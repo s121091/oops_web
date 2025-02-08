@@ -41,6 +41,7 @@ function init() {
 // 当内容加载完成后，执行初始化
 document.addEventListener('DOMContentLoaded', init);
 
+// 滚动到 Favourite 时调整偏移
 function scrollToFavourite(event) {
     event.preventDefault();
 
