@@ -164,12 +164,20 @@ button:hover {
     gap: 20px;
     scroll-margin-top: -20px; /* 添加滚动偏移量，考虑导航栏高度 */
 }
+
 .card-row {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 20px;
     width: 100%;
+}
+
+.card-container.sticky {
+    position: sticky;
+    top: 0;
+    background-color: transparent;
+    padding-top: 60px; /* 考虑到固定的导航栏高度 */
 }
 
 .card {
