@@ -2,19 +2,18 @@ function handleClick() {
     alert('按钮被点击了！');
 }
 
-// 卡片懒加载
 function handleScroll() {
     const windowHeight = window.innerHeight;
-    const cards = document.querySelectorAll('.card:not(.show)');
+    const cards = document.querySelectorAll('.card');
 
     cards.forEach(card => {
-        if (card.getBoundingClientRect().top <= windowHeight - 50) {
+        const cardRect = card.getBoundingClientRect();
+        if (cardRect.top < windowHeight - 50) {
             card.classList.add('show');
         }
     });
 }
 
-// 防抖函数
 function debounce(func, wait) {
     let timeout;
     return function() {
@@ -23,45 +22,44 @@ function debounce(func, wait) {
     };
 }
 
-// 初始化
-document.addEventListener('DOMContentLoaded', () => {
+function init() {
     handleScroll();
     document.addEventListener('scroll', debounce(handleScroll, 100));
-});
+}
 
-// 滚动到锚点
-function scrollToFavourite(e) {
-    e.preventDefault();
+document.addEventListener('DOMContentLoaded', init);
+
+function scrollToFavourite(event) {
+    event.preventDefault();
     const target = document.getElementById('Favourite-anchor');
     if (target) {
+        const offset = -200;
+        const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition + offset;
+
         window.scrollTo({
-            top: target.offsetTop - 200,
+            top: offsetPosition,
             behavior: 'smooth'
         });
     }
 }
 
-// 打开/关闭侧边菜单
 function toggleMenu() {
-    document.body.classList.toggle('menu-open');
+    const secondaryMenu = document.querySelector('.secondary-menu');
+    secondaryMenu.classList.toggle('visible');
 }
 
-// 控制页脚显示
-window.addEventListener('scroll', () => {
-    const footer = document.querySelector('.mobile-only');
-    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight - 100) {
+function showFooterOnScroll() {
+    const footer = document.querySelector('.footer');
+    const scrollThreshold = 100; /* 距离底部 100px 时显示页脚 */
+
+    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight - scrollThreshold) {
         footer.style.visibility = 'visible';
-    } else {
-        footer.style.visibility = 'hidden';
+        window.removeEventListener('scroll', showFooterOnScroll);
     }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    /* 监听滚动事件 */
+    window.addEventListener('scroll', showFooterOnScroll);
 });
-
-// 添加事件监听器
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', scrollToFavourite);
-});
-
-document.querySelector('.navbar-toggler').addEventListener('click', toggleMenu);
-document.querySelector('.close-button').addEventListener('click', toggleMenu);
-
-document.querySelector('.cta-btn').addEventListener('click', handleClick);
