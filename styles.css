@@ -207,3 +207,7 @@ button:hover {
         width: 80%;
     }
 }
+
+#Favourite {
+    scroll-margin-top: 10px; /* 将 10px 替换为你需要的偏移量 */
+}
