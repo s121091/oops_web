@@ -156,28 +156,15 @@ button:hover {
 /* 卡片容器样式 */
 .card-container {
     display: flex;
-    margin-top: 20px;
-    justify-content: center;
+    flex-direction: column; /* 改为纵向排列行 */
     align-items: center;
-    flex-wrap: wrap;
-    max-width: 100%;
     gap: 20px;
-    scroll-margin-top: -20px; /* 添加滚动偏移量，考虑导航栏高度 */
+    margin-top: 20px;
 }
 
 .card-row {
     display: flex;
-    justify-content: center;
-    align-items: center;
     gap: 20px;
-    width: 100%;
-}
-
-.card-container.sticky {
-    position: sticky;
-    top: 0;
-    background-color: transparent;
-    padding-top: 60px; /* 考虑到固定的导航栏高度 */
 }
 
 .card {
@@ -189,8 +176,13 @@ button:hover {
     opacity: 0;
     transform: translateY(50px);
     transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
 }
 
+/* 当卡片可见时的样式 */
 .card.show {
     opacity: 1;
     transform: translateY(0);
@@ -206,12 +198,12 @@ button:hover {
 }
 
 /* 响应式设计 */
-@media (max-width: 600px) {
-    .nav-links {
+@media (max-width: 900px) {
+    .card-row {
         flex-direction: column;
-        gap: 10px;
+        align-items: center;
     }
     .card {
-        width: 100%;
+        width: 80%;
     }
 }
