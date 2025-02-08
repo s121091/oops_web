@@ -42,27 +42,10 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 function scrollToFavourite(event) {
-    event.preventDefault(); // 阻止默认的锚点跳转行为
-
-    const target = document.getElementById('Favourite');
-    const offset = -200; // 偏移量，负值表示向上偏移
-
-    if (target) {
-        // 获取元素相对于文档顶部的位置
-        const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
-        // 计算偏移后的滚动位置
-        const offsetPosition = elementPosition + offset;
-
-        // 平滑滚动到偏移后的位置
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth' // 可选，去掉则为瞬间滚动
-        });
-    }
-}
-
-function scrollToFavourite(event) {
     event.preventDefault();
-    console.log('scrollToFavourite 函数被调用');
-    // 你的滚动代码
+
+    const target = document.getElementById('Favourite-anchor');
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+    }
 }
