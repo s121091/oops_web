@@ -45,7 +45,7 @@ function scrollToFavourite(event) {
     event.preventDefault(); // 阻止默认的锚点跳转行为
 
     const target = document.getElementById('Favourite');
-    const offset = -10; // 偏移量，负值表示向上偏移
+    const offset = -200; // 偏移量，负值表示向上偏移
 
     if (target) {
         // 获取元素相对于文档顶部的位置
