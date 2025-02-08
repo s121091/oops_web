@@ -270,7 +270,7 @@ button:hover {
 /* 响应式设计 */
 @media (max-width: 900px) {
     .card {
-        width: 90%; /* 在手机端占据更多宽度 */
+        width: 50%; /* 在手机端占据更多宽度 */
         height: auto; /* 高度自适应 */
         font-size: 1.2em; /* 调整字体大小 */
     }
