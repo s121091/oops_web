@@ -9,15 +9,7 @@ function handleClick() {
 
 // 滚动处理函数
 function handleScroll() {
-    const containerRect = cardContainer.getBoundingClientRect();
     const windowHeight = window.innerHeight;
-
-    // 检查卡片容器是否进入视口
-    if (containerRect.top <= 0 && containerRect.bottom >= windowHeight) {
-        cardContainer.classList.add('sticky');
-    } else {
-        cardContainer.classList.remove('sticky');
-    }
 
     // 控制卡片的显示动画
     cards.forEach(card => {
