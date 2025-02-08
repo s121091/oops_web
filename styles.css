@@ -156,7 +156,7 @@ button:hover {
 /* 卡片容器样式 */
 .card-container {
     display: flex;
-    flex-direction: column; /* 改为纵向排列行 */
+    flex-direction: column; /* 纵向排列行 */
     align-items: center;
     gap: 20px;
     margin-top: 20px;
@@ -208,8 +208,10 @@ button:hover {
     }
 }
 
+/* 锚点元素样式 */
 #Favourite-anchor {
     display: block;
     height: 0;
-    margin-top: -10px; /* 设置向上的偏移量 */
+    margin-top: -70px; /* 根据导航栏高度调整偏移量 */
+    visibility: hidden;
 }
