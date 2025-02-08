@@ -47,6 +47,14 @@ function scrollToFavourite(event) {
 
     const target = document.getElementById('Favourite-anchor');
     if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
+        const offset = -70; // 与导航栏高度一致
+
+        const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition + offset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
     }
 }
