@@ -269,12 +269,18 @@ button:hover {
 
 /* 响应式设计 */
 @media (max-width: 900px) {
-    .card-row {
-        flex-direction: column;
-        align-items: center;
-    }
     .card {
-        width: 80%;
+        width: 90%; /* 在手机端占据更多宽度 */
+        height: auto; /* 高度自适应 */
+        font-size: 1.2em; /* 调整字体大小 */
     }
 }
 
+/* 卡片后的部分 */
+.section-after-cards {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+}
