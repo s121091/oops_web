@@ -167,7 +167,7 @@ button:hover {
     flex-direction: column; /* 纵向排列行 */
     align-items: center;
     gap: 20px;
-    margin-top: 50px;
+    margin-top: 70px;
 }
 
 .card-row {
