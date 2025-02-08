@@ -204,9 +204,13 @@ button:hover {
 }
 
 .card:hover {
-    background-color: #EEDECD;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     transform: translateY(0) scale(1.05); /* 悬停状态 */
+}
+
+/* 特定于卡片 1 的样式 */
+.card-1 {
+    background-color: white; /* 根据图片实际边缘颜色手动设置 */
 }
 
 .card .card-image {
@@ -218,6 +222,8 @@ button:hover {
     left: 0;
     z-index: -1; /* 将图片放在内容下方 */
     display: block; /* 确保图片作为块级元素 */
+    max-width: 100%;
+    max-height: 100%;
     backface-visibility: hidden; /* 防止渲染问题 */
     transform: translateZ(0); /* 强制硬件加速 */
 }
@@ -238,24 +244,13 @@ button:hover {
     filter: blur(5px); /* 应用高斯模糊效果 */
 }
 
-.card-1 .card-content {
-    color: black; /* 文字颜色为黑色 */
-    text-align: center;
-    padding: 20px;
-    /*background: rgba(255, 255, 255, 0.5); /* 半透明白色背景，提高文字可读性 */
-    border-radius: 15px;
-    position: relative;
-    z-index: 1; /* 确保内容在图片上方 */
-    transition: color 0.3s ease; /* 添加过渡效果 */
-}
-
-.card-1 .card-content h2,
-.card-1 .card-content p {
+.card .card-content h2,
+.card .card-content p {
     margin: 0; /* 移除默认的外边距 */
 }
 
 /* 悬停时更改文字颜色 */
-.card-1:hover .card-content {
+.card:hover .card-content {
     color: #EEDECD; /* 悬停时文字颜色变为#EEDECD */
 }
 
