@@ -207,3 +207,9 @@ button:hover {
         width: 80%;
     }
 }
+
+#Favourite-anchor {
+    display: block;
+    height: 0;
+    margin-top: -10px; /* 设置向上的偏移量 */
+}
