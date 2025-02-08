@@ -207,11 +207,3 @@ button:hover {
         width: 80%;
     }
 }
-
-#Favourite::before {
-    content: '';
-    display: block;
-    height: 10px; /* 偏移量 */
-    margin-top: -10px; /* 负的偏移量 */
-    visibility: hidden;
-}
