@@ -1,20 +1,14 @@
-// 缓存 DOM 元素
-const cardContainer = document.querySelector('.card-container');
-const cards = document.querySelectorAll('.card');
-
-// 处理按钮点击
 function handleClick() {
     alert('按钮被点击了！');
 }
 
-// 滚动处理函数
+// 卡片懒加载
 function handleScroll() {
     const windowHeight = window.innerHeight;
+    const cards = document.querySelectorAll('.card:not(.show)');
 
-    // 控制卡片的显示动画
     cards.forEach(card => {
-        const cardRect = card.getBoundingClientRect();
-        if (cardRect.top < windowHeight - 50) {
+        if (card.getBoundingClientRect().top <= windowHeight - 50) {
             card.classList.add('show');
         }
     });
@@ -29,32 +23,45 @@ function debounce(func, wait) {
     };
 }
 
-// 初始化函数
-function init() {
-    // 检查初始状态下卡片是否在视口内
+// 初始化
+document.addEventListener('DOMContentLoaded', () => {
     handleScroll();
-
-    // 添加滚动事件监听器，使用防抖
     document.addEventListener('scroll', debounce(handleScroll, 100));
-}
+});
 
-// 当内容加载完成后，执行初始化
-document.addEventListener('DOMContentLoaded', init);
-
-// 滚动到 Favourite 时调整偏移
-function scrollToFavourite(event) {
-    event.preventDefault();
-
+// 滚动到锚点
+function scrollToFavourite(e) {
+    e.preventDefault();
     const target = document.getElementById('Favourite-anchor');
     if (target) {
-        const offset = -200; // 与导航栏高度一致
-
-        const elementPosition = target.getBoundingClientRect().top + window.pageYOffset;
-        const offsetPosition = elementPosition + offset;
-
         window.scrollTo({
-            top: offsetPosition,
+            top: target.offsetTop - 200,
             behavior: 'smooth'
         });
     }
 }
+
+// 打开/关闭侧边菜单
+function toggleMenu() {
+    document.body.classList.toggle('menu-open');
+}
+
+// 控制页脚显示
+window.addEventListener('scroll', () => {
+    const footer = document.querySelector('.mobile-only');
+    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight - 100) {
+        footer.style.visibility = 'visible';
+    } else {
+        footer.style.visibility = 'hidden';
+    }
+});
+
+// 添加事件监听器
+document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', scrollToFavourite);
+});
+
+document.querySelector('.navbar-toggler').addEventListener('click', toggleMenu);
+document.querySelector('.close-button').addEventListener('click', toggleMenu);
+
+document.querySelector('.cta-btn').addEventListener('click', handleClick);
