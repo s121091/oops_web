@@ -118,12 +118,12 @@ body {
 .container {
     text-align: center;
     color: #1A1A1A;
-    margin-top: 70px; /* 增加 margin 以将元素下移 */
+    margin-top: 90px; /* 增加 margin 以将元素下移，考虑导航栏高度 */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 90vh; /* 确保容器占据整个视口高度 */
+    min-height: 90vh; /* 确保容器占据足够高度 */
 }
 
 h1 {
@@ -151,6 +151,14 @@ button:hover {
     height: 24px;
     fill: #1A1A1A;
     margin-right: 10px;
+}
+
+/* 锚点元素样式 */
+#Favourite-anchor {
+    display: block;
+    height: 0;
+    margin-top: -70px; /* 根据导航栏高度调整偏移量 */
+    visibility: hidden;
 }
 
 /* 卡片容器样式 */
@@ -206,12 +214,4 @@ button:hover {
     .card {
         width: 80%;
     }
-}
-
-/* 锚点元素样式 */
-#Favourite-anchor {
-    display: block;
-    height: 0;
-    margin-top: -70px; /* 根据导航栏高度调整偏移量 */
-    visibility: hidden;
 }
