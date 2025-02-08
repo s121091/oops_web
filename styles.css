@@ -208,6 +208,10 @@ button:hover {
     }
 }
 
-#Favourite {
-    scroll-margin-top: 200px; /* 将 10px 替换为你需要的偏移量 */
+#Favourite::before {
+    content: '';
+    display: block;
+    height: 10px; /* 偏移量 */
+    margin-top: -10px; /* 负的偏移量 */
+    visibility: hidden;
 }
