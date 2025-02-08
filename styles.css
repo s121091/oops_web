@@ -228,20 +228,15 @@ button:hover {
     transform: translateZ(0); /* 强制硬件加速 */
 }
 
-/* 特定于卡片 1 的样式 */
-.card-1 {
-    background-color: white; /* 默认背景颜色，可以根据需要调整 */
-}
-
-.card-1 .card-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* 确保图片完全显示在卡片内 */
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1; /* 将图片放在内容下方 */
-    filter: blur(5px); /* 应用高斯模糊效果 */
+.card .card-content {
+    color: black; /* 文字颜色为黑色 */
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.5); /* 半透明白色背景，提高文字可读性 */
+    border-radius: 15px;
+    position: relative;
+    z-index: 1; /* 确保内容在图片上方 */
+    transition: color 0.3s ease; /* 添加过渡效果 */
 }
 
 .card .card-content h2,
