@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinterest 风格网站示例</title>
+    <!-- 引入 Font Awesome 图标库的 CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- 引入外部的 CSS 样式表 -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 模糊背景 -->
+    <div class="blur-background"></div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <ul class="nav-links">
+            <li><a href="#" onclick="event.preventDefault()">oops</a></li>
+            <li><a href="#Favourite-anchor" onclick="scrollToFavourite(event)">Favorites</a></li>
+            <li><a href="#" onclick="event.preventDefault()">Influencer</a></li>
+            <li><a href="#" onclick="event.preventDefault()">Code</a></li>
+            <li><a href="#" onclick="event.preventDefault()">Game</a></li>
+            <li><a href="#" onclick="event.preventDefault()">Music</a></li>
+            <li><a href="#" onclick="event.preventDefault()">Books</a></li>
+        </ul>
+        <div class="contact-icons">
+            <a href="#"><i class="fab fa-weixin"></i></a>
+            <a href="#"><i class="fab fa-qq"></i></a>
+            <a href="#"><i class="fab fa-telegram"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
+        </div>
+    </nav>
+
+    <!-- 背景圆形 -->
+    <div class="circles-container">
+        <div class="circle circle-large"></div>
+        <div class="circle circle-small-black"></div>
+        <div class="circle circle-smallest-white"></div>
+    </div>
+
+    <!-- 主内容区 -->
+    <main class="content">
+        <div class="container">
+            <!-- 心形图标 -->
+            <svg class="icon" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+                    2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3
+                    16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55
+                    11.54L12 21.35z"/>
+            </svg>
+            <h1>欢迎来到我们的网站</h1>
+            <button onclick="handleClick()">点我</button>
+        </div>
+
+        <!-- 锚点元素 -->
+        <div id="Favourite-anchor"></div>
+
+        <!-- 卡片容器 -->
+        <section class="card-container">
+            <!-- 第一行卡片 -->
+            <div class="card-row">
+                <div class="card">卡片 1</div>
+                <div class="card">卡片 2</div>
+                <div class="card">卡片 3</div>
+            </div>
+            <!-- 第二行卡片 -->
+            <div class="card-row">
+                <div class="card">卡片 4</div>
+                <div class="card">卡片 5</div>
+                <div class="card">卡片 6</div>
+            </div>
+        </section>
+
+        <section class="section-after-cards">
+            这是卡片之后的部分。
+        </section>
+    </main>
+
+    <!-- 引入外部的 JavaScript 脚本 -->
+    <script src="script.js" defer></script>
+</body>
+</html>
