@@ -61,3 +61,8 @@ function scrollToFavourite(event) {
     }
 }
 
+function scrollToFavourite(event) {
+    event.preventDefault();
+    console.log('scrollToFavourite 函数被调用');
+    // 你的滚动代码
+}
