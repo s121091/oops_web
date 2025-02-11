@@ -560,6 +560,7 @@ main {
 .band-card {
     position: relative;
     margin-bottom: 30px;
+    width: 100%;
 }
 
 .band-photo {
