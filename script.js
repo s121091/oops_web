@@ -140,3 +140,20 @@ async function applyTranslations(lang) {
         }
     });
 }
+
+// 在 script.js 添加滚动监听
+let lastScroll = 0;
+window.addEventListener('scroll', () => {
+  const bioSection = document.querySelector('.bio-section');
+  const scrollY = window.scrollY;
+  const delta = scrollY - lastScroll;
+  
+  // 动态参数
+  bioSection.style.setProperty('--offset-y', `${Math.min(30, delta)}px`);
+  bioSection.style.setProperty('--rotate-z', `${Math.min(3, delta*0.1)}deg`);
+  
+  // 色相动态偏移
+  // bioSection.style.filter = `hue-rotate(${Math.abs(delta)*0.3}deg)`;
+  
+  lastScroll = scrollY;
+});
