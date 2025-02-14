@@ -514,6 +514,7 @@ main {
 }
 
 /* 音乐区域 */
+/* 修改 music-section 的容器样式 */
 .music-container {
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -521,13 +522,21 @@ main {
     max-width: 1200px;
     margin: 50px auto;
     padding: 0 20px;
+    position: relative;
+    min-height: 100vh; /* 保证容器有足够滚动空间 */
 }
 
+/* 左侧固定卡片容器 */
 .bio-section {
-    height: 100%;
+    position: sticky;
+    top: 50%; /* 垂直居中定位 */
+    align-self: start; /* 防止grid拉伸 */
+    height: fit-content;
+    margin-top: 190px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    gap: 30px; /* 卡片间距 */
+    transition: transform 0.3s ease; /* 添加滚动顺滑效果 */
 }
 
 .bio-card {
@@ -630,6 +639,7 @@ main {
     background-size: cover;
     background-position: center;
     position: relative;
+    
 }
 
 .album-cover::before {
@@ -640,7 +650,7 @@ main {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.1);
-    z-index: 1;
+    z-index: -1;
     transition: opacity var(--transition-speed);
 }
 
@@ -911,3 +921,104 @@ main {
 .playing .fa-play-circle::before {
     content: "\f28b"; /* 暂停图标 */
 }
+
+/* */
+
+/* 新增关键帧动画 */
+@keyframes cardFloat {
+    0%, 100% { transform: translateY(0) rotateZ(0deg); }
+    25% { transform: translateY(-3px) rotateZ(-0.5deg); }
+    75% { transform: translateY(2px) rotateZ(0.3deg); }
+  }
+  
+  /* 优化粘性容器 */
+  .bio-section {
+    position: sticky;
+    top: 50%;
+    transform: translateY(calc(-50% + var(--offset-y, 0px))) 
+               rotateZ(var(--rotate-z, 0deg));
+    transition: 
+      transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), /* 弹簧曲线 */
+      filter 0.3s ease;
+    will-change: transform; /* 开启GPU加速 */
+    filter: hue-rotate(0deg);
+  }
+  
+  /* 动态浮动效果 */
+  .bio-card, .band-card, .avatar-container {
+    transition: 
+      transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+      box-shadow 0.3s ease;
+    transform-origin: center bottom;
+    animation: cardFloat 8s ease-in-out infinite;
+  }
+  
+  /* 滚动互动效果 */
+  .music-container:active .bio-card,
+  .music-container:active .band-card {
+    animation-play-state: paused;
+  }
+  
+  /* 添加流体动态背景 */
+  .bio-card::before {
+    content: "";
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    background: linear-gradient(
+      45deg,
+      rgba(255,107,53,0.1) 0%,
+      rgba(241,80,100,0.2) 50%,
+      rgba(255,107,53,0.1) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  
+  /* 滚动互动时的波纹效果 */
+  .bio-section:hover::before {
+    opacity: 0.6;
+    animation: wave 2s linear infinite;
+  }
+  
+  @keyframes wave {
+    from { transform: translateX(-10%) rotate(0deg) ; }
+    to { transform: translateX(10%) rotate(360deg) ; }
+  }
+
+  @media (hover: none) {
+    .bio-section {
+      transition-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      filter: none !important;
+    }
+    .bio-card::before {
+      display: none;
+    }
+  }
+
+  /* 移动端样式覆盖 */
+  @media (max-width: 768px) {
+    .music-container {
+      display: flex;
+      flex-direction: column;
+      min-height: auto;
+    }
+    
+    .bio-section {
+      /* 关闭所有动态效果 */
+      position: static !important;
+      transform: none !important;
+      transition: none !important;
+      filter: none !important;
+      grid-row: unset;
+    }
+    
+    /* 隐藏动态流体效果 */
+    .bio-card::before,
+    .band-card::before {
+      display: none;
+    }
+  }
