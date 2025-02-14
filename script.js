@@ -157,3 +157,17 @@ window.addEventListener('scroll', () => {
   
   lastScroll = scrollY;
 });
+
+// 在 script.js 中添加移动端判断
+const isMobile = /iPhone|iPad|iPod|Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+if (!isMobile) {
+  // 桌面端才应用滚动效果
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    // 原有滚动逻辑...
+  });
+} else {
+  // 移动端时移除 hover 状态相关样式
+  document.documentElement.classList.add('is-mobile');
+}
