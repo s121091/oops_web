@@ -1,0 +1,85 @@
+/* Global body styling: sets font, background image, dimensions and border */
+body {
+    font-family: 'Times New Roman', Times, serif;
+    background-image: url(image.jpeg);
+    background-size: 60%;
+    border: 2px solid black;
+    width: 650px;
+    height: 630px;
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-attachment: fixed;
+    margin: 2% 2%;
+}
+
+body img {
+    position: relative;
+}
+
+/* Style for table header labels */
+.h3 {
+    font-size: 120%;
+    font-weight: bold;
+}
+
+/* General button style (shared by Start Tossing and Reset) */
+.button {
+    width: 150px;
+    height: 50px;
+    font-size: large;
+    background-color: aliceblue;
+    border-color: antiquewhite;
+    border-style: dashed;
+    border-width: 3px;
+    border-radius: 1cap;
+}
+
+/* Style for the statistical numbers (Heads, Tails, percentages) */
+span {
+    font-weight: bold;
+    font-size: 130%;
+    text-decoration: underline;
+    color: orange;
+}
+
+/* Hover effect for buttons */
+.button:hover {
+  color: red;
+  text-decoration: underline; 
+}
+
+/* Active (click) effect for buttons */
+.button:active {
+    color:rgb(247, 215, 175);
+}
+
+/* Left margin for the main container div */
+div {
+    margin: 0% 0% 0% 5%;
+}
+
+/* Style for the gambling recovery notes */
+.notes {
+    text-align: justify;
+    margin: 5% 5% 0% 0%;
+    color:  red;
+    font-size: larger;
+    font-weight: bold;
+}
+
+/* Link styles (normal, visited, hover, active) */
+a:link {
+  color: rgb(123, 201, 227);
+}
+
+a:visited {
+  color: green;
+}
+
+a:hover {
+  color: red;
+}
+
+a:active {
+  color:rgb(247, 215, 175);
+}

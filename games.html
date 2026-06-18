@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小遊戲實驗室 | oops</title>
+    <!-- 完美复用你本地的 styles.css -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- 复用主页的固定导航栏 -->
+    <nav>
+        <div class="username" onclick="window.open('index.html', '_self')" style="cursor: pointer;">oops</div>
+        <div class="nav-links">
+            <a href="index.html#Ps">個人卡片</a>
+            <a href="index.html#PodcastHero">Podcast</a>
+            <a href="index.html#Link">實用工具</a>
+            <a href="index.html#Projects">項目&隨筆</a>
+            <a href="index.html#Music">音樂</a>
+            <button class="lang-switch" onclick="window.open('index.html', '_self')">HOME</button>
+        </div>
+    </nav>
+
+    <!-- 加上了 games-container 类名，并在 CSS 中覆盖布局 -->
+    <main class="games-container">
+        <!-- 返回主页按钮 -->
+        <a href="index.html" class="back-home-btn">
+            <i class="fas fa-arrow-left"></i> 返回主頁
+        </a>
+
+        <!-- 标题区域 -->
+        <div class="section-header">
+            <h2 class="section-title">
+                <span>網頁小遊戲實驗室</span>
+                <span class="rocket-icon">🎮</span>
+            </h2>
+        </div>
+
+        <!-- 游戏卡片网格 -->
+        <div class="games-grid">
+            
+            <a href="./games/coin-tossing/index.html" class="game-card">
+                <div class="game-thumbnail" style="background-image: url('./games/coin-tossing/preview.png')">
+                    <div class="game-tags">
+                        <span class="game-inner-tag">概率模擬</span>
+                        <span class="game-inner-tag">硬幣投擲</span>
+                        <span class="game-inner-tag">統計可視化</span>
+                    </div>
+                </div>
+                <div class="game-card-content">
+                    <h3>Coin tossing</h3>
+                    <p>通過設定投擲次數和正面概率，直觀展示隨機結果的分布與百分比，適合概率教學與自主探索。</p>
+                    <div class="play-now-link">進入遊戲 <i class="fas fa-chevron-right"></i></div>
+                </div>
+            </a>
+
+            <a href="./games/random-animals/index.html" class="game-card">
+                <div class="game-thumbnail" style="background-image: url('./games/random-animals/preview.png')">
+                <div class="game-tags">
+                    <span class="game-inner-tag">隨機展示</span>
+                    <span class="game-inner-tag">動物圖鑒</span>
+                    <span class="game-inner-tag">無重復輪播</span>
+                </div>
+            </div>
+            <div class="game-card-content">
+                <h3>Random Animal Slideshow</h3>
+                <p>採用“不重復”規則，隨機展示六種可愛動物，每輪全部出現一次。點擊描述按鈕可跳轉維基百科，寓教於樂。</p>
+                <div class="play-now-link">進入遊戲 <i class="fas fa-chevron-right"></i></div>
+            </div>
+            </a>
+
+            <a href="./games/number-looping/index.html" class="game-card">
+                <div class="game-thumbnail" style="background-image: url('./games/number-looping/preview.png')">
+                    <div class="game-tags">
+                        <span class="game-inner-tag">數字循環</span>
+                        <span class="game-inner-tag">自動計數</span>
+                        <span class="game-inner-tag">交互控制</span>
+                    </div>
+                </div>
+                <div class="game-card-content">
+                    <h3>Counter 0→9→0</h3>
+                    <p>通過 Start / Resume / Stop 按鈕控制數字在 0 - 9 之間自動循環滾動，直觀演示定時器、方向切換與狀態管理。</p>
+                    <div class="play-now-link">進入遊戲 <i class="fas fa-chevron-right"></i></div>
+                </div>
+            </a>
+
+            <a href="./games/memory-game/game/index.html" class="game-card">
+                <div class="game-thumbnail" style="background-image: url('./games/memory-game/game/preview.png')">
+                    <div class="game-tags">
+                        <span class="game-inner-tag">記憶翻牌</span>
+                        <span class="game-inner-tag">咖啡與茶</span>
+                        <span class="game-inner-tag">雙難度模式</span>
+                    </div>
+                </div>
+                <div class="game-card-content">
+                    <h3>Coffee & Tea Memory Game</h3>
+                    <p>翻牌配對咖啡與茶飲圖鑒，考驗記憶力。基礎/進階兩種難度，配有趣味“偷看”功能，適合所有年齡層。</p>
+                    <div class="play-now-link">進入遊戲 <i class="fas fa-chevron-right"></i></div>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <!-- 复用主页的深色页脚 -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Copyright</h4>
+                <p>© 2025 oops. 保留一切權利.</p>
+            </div>
+            <div class="footer-section">
+                <h4>導航鏈接</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">返回首頁</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>信号追踪</h4>
+                <div class="social-links">
+                    <a href="mailto:mail@oops.us.kg"><i class="fab fa-google text-2xl"></i>： mail@oops.us.kg</a>
+                    <a href="https://github.com/s121091"><i class="fab fa-github text-2xl"></i>： s121091</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // 初始化导航栏的基础动画
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('mouseover', () => link.style.transform = 'translateY(-2px)');
+                link.addEventListener('mouseout', () => link.style.transform = 'translateY(0)');
+            });
+        });
+    </script>
+</body>
+</html>

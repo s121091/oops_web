@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Biased Coin Tossing with History Log</title>
+        <script src="script.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+
+        <!-- Main container for the coin toss simulator -->
+        <div>
+            <h2>Biased Coin Tossing with History Log</h2>
+
+            <!-- User inputs: number of tosses and probability of heads -->
+            <p>
+                Number of tosses: &nbsp;&nbsp;
+                <input id="input_tosses" name="input_tosses" type="text" size="25">
+            </p>
+
+            <!-- Input field for the probability of heads (0.0 - 1.0) -->
+            <p>
+                Probablity of heads (0.0 - 1.0): &nbsp;
+                <input id="input_probability" type="text" name="input_probability" size="14">
+            </p>
+
+            <br>
+
+            <!-- Table layout: left column shows statistics, right column shows history -->
+            <table border="0">
+                <tr>
+                    <td class="h3">Results &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;</td>
+                    <td class="h3">History (most recent run)</td>
+                </tr>
+
+                <!-- Left column: statistical results -->
+                <tr>
+                    <td>
+                        <p>
+                            Heads: 
+                            <span id="print_headsCounter">0</span> 
+                        </p>
+                        <p>
+                            Tails: 
+                            <span id="print_tailsCounter">0</span>
+                        </p>
+                        <p>
+                            Heads %: 
+                            <span id="print_headsPercentage">0.0%</span>
+                        </p>
+                        <p>
+                            Tails %: 
+                            <span id="print_tailsPercentage">0.0%</span>
+                        </p>
+                    </td>
+
+                    <!-- Right column: history textarea -->
+                    <td>
+                        <tt><textarea id="print_tossesResult" rows="10" cols="32">Please enter the number of tosses and the probability first!</textarea></tt>
+                    </td>
+
+                    <!-- Row for buttons: Start Tossing and Reset -->
+                    <td>
+                        &emsp;<input type="button" value="Start Tossing" onclick="startTossing()" class="button">
+                        <br><br><br>
+                        &emsp;<input type="button" value="Reset" onclick="resetAll()" class="button">
+                    </td>
+                </tr>
+            </table>
+
+            <!-- Support message and links to gambling recovery resources -->
+            <tt>
+                <p class="notes">Note: If you need support to quit gambling, you can call the Hong Kong Gamblers Recovery Centre hotline (+852) 2426 6262 to receive professional counseling and assistance.</p>
+                <p class="notes">註：如果您需要戒賭支持，可以撥打香港戒賭中心戒賭熱線(+852) 2426 6262，獲取專業的輔導和幫助。</p>
+            </tt>
+
+            <!-- External links to recovery centre -->
+            <br>
+            <a href="https://www.hkgamblers-recovery.org/" alt="Hong Kong Gamblers Recovery Centre">Website : Hong Kong Gamblers Recovery Centre</a>
+            <br>
+            <a href="https://www.hkgamblers-recovery.org/eng/contact_us.php" alt="Hotline : (+852) 2426 6262">Hotline : (+852) 2426 6262</a>
+        </div>
+    </body>
+</html>

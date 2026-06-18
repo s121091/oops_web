@@ -1,0 +1,201 @@
+{
+    "pageTitle": "oops",
+    "username": "oops",
+    "langSwitch": "EN",
+
+    "nav": {
+        "home": "個人卡片",
+        "podcast": "播客",
+        "tools": "實用工具",
+        "projects": "項目&隨筆",
+        "music": "音樂"
+    },
+
+    "userTitle": "oops",
+    "userSubtitle": "ISFP-T / Tech Enthusiast",
+
+    "tag": {
+        "hackintosh": "黑苹果",
+        "opencore": "OpenCore",
+        "diy": "DIY",
+        "programming": "编程",
+        "webdev": "网页开发",
+        "photography": "摄影",
+        "design": "设计",
+        "swift": "Swift",
+        "doglover": "爱狗人士"
+    },
+
+    "podcast": {
+        "title": "播客",
+        "datePlaceholder": "加载日期...",
+        "titlePlaceholder": "加载最新集...",
+        "descPlaceholder": "获取最新新闻...",
+        "currentTime": "00:00",
+        "totalTime": "--:--",
+        "playlistHeader": "剧集列表",
+        "playlistLoading": "加载剧集..."
+    },
+
+    "tools": {
+        "title": "實用工具",
+        "dashboardTitle": "網絡連接信息",
+        "ipv4": "IPv4: 检测中...",
+        "ipv6": "IPv6: ...",
+        "location": "國家/地區",
+        "asn": "ASN / 機構",
+        "analyzing": "分析中...",
+        "ipType": "IP 類型",
+        "fraud": "欺詐值 (Fraud Score)",
+        "calculating": "计算中...",
+        "privacy": "隱私檢測",
+        "vpn": "VPN",
+        "proxy": "代理 (Proxy)",
+        "tor": "Tor 出口",
+        "relay": "中繼 (Relay)",
+        "hosting": "託管 (Hosting)",
+        "network": "網絡檢測",
+        "serviceType": "服務類型",
+        "detecting": "检测中...",
+        "anycast": "AnyCast",
+        "mobile": "移動網絡",
+        "edu": "教育網",
+        "satellite": "衛星網絡",
+        "linkCloudflare": "CloudFlare IP",
+        "linkGoogle": "Google",
+        "linkGithub": "GitHub",
+        "linkYoutube": "YouTube",
+        "linkBilibili": "Bilibili",
+        "linkChatgpt": "ChatGPT",
+        "linkStatus": "測試中..."
+    },
+
+    "projects": {
+        "title": "實驗室 & 隨筆 （施工中🚧）",
+        "statTech": "Tech",
+        "statLaboratory": "Laboratory",
+        "statDesign": "Design",
+        "statLife": "& Life",
+        "terminalUser": "user@hackintosh ~",
+        "terminalNeofetch": "neofetch",
+        "terminalOs": "macOS Sequoia 15.5",
+        "terminalHost": "黑苹果",
+        "terminalKernel": "OpenCore 0.9.8",
+        "terminalCpu": "Intel Core i7-6700",
+        "terminalGpu": "AMD Radeon RX 6950 XT",
+        "terminalMemory": "16GB DDR5",
+        "creatorBio": "折騰永無止境，完美驅動的那一刻是最大的滿足。這裡記錄我的項目開發與黑蘋果折騰筆記。",
+        "project1Tag": "故事",
+        "project1Title": "我的黑蘋果之旅 & 配置分享",
+        "project1Desc": "從誤刪 Windows 到完美驅動：記錄引領我走入程式與折騰世界的黑蘋果啟蒙之旅。",
+        "project2Tag": "游戏",
+        "project2Title": "小遊戲實驗室",
+        "project2Desc": "收錄在學校開發的各種趣味網頁小遊戲，點擊立即開玩！"
+    },
+
+    "music": {
+        "title": "音樂",
+        "songs": [
+            {
+                "title": "Radio Wave",
+                "artist": "By The Coast",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/cf/b6/7c/cfb67c76-5e4b-04e4-7109-68729fc21b4c/859745921435_cover.jpg/632x632bb-60.jpg",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/Radio%20Wave.m4a"
+            },
+            {
+                "title": "Blank Space",
+                "artist": "Taylor Swift",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/db/91/88/db918861-6232-a2d1-16f6-b92f8cb415dc/00602537993772.rgb.jpg/632x632bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/Blank%20Space.m4a"
+            },
+            {
+                "title": "Everywhere We Go",
+                "artist": "陳冠希、MC仁、廚房仔",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music/v4/11/33/d1/1133d149-ace3-3970-ad99-ffa5077cc43a/19620120727D01_IMAGE.jpg/592x592bf-60.jpg",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/Everywhere%20We%20Go.m4a"
+            },
+            {
+                "title": "最佳損友",
+                "artist": "陳奕迅",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/a4/fa/86/a4fa86d6-c23a-c37f-1251-00376ff144cd/00602498378830.rgb.jpg/592x592bf-60.jpg",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/ZJSY.m4a"
+            },
+            {
+                "title": "畫",
+                "artist": "鄧紫棋",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/48/74/fe/4874fe6c-d349-36d2-aa5b-d76b5f1f764f/190374733809.jpg/632x632bb-60.jpg",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/HUA.m4a"
+            },
+            {
+                "title": "逆光白",
+                "artist": "林俊杰",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/53/01/ca/5301cac3-425e-a155-f471-a341937daf32/4711099723225.jpg/416x416bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/Liv'%20a%20Little.m4a"
+            },
+            {
+                "title": "我不曾忘記",
+                "artist": "Yuh_ChiliChili",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/4b/ad/0e/4bad0ee9-0c07-25ec-d11b-c6a861b03341/193017095494.jpg/592x592bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/I've%20Never%20Forgotten.m4a"
+            },
+            {
+                "title": "讓風告訴你",
+                "artist": "Yuh_ChiliChili",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/0c/98/30/0c983024-3556-ec38-5473-5fbf55da14c6/193017043648.jpg/592x592bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/Let%20the%20Wind%20Tell%20You.m4a"
+            },
+            {
+                "title": "如果突然想起我",
+                "artist": "Yuh_ChiliChili",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/38/59/ee/3859ee83-6e26-f1d8-3c4c-28d817d07b64/193017075304.jpg/592x592bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/If%20You%20Think%20of%20Me.m4a"
+            },
+            {
+                "title": "唯一",
+                "artist": "鄧紫棋",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/0e/8e/5f/0e8e5f85-b496-d4e4-066e-b92b0e94e0d6/196871486996.jpg/592x592bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/Only%20One.m4a"
+            },
+            {
+                "title": "Stay",
+                "artist": "Zedd, Alessia Cara",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/e5/08/90/e50890a8-205e-a810-dcda-44b614f99f5f/00602557442878.rgb.jpg/592x592bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/Stay.m4a"
+            },
+            {
+                "title": "Sugar",
+                "artist": "Maroon 5",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/b7/25/76/b72576f1-072e-3da2-60d5-2724a9bccf4a/14UMGIM31673.rgb.jpg/592x592bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/Sugar.m4a"
+            },
+            {
+                "title": "I Really Want to Stay at Your House",
+                "artist": "Samyel Kim, Lorien",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music122/v4/16/bb/0c/16bb0cad-ad6c-b0e0-422b-74f8be80ed47/384.jpg/592x592bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/I%20Really%20Want%20to%20Stay%20at%20Your%20House.m4a"
+            },
+            {
+                "title": "So Tired",
+                "artist": "Nueki, Tolchonov",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music126/v4/f0/c3/5d/f0c35d05-fd45-6dbb-9f8c-434e3e3215e9/197188881757.jpg/592x592bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/SO%20TIRED.m4a"
+            },
+            {
+                "title": "Empty Love",
+                "artist": "Lulleaux",
+                "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music123/v4/bb/14/cd/bb14cd7e-ff5b-ea74-6e1f-efef735b46d8/8715576192746_cover.jpg/592x592bb.webp",
+                "audio": "https://raw.githubusercontent.com/s121091/oops_web/refs/heads/main/assets/Music/Empty%20Love.m4a"
+            }
+        ]
+    },
+
+    "footer": {
+        "copyrightTitle": "版權",
+        "copyright": "© 2025 oops. 保留一切權利.",
+        "navTitle": "導航鏈接",
+        "navLink": "未完待續...",
+        "signalTitle": "信号追踪",
+        "email": "oops.x@nicai.us.kg",
+        "github": "s121091"
+    }
+}

@@ -1,0 +1,83 @@
+.controls {
+    margin: 10px 0;
+}
+
+button {
+    padding: 8px 15px;
+    background-color: rgb(204,225,158);
+    border: orange dashed 2px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.game-container {
+    width: 1150px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.board {
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+.basic-grid {
+    width: 560px;
+    margin: auto;
+}
+
+.advanced-grid {
+    width: 840px;
+}
+
+.card {
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+    float: left;
+    background: #ffcb74;
+    border: 2px solid #333;
+    cursor: pointer;
+    text-align: center;
+    line-height: 120px;
+    font-size: 40px;
+    box-sizing: border-box;
+}
+
+.card.matched {
+    background: #90EE90;
+    pointer-events: none;
+}
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.left_box {
+    margin: 200px auto;
+    border: black solid 2px;
+    background-color: beige;
+    font-size: 1rem;
+}
+
+.left_box.clock {
+    float: left;
+    margin: 200px 20px 0 0;
+}
+
+#game-board{
+    float: left;
+    margin:  0 0 0 50;
+}
+
+.controls{
+    float: left;
+    margin:  0 0 0 55;
+}
+
+.game_h1{
+    float: left;
+    margin: 0 0 0 55;
+}

@@ -1,0 +1,89 @@
+body {
+    text-align: center;
+    font-family: 'Times New Roman', Times, serif;
+    background-image: url(background.jpg);
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    margin: 5% auto;
+}
+
+table {
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+/* Display area for the animal image*/
+#Output {
+    text-align: center;
+    width: 300px;
+    height: 200px;
+    border: 2px solid black;
+    margin: auto;
+    background-color: aliceblue;
+    line-height: 200px;
+    position: relative;
+}
+
+/* Ensure images fit inside the display area */
+#Output img {
+    max-width: 300px;
+    max-height: 200px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+/* Style for the two main buttons (Show and Restart) */
+#Show, #Restart {
+    width: 200px;
+    height: 70px;
+    font-size: large;
+    border: 3px dashed;
+    background-color: aliceblue;
+    border-color: orange;
+    border-radius: 2cap;
+}
+
+/* Style for the description button */
+#animalsInfo {
+    width: 310px;
+    height: 70px;
+    font-size: large;
+    border: 3px dashed;
+    background-color: aliceblue;
+    border-color: orange;
+    border-radius: 2cap;
+}
+
+/* Hover effect for all buttons */
+#Show:hover, #Restart:hover, #animalsInfo:hover {
+  color: red;
+  text-decoration: underline; 
+  cursor: pointer;
+}
+
+/* Active (click) effect for all buttons */
+#Show:active, #Restart:active, #animalsInfo:active {
+    color:rgb(247, 215, 175);
+}
+
+/* Style for the counter number (e.g., "0 / 6") */
+#imageCounter {
+    text-decoration: underline;
+    font-weight: bold;
+    color: rgb(255, 0, 0);
+    font-size: 200%;
+}
+
+/* Style for the animal name displayed below the image */
+#imageName {
+    font-style: italic;
+    font-weight: bold;
+    color: orangered;
+    background-color: whitesmoke;
+    font-size: 150%;
+}

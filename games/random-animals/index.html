@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Random Animal Slideshow with “No Repeat” Rule</title>
+        <script src="script.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <!-- Main control table -->
+        <table>
+
+            <!-- First row: action buttons -->
+            <tr>
+                <td>
+                    <input type="button" id="Show" value="Show Random Animal" onclick="Show()">
+                    &emsp;
+                    <input type="button" id="Restart" value="Restart Slideshow" onclick="Restart()">
+                    <br><br>
+                </td>
+                <td>
+                    
+                </td>
+            </tr>
+
+            <!-- Second row: image display area and info button -->
+            <tr>
+                <td>
+                    <div id="Output">
+                        No animal shown yet
+                    </div>
+                </td>
+                <td>
+                    <input type="button" id="animalsInfo" value="Click to see the animal's description" onclick="AnimalsInfo()">
+                </td>
+            </tr>
+
+            <!-- Third row: animal name and counter display -->
+            <tr>
+                <td>
+                    <p><span id="imageName"></span></p>
+                    <p> Animals shown in this round: <span id="imageCounter">0</span> / 6</p>
+                </td>
+            </tr>
+        </table>    
+    </body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackintosh 折騰之旅 | oops</title>
+    <!-- 引入全域樣式 -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- 導航欄 -->
+    <nav>
+        <div class="username" onclick="window.open('index.html', '_self')" style="cursor: pointer;">oops</div>
+        <div class="nav-links">
+            <a href="index.html#Ps">個人卡片</a>
+            <a href="index.html#PodcastHero">Podcast</a>
+            <a href="index.html#Link">實用工具</a>
+            <a href="index.html#Projects">項目&隨筆</a>
+            <a href="index.html#Music">音樂</a>
+            <button class="lang-switch" onclick="window.open('index.html', '_self')">HOME</button>
+        </div>
+    </nav>
+
+    <main class="journey-container">
+        <!-- 返回按鈕 -->
+        <a href="index.html" class="back-home-btn">
+            <i class="fas fa-arrow-left"></i> 返回主頁
+        </a>
+
+        <!-- 頁面標題區 -->
+        <div class="journey-header">
+            <h1>My Hackintosh Journey</h1>
+            <p class="subtitle">-- Tinkering never ends / 折騰永無止境 --</p>
+        </div>
+
+        <div class="article-grid">
+            <!-- 左側：影片與當前配置 -->
+            <div class="article-sidebar">
+                <div class="article-card video-card">
+                    <h3><i class="fab fa-bilibili"></i>推薦一首歌</h3>
+                    <p class="video-desc">可以邊聽歌邊看哦（點擊播放聲音）</p>
+                    <div class="video-wrapper">
+                        <iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=21174982&bvid=BV1ZW411g7Di&cid=34768747&p=1&danmaku=0&muted=0" frameborder="no" scrolling="no" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-credit">
+                        BGM: 灰澈 x Jimce何 - <a href="https://www.bilibili.com/video/BV1ZW411g7Di/" target="_blank">Source</a>
+                    </div>
+                </div>
+
+                <div class="article-card hardware-card">
+                    <h3><i class="fas fa-desktop"></i> Current Build</h3>
+                    <ul class="hardware-list">
+                        <li><strong>OS:</strong> macOS Sequoia (OpenCore)</li>
+                        <li><strong>CPU:</strong> Intel Core i7</li>
+                        <li><strong>GPU:</strong> AMD Radeon RX 6950 XT</li>
+                        <li><strong>Status:</strong> 完美驅動 (AirDrop, Handoff 正常)</li>
+                    </ul>
+                    <a href="https://github.com/s121091/Hackintosh-Opencore-B250M_KYLIN-HD530-6950XT" target="_blank" class="github-btn">
+                        <i class="fab fa-github"></i> 查看 GitHub 倉庫
+                    </a>
+                </div>
+            </div>
+
+            <!-- 右側：故事正文 -->
+            <div class="article-content">
+                <div class="article-card story-card">
+                    <h2>緣起：算法的奇妙推薦</h2>
+                    <p>「黑蘋果 (Hackintosh)」指的是在非蘋果電腦上運行 macOS 作業系統。我踏入這個領域純粹是個偶然。那是在我初一的時候，Bilibili 的推薦算法給我推播了 UP 主 <a href="https://space.bilibili.com/91666249" target="_blank" class="text-link">道源者也</a> 的一個影片： <a href="https://www.bilibili.com/video/BV1W44112792/?share_source=copy_web&vd_source=b211b73a7a1940a91e7a68c94fadb5cf" target="_blank" class="text-link">【Win10加MacOS双系统体验完美黑苹果10.14.6保姆级教程（使用intel UHD630核显）~[折腾之王]】</a>。出於純粹的好奇心和「這看起來很好玩」的心態，我決定跟著他的教程一步步嘗試。</p>
+                    
+                    <h2>翻車與成長：不小心清空了 Windows</h2>
+                    <p>正是這個影片，為我打開了折騰電腦的大門，並讓我的電腦技術突飛猛進。我記得很清楚：在第一次嘗試時，我需要格式化硬碟來為 macOS 創建分區；結果，我一不小心把原來的 Windows 系統給抹除了。</p>
+                    <p>當時我嚇壞了，以為電腦徹底報廢了。後來上網查資料才發現，原來我只是刪除了系統，重裝一下就能恢復。順著這條線索，我學會了如何擦除磁盤、分區、更改分區表格式、啟用系統以及安裝驅動。</p>
+
+                    <h2>進階：從「能用」到「完美」</h2>
+                    <p>有了重裝系統的經驗後，我再次嘗試安裝 macOS。過程依然坎坷：起初因為看不懂 config 文件，一直選錯配置，導致連 macOS 的恢復介面都進不去。後來好不容易調整好 config 進了系統，卻發現顯卡沒有正確驅動，整個介面卡頓無比。當時我甚至覺得，黑蘋果只是個鬧著玩的噱頭。</p>
+                    <p>直到後來網路上的教程越來越完善，我才重新燃起了折騰的慾望。一步步地，我從依賴別人做好的驅動文件，到自己手動修復一個個瑕疵。甚至因為對現有的音效卡驅動不滿意，我跟著教程去 Linux 環境下提取音頻文件和電壓值，自己定制了 ALC 音效驅動。</p>
+
+                    <h2>現在：折騰永無止境</h2>
+                    <p>如今，我的 macOS 環境已經趨近完美。除了玩遊戲或一些只能在 Windows 上完成的工作外，我幾乎已經離不開 macOS 了。回顧這段經歷，真的非常奇妙。我相信，<strong>正是這段折騰黑蘋果的旅程，讓我徹底愛上了研究電腦與寫程式。</strong></p>
+                </div>
+
+                <!-- 致謝區塊 -->
+                <div class="article-card thanks-card">
+                    <h3><i class="fas fa-heart"></i> 致謝 (Acknowledgements)</h3>
+                    <p>感謝開源社區與前輩們的無私奉獻，沒有他們就沒有這段旅程：</p>
+                    <div class="thanks-tags">
+                        <a href="https://github.com/acidanthera" target="_blank" class="thanks-tag">Acidanthera</a>
+                        <a href="https://dortania.github.io/OpenCore-Install-Guide/" target="_blank" class="thanks-tag">Dortania's Guide</a>
+                        <a href="https://blog.daliansky.net/" target="_blank" class="thanks-tag">黑果小兵的部落閣</a>
+                        <a href="https://space.bilibili.com/91666249" target="_blank" class="thanks-tag">道源者也</a>
+                        <a href="https://space.bilibili.com/321864713" target="_blank" class="thanks-tag">草原企鵝2018</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4>Copyright</h4>
+                <p>© 2025 oops. 保留一切權利.</p>
+            </div>
+            <div class="footer-section">
+                <h4>導航鏈接</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html">返回首頁</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>信号追踪</h4>
+                <div class="social-links">
+                    <a href="mailto:mail@oops.us.kg"><i class="fab fa-google text-2xl"></i>： mail@oops.us.kg</a>
+                    <a href="https://github.com/s121091"><i class="fab fa-github text-2xl"></i>： s121091</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,138 @@
+<html>
+    <head>
+        <title>Exercise 1 - Counter 0→9→0</title>
+        <style>
+            body {
+                text-align: center;
+                font-family: Arial, sans-serif;
+                margin-top: 50px;
+                background-image: url('background_Ex1.jpg');
+                background-size: cover;
+            }
+
+            .counter-box {
+                background: lightgoldenrodyellow;
+                border: black solid 2px;
+                width: fit-content;
+                margin: 0 auto;
+                padding: 30px;
+                border-radius: 30px;
+            }
+
+            #numberImage {
+                width: 200px;
+                height: 200px;
+                border: lightslategrey solid 2px;
+                border-radius: 30px;
+                margin: auto;
+                overflow: hidden;
+            }
+
+            #numberImage span{
+                height: 22vh;
+                display: table-cell;
+                vertical-align: middle;
+            }
+
+            button {
+                font-size: 18px;
+                padding: 8px 20px;
+                margin: 0 10px;
+                cursor: pointer;
+                border: blue dashed 2px;
+                border-radius: 30px;
+                background-color: lightcoral;
+                color: white;
+            }
+
+            button:hover { 
+                background-color: rgba(255, 127, 80, 0.322)
+            }
+            
+        </style>
+
+        <script type="text/javascript">
+            let currentNumber = 0;      // Store the current number being shown (0 to 9)
+            let direction = 1;          // Direction: 1 = counting up, -1 = counting down
+            let timerFlag = null;       // Stores the timer ID so we can stop it later
+            let hasStarted = false;     // Tells if the user has ever clicked Start (so Resume can work properly)
+
+            // Update the picture shown on the webpage
+            function updateDisplay() {
+
+                // Put an <img> tag inside the numberImage div
+                // The picture file name is the current number + ".jpg"
+                document.getElementById('numberImage').innerHTML = '<img src="' + currentNumber + '.jpg" alt="Number ' + currentNumber + '" style="width: 100%; height: 100%; border-radius: 20px;">';}
+
+            // Change to the next number (following direction, and reverse at ends)
+            function changeNumber() {
+                let next = currentNumber + direction;   // Calculate the next number
+                if (next > 9) {                         // If we go above 9, switch to counting down
+                    direction = -1;
+                    next = currentNumber + direction;
+                } else if (next < 0) {                  // If we go below 0, switch to counting up
+                    direction = 1;
+                    next = currentNumber + direction;
+                }
+                currentNumber = next;       // Update current number and show it
+                updateDisplay();
+            }
+
+            // Start the counter from 0 (reset everything)
+            function Start() {
+                Stop();     // First stop any running timer
+
+                currentNumber = 0;  // Start at 0
+                direction = 1;      // Go upwards
+                hasStarted = true;  // Mark that we've started at least once
+
+                updateDisplay();    // Show the first number (0)
+
+                // If a timer is already running, exit the function early. Do NOT start another timer.
+                if (timerFlag !== null){
+                    return;
+                } else {
+                timerFlag = setInterval(changeNumber, 500);     // Start a new timer that calls changeNumber every 500ms
+                }
+            }
+
+            // Stop the counter
+            function Stop() {
+                if (timerFlag !== null) {
+                    clearInterval(timerFlag);   // Stop the timer
+                    timerFlag = null;           // Clear the timer ID
+                }
+            }
+
+             // Resume counting from where it stopped
+            function Resume() {
+
+                // Only resume if we have started before AND no timer is running
+                if (hasStarted && timerFlag === null) {
+                timerFlag = setInterval(changeNumber, 500);
+                }
+            }
+
+            // Initial setup when page loads
+            currentNumber = 0;
+            direction = 1;
+
+            // Show the starting picture (0.jpg)
+            updateDisplay();
+            
+        </script>
+
+    </head>
+    <body>
+        <div class="counter-box">
+            <div id="numberImage">
+                <span>Click start to show the number</span>
+            </div>
+            <div style="margin-top: 20px;">
+                <button onclick="Start()">Start</button>
+                <button onclick="Resume()">Resume</button>
+                <button onclick="Stop()">Stop</button>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,39 @@
+<html>
+    <head>
+        <title>Game Page</title>
+        <link rel="stylesheet" href="game.css">
+        <link rel="stylesheet" href="universal_style.css">
+    </head>
+    <body onload="initGame('basic'), Clock()">
+        <div class="nav">
+            <a href="../../../index.html">Home</a>
+        </div>
+
+        <div class="center game-container">
+                <div class="left_box clock">
+                    <canvas id="canvas" width="200" height="200" class="clock"></canvas>
+                    <p>Today is <span id="day"></span></p>
+                    <p>The time now is <span id="time"></span></p>
+                </div>
+
+                <h1 class="game_h1">Coffee & Tea Memory Game</h1>
+
+                <div class="controls">
+                    <button id="btn-basic">Basic level</button>
+                    <button id="btn-advanced">Advanced level</button>
+                    <button id="btn-reset">Reset Game</button>
+                    <button id="btn-peek">👀 Peek All Cards</button>
+                </div>
+
+                <div id="game-board" class="board"></div>
+        </div>
+
+        <div class="footer">
+            <button id="home_button">Home</button>
+            <p>Copyright © 2026 Coffee and Tea. All rights reserved.</p>
+        </div>
+
+        <script src="game.js"></script>
+        <script src="universal_script.js"></script>
+    </body>
+</html>
