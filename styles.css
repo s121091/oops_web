@@ -2171,3 +2171,179 @@ main.journey-container {
         text-overflow: ellipsis !important; /* 如果螢幕真的太小，字超出會變成... */
     }
 }
+
+/* ================= 全新雙欄音樂播放器 (Apple Podcast 風格) ================= */
+.pro-player-layout {
+    display: flex;
+    gap: 40px;
+    background: #ffffff; /* 白色大底板 */
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); /* 輕柔的懸浮陰影 */
+    padding: 40px;
+    margin-top: 20px;
+}
+
+/* 左側控制台 */
+.pro-player-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 確保內容水平絕對置中 */
+    justify-content: center;
+    text-align: center;
+    max-width: 350px;
+    border-right: 2px dashed #f0f0f0; /* 中間的灰色虛線分隔 */
+    padding-right: 40px; /* 與虛線保持安全距離 */
+}
+
+.pro-cover-container {
+    width: 260px;
+    height: 260px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15); /* 加深專輯封面的立體感 */
+    margin-bottom: 25px;
+}
+
+.pro-cover-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pro-player-left h3 { margin: 0 0 8px 0; font-size: 1.5rem; color: #333; font-weight: 700; }
+.pro-player-left p { margin: 0 0 25px 0; color: #888; font-size: 0.95rem; }
+
+/* 進度條 (完美致敬播客的橘色主題) */
+.pro-progress-bar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    gap: 12px;
+    margin-bottom: 25px;
+    font-size: 0.85rem;
+    color: #ff5e3a; /* 時間文字改為主題橘色 */
+    font-weight: 600;
+}
+
+.pro-progress-bar input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    height: 6px;
+    background: #ffe4de; /* 淺橘色軌道 */
+    border-radius: 5px;
+    outline: none;
+}
+
+.pro-progress-bar input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #ff5e3a; /* 實心橘色拖曳點 */
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(255, 94, 58, 0.4);
+}
+
+/* 播放按鈕絕對置中與動畫 */
+.pro-controls { 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; /* 解決不居中的問題 */
+    gap: 25px; 
+    width: 100%;
+}
+
+.pro-controls button {
+    background: none;
+    border: none;
+    color: #333;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.pro-controls button:hover { color: #ff5e3a; transform: scale(1.1); }
+.pro-controls .play-btn-main {
+    width: 65px; height: 65px;
+    background: #ff5e3a;
+    color: white;
+    border-radius: 50%;
+    font-size: 1.6rem;
+    display: flex; justify-content: center; align-items: center;
+    box-shadow: 0 8px 20px rgba(255, 94, 58, 0.3);
+}
+.pro-controls .play-btn-main:hover { color: white; transform: scale(1.05); }
+.pro-controls #pro-like-btn.liked i { font-weight: 900; color: #ff4757; }
+
+/* 右側歌單區塊 */
+.pro-player-right {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.playlist-header-controls {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px dashed #f0f0f0;
+}
+
+.playlist-header-controls h4 { margin: 0; font-size: 1.1rem; color: #333; }
+.playlist-header-controls select {
+    background: transparent; color: #555;
+    border: none; padding: 5px;
+    font-size: 0.9rem; outline: none; cursor: pointer;
+    font-weight: 600;
+}
+
+.pro-playlist-container {
+    flex: 1;
+    overflow-y: auto;
+    max-height: 400px;
+    display: flex; flex-direction: column; gap: 8px;
+    padding-right: 10px; /* 給滾動條留點呼吸空間 */
+}
+
+/* 滾動條美化 */
+.pro-playlist-container::-webkit-scrollbar { width: 6px; }
+.pro-playlist-container::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
+
+/* 列表項目 (致敬播客的高級質感) */
+.pro-playlist-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 18px; border-radius: 12px; cursor: pointer;
+    transition: 0.2s;
+    border: 1px solid transparent;
+}
+
+.pro-playlist-item:hover { background: #f9f9f9; }
+
+/* 播放中狀態 (淡橘底色 + 橘色高光文字) */
+.pro-playlist-item.active { 
+    background-color: #fff0ed; 
+    border: 1px solid #ffe4de;
+}
+.pro-playlist-item.active .pro-item-title,
+.pro-playlist-item.active .pro-item-artist {
+    color: #ff5e3a; 
+}
+
+.pro-item-info { display: flex; flex-direction: column; gap: 4px; }
+.pro-item-title { font-weight: 700; color: #333; font-size: 1rem; transition: 0.2s; }
+.pro-item-artist { font-size: 0.85rem; color: #888; transition: 0.2s; }
+.pro-item-like { color: #ff4757; font-size: 1.1rem; }
+
+/* 手機版適配 (虛線自動變到底部) */
+@media (max-width: 768px) {
+    .pro-player-layout { flex-direction: column; padding: 25px; gap: 25px; }
+    .pro-player-left { 
+        max-width: 100%; 
+        border-right: none; 
+        border-bottom: 2px dashed #f0f0f0; 
+        padding-right: 0; 
+        padding-bottom: 25px; 
+    }
+}

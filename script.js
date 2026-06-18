@@ -911,36 +911,6 @@ setTimeout(fetchNetworkInfo, 500);
     const refreshBtn = document.getElementById('retest-btn');
     if(refreshBtn) refreshBtn.addEventListener('click', () => { testLatency(); fetchNetworkInfo(); });
 
-    const songCards = document.querySelectorAll('.song-card');
-    songCards.forEach(card => {
-        card.addEventListener('click', function() {
-            if(podcastAudio && !podcastAudio.paused) {
-                podcastAudio.pause();
-                updatePlayerState(false); 
-            }
-            const audioFile = this.dataset.audio;
-            if(!audioFile) return;
-            if(currentAudio && currentAudio.src.endsWith(encodeURI(audioFile).split('/').pop())) {
-                if(currentAudio.paused) { 
-                    currentAudio.play(); 
-                    this.classList.add('playing'); 
-                } else { 
-                    currentAudio.pause(); 
-                    this.classList.remove('playing'); 
-                }
-            } else {
-                if(currentAudio) { 
-                    currentAudio.pause(); 
-                    songCards.forEach(c => c.classList.remove('playing')); 
-                }
-                currentAudio = new Audio(audioFile);
-                currentAudio.play();
-                this.classList.add('playing');
-                currentAudio.addEventListener('ended', () => { this.classList.remove('playing'); });
-            }
-        });
-    });
-
     let currentLang = 'zh';
     const langMap = { zh: 'en', en: 'zh' };
     const savedLang = localStorage.getItem('lang') || 'zh';
@@ -952,6 +922,47 @@ setTimeout(fetchNetworkInfo, 500);
         localStorage.setItem('lang', currentLang); 
         switchBtn.textContent = currentLang === 'zh' ? 'EN' : '中'; 
     });
+
+    // ========== 綁定音樂卡片點擊事件 (帶有全域通行證) ==========
+    // window.attachMusicEvents = function() {
+    //     const songCards = document.querySelectorAll('.song-card');
+        
+    //     songCards.forEach(card => {
+    //         card.addEventListener('click', function() {
+    //             // 如果播客正在播放，先暫停它
+    //             if(podcastAudio && !podcastAudio.paused) {
+    //                 podcastAudio.pause();
+    //                 updatePlayerState(false); 
+    //             }
+                
+    //             const audioFile = this.dataset.audio;
+    //             if(!audioFile) return;
+                
+    //             // 檢查點擊的是不是當前正在播放的同一首歌
+    //             if(currentAudio && currentAudio.src.endsWith(encodeURI(audioFile).split('/').pop())) {
+    //                 if(currentAudio.paused) { 
+    //                     currentAudio.play(); 
+    //                     this.classList.add('playing'); 
+    //                 } else { 
+    //                     currentAudio.pause(); 
+    //                     this.classList.remove('playing'); 
+    //                 }
+    //             } else {
+    //                 // 如果點擊了另一首歌
+    //                 if(currentAudio) { 
+    //                     currentAudio.pause(); 
+    //                     songCards.forEach(c => c.classList.remove('playing')); 
+    //                 }
+    //                 currentAudio = new Audio(audioFile);
+    //                 currentAudio.play();
+    //                 this.classList.add('playing');
+    //                 currentAudio.addEventListener('ended', () => { 
+    //                     this.classList.remove('playing'); 
+    //                 });
+    //             }
+    //         });
+    //     });
+    // };
 
     const initSpringSticky = (selector, topOffset = 100) => {
         const element = document.querySelector(selector);
@@ -1047,32 +1058,210 @@ document.addEventListener('DOMContentLoaded', function() {
     loadLanguage(currentLang);
 });
 
-// ========== 音乐卡片动态生成 ==========
-function renderMusic(songs) {
-    const grid = document.getElementById('musicGrid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    if (!songs || songs.length === 0) {
-        grid.innerHTML = '<p>' + (getNestedValue(translations, 'music.noSongs') || 'No songs available') + '</p>';
-        return;
+// ========== 全新音樂播放器核心邏輯 ==========
+let musicAudio = new Audio();
+let originalSongs = []; // 存儲原始 JSON 的順序
+let currentPlaylist = []; // 存儲當前排序後的播放列表
+let currentPlayingSong = null; // 當前正在播放的歌曲對象
+let isMusicPlaying = false;
+
+// 從 localStorage 獲取喜歡的歌曲列表
+let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
+
+// UI 元素綁定
+const proCover = document.getElementById('pro-cover');
+const proTitle = document.getElementById('pro-title');
+const proArtist = document.getElementById('pro-artist');
+const proPlayBtn = document.getElementById('pro-play-btn');
+const proLikeBtn = document.getElementById('pro-like-btn');
+const proTimeCurrent = document.getElementById('pro-time-current');
+const proTimeTotal = document.getElementById('pro-time-total');
+const proSeekbar = document.getElementById('pro-seekbar');
+const proPlaylistContainer = document.getElementById('pro-playlist');
+const proSortSelect = document.getElementById('pro-sort-select');
+
+// 格式化時間 (輔助函數)
+const formatMusicTime = (seconds) => {
+    if (isNaN(seconds)) return "00:00";
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+};
+
+// 1. 初始化與渲染音樂 (取代舊的 renderMusic)
+window.renderMusic = function(songs) {
+    if (!songs || songs.length === 0) return;
+    originalSongs = [...songs];
+    currentPlaylist = [...songs];
+    renderPlaylistView();
+    
+    // 如果還沒有選擇歌曲，默認加載第一首 (但不自動播放)
+    if (!currentPlayingSong) {
+        loadSong(currentPlaylist[0], false);
     }
-    songs.forEach(song => {
-        const card = document.createElement('div');
-        card.className = 'song-card';
-        // 音频路径直接从 song.audio 读取
-        card.dataset.audio = song.audio;
-        // 封面图
-        const coverUrl = song.cover || 'https://via.placeholder.com/200?text=No+Cover';
-        card.innerHTML = `
-            <div class="album-cover" style="background-image: url(${coverUrl})">
-                <div class="play-overlay">
-                    <i class="fas fa-play-circle"></i>
-                </div>
+};
+
+// 2. 渲染右側清單
+function renderPlaylistView() {
+    proPlaylistContainer.innerHTML = '';
+    currentPlaylist.forEach((song) => {
+        const isLiked = likedSongs.includes(song.title);
+        const item = document.createElement('div');
+        item.className = 'pro-playlist-item';
+        if (currentPlayingSong && currentPlayingSong.title === song.title) {
+            item.classList.add('active');
+        }
+        item.innerHTML = `
+            <div class="pro-item-info">
+                <span class="pro-item-title">${song.title}</span>
+                <span class="pro-item-artist">${song.artist}</span>
             </div>
-            <h3>${song.title}</h3>
-            <p>${song.artist}</p>
+            <div class="pro-item-like">
+                ${isLiked ? '<i class="fas fa-heart"></i>' : ''}
+            </div>
         `;
-        grid.appendChild(card);
+        // 點擊列表播放該歌曲
+        item.addEventListener('click', () => {
+            loadSong(song, true);
+        });
+        proPlaylistContainer.appendChild(item);
     });
-    attachMusicEvents();
 }
+
+// 3. 加載歌曲並更新左側 UI
+function loadSong(song, autoPlay = false) {
+    // 解決播客衝突：播放音樂時暫停播客
+    if (typeof podcastAudio !== 'undefined' && podcastAudio && !podcastAudio.paused) {
+        podcastAudio.pause();
+        updatePlayerState(false);
+    }
+
+    currentPlayingSong = song;
+    musicAudio.src = song.audio;
+    proCover.src = song.cover;
+    proTitle.textContent = song.title;
+    proArtist.textContent = song.artist;
+    
+    // 更新愛心狀態
+    updateLikeButtonUI();
+
+    // 更新右側列表的 Active 狀態
+    renderPlaylistView();
+
+    if (autoPlay) {
+        togglePlayMusic(true);
+    } else {
+        togglePlayMusic(false);
+    }
+}
+
+// 4. 播放/暫停控制 (完美解決只能播不能暫停的問題)
+function togglePlayMusic(forcePlay) {
+    if (forcePlay === true) {
+        musicAudio.play();
+        isMusicPlaying = true;
+    } else if (forcePlay === false) {
+        musicAudio.pause();
+        isMusicPlaying = false;
+    } else {
+        // 切換狀態
+        if (musicAudio.paused) {
+            musicAudio.play();
+            isMusicPlaying = true;
+        } else {
+            musicAudio.pause();
+            isMusicPlaying = false;
+        }
+    }
+    // 更新按鈕圖標
+    proPlayBtn.innerHTML = isMusicPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+}
+
+// 綁定主播放按鈕
+proPlayBtn.addEventListener('click', togglePlayMusic);
+
+// 5. 喜歡 (Heart) 功能與 LocalStorage
+function updateLikeButtonUI() {
+    if (!currentPlayingSong) return;
+    const isLiked = likedSongs.includes(currentPlayingSong.title);
+    if (isLiked) {
+        proLikeBtn.classList.add('liked');
+        proLikeBtn.innerHTML = '<i class="fas fa-heart"></i>';
+    } else {
+        proLikeBtn.classList.remove('liked');
+        proLikeBtn.innerHTML = '<i class="far fa-heart"></i>';
+    }
+}
+
+proLikeBtn.addEventListener('click', () => {
+    if (!currentPlayingSong) return;
+    const songTitle = currentPlayingSong.title;
+    const index = likedSongs.indexOf(songTitle);
+    
+    if (index > -1) {
+        likedSongs.splice(index, 1); // 移除喜歡
+    } else {
+        likedSongs.push(songTitle); // 加入喜歡
+    }
+    
+    localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
+    updateLikeButtonUI();
+    renderPlaylistView(); // 刷新列表上的小愛心
+});
+
+// 6. 進度條控制
+musicAudio.addEventListener('timeupdate', () => {
+    if (musicAudio.duration) {
+        const percent = (musicAudio.currentTime / musicAudio.duration) * 100;
+        proSeekbar.value = percent;
+        proTimeCurrent.textContent = formatMusicTime(musicAudio.currentTime);
+        proTimeTotal.textContent = formatMusicTime(musicAudio.duration);
+    }
+});
+
+proSeekbar.addEventListener('input', () => {
+    if (musicAudio.duration) {
+        const seekTime = (proSeekbar.value / 100) * musicAudio.duration;
+        musicAudio.currentTime = seekTime;
+    }
+});
+
+musicAudio.addEventListener('ended', () => {
+    // 自動播放下一首
+    document.getElementById('pro-next-btn').click();
+});
+
+// 7. 上一首 / 下一首
+document.getElementById('pro-next-btn').addEventListener('click', () => {
+    if(!currentPlayingSong) return;
+    let index = currentPlaylist.findIndex(s => s.title === currentPlayingSong.title);
+    let nextIndex = index + 1 >= currentPlaylist.length ? 0 : index + 1;
+    loadSong(currentPlaylist[nextIndex], true);
+});
+
+document.getElementById('pro-prev-btn').addEventListener('click', () => {
+    if(!currentPlayingSong) return;
+    let index = currentPlaylist.findIndex(s => s.title === currentPlayingSong.title);
+    let prevIndex = index - 1 < 0 ? currentPlaylist.length - 1 : index - 1;
+    loadSong(currentPlaylist[prevIndex], true);
+});
+
+// 8. 排序功能
+proSortSelect.addEventListener('change', (e) => {
+    const mode = e.target.value;
+    if (mode === 'default') {
+        currentPlaylist = [...originalSongs];
+    } else if (mode === 'alphabet') {
+        currentPlaylist.sort((a, b) => a.title.localeCompare(b.title));
+    } else if (mode === 'artist') {
+        currentPlaylist.sort((a, b) => a.artist.localeCompare(b.artist));
+    } else if (mode === 'liked') {
+        currentPlaylist = originalSongs.filter(song => likedSongs.includes(song.title));
+        if(currentPlaylist.length === 0) {
+            alert('你還沒有喜歡的歌曲哦！顯示默認列表。');
+            proSortSelect.value = 'default';
+            currentPlaylist = [...originalSongs];
+        }
+    }
+    renderPlaylistView();
+});

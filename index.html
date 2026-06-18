@@ -25,7 +25,7 @@
     <main>
         <div id="Ps" class="left-panel">
             <div class="avatar-container">
-                <img src="https://github.com/s121091/Copilot-web/blob/main/assets/images/Avatar.JPG?raw=true" alt="Avatar">
+                <img src="assets/images/Avatar.JPG?raw=true" alt="Avatar">
                 <div class="carton-box"></div>
                 <div class="avatar-overlay"></div>
             </div>
@@ -48,6 +48,105 @@
             </div>
         </div>
     </main>
+
+        <!-- 項目區域 -->
+    <section id="Projects" class="creator-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span data-i18n="projects.title">實驗室 & 隨筆 （施工中🚧）</span>
+                <span class="rocket-icon">🧪</span>
+                <div class="slider-controls">
+                    <button class="nav-btn prev-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                    <button class="nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </h2>
+        </div>
+
+        <div class="content-container scroll-layout-container">
+            <div class="creator-profile sticky-profile">
+                <div class="creator-header">
+                    <div class="creator-avatar">
+                        <img src="assets/images/Avatar.JPG?raw=true" alt="創作者頭像">
+                    </div>
+                    <div class="creator-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" data-i18n="projects.statTech">Tech</span>
+                            <span data-i18n="projects.statLaboratory">Laboratory</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-i18n="projects.statDesign">Design</span>
+                            <span data-i18n="projects.statLife">& Life</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hackintosh-terminal">
+                    <div class="terminal-header">
+                        <span class="terminal-btn red"></span>
+                        <span class="terminal-btn yellow"></span>
+                        <span class="terminal-btn green"></span>
+                        <span class="terminal-title" data-i18n="projects.terminalUser">user@hackintosh ~</span>
+                    </div>
+                    <div class="terminal-body">
+                        <p><span class="prompt">➜</span> <span class="cmd" data-i18n="projects.terminalNeofetch">neofetch</span></p>
+                        <div class="fetch-grid">
+                            <div class="apple-logo">
+                                <i class="fab fa-apple"></i>
+                            </div>
+                            <div class="fetch-info">
+                                <p><span class="key">OS:</span> <span data-i18n="projects.terminalOs">macOS Sequoia 15.5</span></p>
+                                <p><span class="key">Host:</span> <span data-i18n="projects.terminalHost">Hackintosh</span></p>
+                                <p><span class="key">Kernel:</span> <span data-i18n="projects.terminalKernel">OpenCore 0.9.8</span></p>
+                                <p><span class="key">CPU:</span> <span data-i18n="projects.terminalCpu">Intel Core i7-6700</span></p>
+                                <p><span class="key">GPU:</span> <span data-i18n="projects.terminalGpu">AMD Radeon RX 6950 XT</span></p>
+                                <p><span class="key">Memory:</span> <span data-i18n="projects.terminalMemory">16GB DDR5</span></p>
+                            </div>
+                        </div>
+                        <p><span class="prompt">➜</span> <span class="cursor">_</span></p>
+                    </div>
+                </div>
+
+                <div class="creator-bio">
+                    <p data-i18n="creatorBio">折騰永無止境，完美驅動的那一刻是最大的滿足。<br>這裡記錄我的項目開發與黑蘋果折騰筆記。</p>
+                    
+                    <div class="mobile-swipe-guide">
+                        <span class="guide-text">滑動探索實驗室項目</span>
+                        <div class="guide-arrows">
+                            <i class="fas fa-chevron-right"></i>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="horizontal-scroll-wrapper">
+                <div class="scroll-mask-container">
+                    <div class="cards-scroll-container" id="projectSlider">
+                        <!-- 项目卡片 1 -->
+                        <div class="scroll-card" onclick="window.open('./journey.html', '_self')">
+                            <div class="scroll-card-thumbnail" style="background-image: url('./assets/images/Hackintosh.png')">
+                                <div class="card-tag" data-i18n="projects.project1Tag">Story</div>
+                            </div>
+                            <div class="scroll-card-content">
+                                <h3 data-i18n="projects.project1Title">我的黑蘋果之旅 & 配置分享</h3>
+                                <p data-i18n="projects.project1Desc">從誤刪 Windows 到完美驅動：記錄引領我走入程式與折騰世界的黑蘋果啟蒙之旅。</p>
+                            </div>
+                        </div>
+                        <!-- 项目卡片 2 -->
+                        <div class="scroll-card" onclick="window.open('games.html', '_self')">
+                            <div class="scroll-card-thumbnail" style="background-image: url(https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80)">
+                                <div class="card-tag" data-i18n="projects.project2Tag">Games</div>
+                            </div>
+                            <div class="scroll-card-content">
+                                <h3 data-i18n="projects.project2Title">小遊戲實驗室</h3>
+                                <p data-i18n="projects.project2Desc">收錄在學校開發的各種趣味網頁小遊戲，點擊立即開玩！</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Podcast 区域 -->
     <section id="PodcastHero" class="podcast-hero-section">
@@ -97,6 +196,57 @@
                 <h4 class="playlist-header"><i class="fas fa-list-ul"></i> <span data-i18n="podcast.playlistHeader">Episodes List</span></h4>
                 <div id="podcastPlaylist" class="podcast-playlist-box">
                     <div class="playlist-loading"><i class="fas fa-spinner fa-spin"></i> <span data-i18n="podcast.playlistLoading">Loading episodes...</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 音樂區域 -->
+    <!-- 音樂區域 (全新雙欄播放器) -->
+    <section id="Music" class="music-section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span data-i18n="music.title">音樂</span>
+                <span class="rocket-icon">🎵</span>
+            </h2>
+        </div>
+        
+        <div class="pro-player-layout">
+            <!-- 左側：播放器控制台 -->
+            <div class="pro-player-left">
+                <div class="pro-cover-container">
+                    <img id="pro-cover" src="https://via.placeholder.com/300?text=Select+a+Song" alt="Album Cover">
+                </div>
+                <h3 id="pro-title">未選擇歌曲</h3>
+                <p id="pro-artist">...</p>
+                
+                <div class="pro-progress-bar">
+                    <span id="pro-time-current">00:00</span>
+                    <input type="range" id="pro-seekbar" value="0" min="0" max="100">
+                    <span id="pro-time-total">00:00</span>
+                </div>
+
+                <div class="pro-controls">
+                    <button id="pro-prev-btn"><i class="fas fa-step-backward"></i></button>
+                    <button id="pro-play-btn" class="play-btn-main"><i class="fas fa-play"></i></button>
+                    <button id="pro-next-btn"><i class="fas fa-step-forward"></i></button>
+                    <button id="pro-like-btn"><i class="far fa-heart"></i></button>
+                </div>
+            </div>
+
+            <!-- 右側：歌單與排序 -->
+            <div class="pro-player-right">
+                <div class="playlist-header-controls">
+                    <h4><i class="fas fa-list-ul"></i> 播放列表</h4>
+                    <select id="pro-sort-select">
+                        <option value="default">默認排序</option>
+                        <option value="alphabet">A-Z (歌名)</option>
+                        <option value="artist">按歌手</option>
+                        <option value="liked">❤️ 已喜歡</option>
+                    </select>
+                </div>
+                <div id="pro-playlist" class="pro-playlist-container">
+                    <!-- JS 動態生成歌單 -->
                 </div>
             </div>
         </div>
@@ -217,122 +367,6 @@
                 <div class="network-status">
                     <span class="status-dot"></span>
                     <span class="latency-text" data-i18n="tools.linkStatus">Testing...</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 項目區域 -->
-    <section id="Projects" class="creator-section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span data-i18n="projects.title">實驗室 & 隨筆 （施工中🚧）</span>
-                <span class="rocket-icon">🧪</span>
-                <div class="slider-controls">
-                    <button class="nav-btn prev-btn" disabled><i class="fas fa-chevron-left"></i></button>
-                    <button class="nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </h2>
-        </div>
-
-        <div class="content-container scroll-layout-container">
-            <div class="creator-profile sticky-profile">
-                <div class="creator-header">
-                    <div class="creator-avatar">
-                        <img src="https://github.com/s121091/Copilot-web/blob/main/assets/images/Avatar.JPG?raw=true" alt="創作者頭像">
-                    </div>
-                    <div class="creator-stats">
-                        <div class="stat-item">
-                            <span class="stat-number" data-i18n="projects.statTech">Tech</span>
-                            <span data-i18n="projects.statLaboratory">Laboratory</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" data-i18n="projects.statDesign">Design</span>
-                            <span data-i18n="projects.statLife">& Life</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="hackintosh-terminal">
-                    <div class="terminal-header">
-                        <span class="terminal-btn red"></span>
-                        <span class="terminal-btn yellow"></span>
-                        <span class="terminal-btn green"></span>
-                        <span class="terminal-title" data-i18n="projects.terminalUser">user@hackintosh ~</span>
-                    </div>
-                    <div class="terminal-body">
-                        <p><span class="prompt">➜</span> <span class="cmd" data-i18n="projects.terminalNeofetch">neofetch</span></p>
-                        <div class="fetch-grid">
-                            <div class="apple-logo">
-                                <i class="fab fa-apple"></i>
-                            </div>
-                            <div class="fetch-info">
-                                <p><span class="key">OS:</span> <span data-i18n="projects.terminalOs">macOS Sequoia 15.5</span></p>
-                                <p><span class="key">Host:</span> <span data-i18n="projects.terminalHost">Hackintosh</span></p>
-                                <p><span class="key">Kernel:</span> <span data-i18n="projects.terminalKernel">OpenCore 0.9.8</span></p>
-                                <p><span class="key">CPU:</span> <span data-i18n="projects.terminalCpu">Intel Core i7-6700</span></p>
-                                <p><span class="key">GPU:</span> <span data-i18n="projects.terminalGpu">AMD Radeon RX 6950 XT</span></p>
-                                <p><span class="key">Memory:</span> <span data-i18n="projects.terminalMemory">16GB DDR5</span></p>
-                            </div>
-                        </div>
-                        <p><span class="prompt">➜</span> <span class="cursor">_</span></p>
-                    </div>
-                </div>
-
-                <div class="creator-bio">
-                    <p data-i18n="creatorBio">折騰永無止境，完美驅動的那一刻是最大的滿足。<br>這裡記錄我的項目開發與黑蘋果折騰筆記。</p>
-                    
-                    <div class="mobile-swipe-guide">
-                        <span class="guide-text">滑動探索實驗室項目</span>
-                        <div class="guide-arrows">
-                            <i class="fas fa-chevron-right"></i>
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="horizontal-scroll-wrapper">
-                <div class="scroll-mask-container">
-                    <div class="cards-scroll-container" id="projectSlider">
-                        <!-- 项目卡片 1 -->
-                        <div class="scroll-card" onclick="window.open('./journey.html', '_self')">
-                            <div class="scroll-card-thumbnail" style="background-image: url('./assets/images/Hackintosh.png')">
-                                <div class="card-tag" data-i18n="projects.project1Tag">Story</div>
-                            </div>
-                            <div class="scroll-card-content">
-                                <h3 data-i18n="projects.project1Title">我的黑蘋果之旅 & 配置分享</h3>
-                                <p data-i18n="projects.project1Desc">從誤刪 Windows 到完美驅動：記錄引領我走入程式與折騰世界的黑蘋果啟蒙之旅。</p>
-                            </div>
-                        </div>
-                        <!-- 项目卡片 2 -->
-                        <div class="scroll-card" onclick="window.open('games.html', '_self')">
-                            <div class="scroll-card-thumbnail" style="background-image: url(https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80)">
-                                <div class="card-tag" data-i18n="projects.project2Tag">Games</div>
-                            </div>
-                            <div class="scroll-card-content">
-                                <h3 data-i18n="projects.project2Title">小遊戲實驗室</h3>
-                                <p data-i18n="projects.project2Desc">收錄在學校開發的各種趣味網頁小遊戲，點擊立即開玩！</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 音樂區域 -->
-    <section id="Music" class="music-section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <span data-i18n="music.title">音樂</span>
-                <span class="rocket-icon">🎵</span>
-            </h2>
-        </div>
-        <div class="music-layout">
-            <div class="music-grid-wrapper">
-                <div class="music-grid" id="musicGrid">
-                    <!-- 由 JS 動態生成 -->
                 </div>
             </div>
         </div>
