@@ -41,6 +41,14 @@ body {
     min-height: 100vh;
 }
 
+/* 页面滚动时锁定列表和交互区域，防止误触 (恢复完美防误滚) */
+body.is-scrolling .podcast-playlist-box,
+body.is-scrolling .pro-playlist-container,
+body.is-scrolling .podcast-stack,
+body.is-scrolling .scroll-layout-container {
+    pointer-events: none !important;
+}
+
 .status-icon.true { color: #2ecc71; }
 .status-icon.false { color: #e74c3c; }
 
@@ -233,17 +241,38 @@ main {
     background: var(--background-color);
 }
 
+/* ✨ 统一 Scroll Layout 比例布局，纯无极滑动 ✨ */
 .scroll-layout-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 40px;
-    padding: 0 20px;
-    align-items: center; 
+    display: flex;
+    gap: 50px; 
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 5% 60px; 
+    align-items: flex-start; 
+    box-sizing: border-box;
+    width: 100%;
+    position: relative; 
+    
+    /* ✨ 恢復原生 CSS 吸附並使用 proximity 修復蘋果橡皮筋回彈抽搐 ✨ */
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+.scroll-layout-container::-webkit-scrollbar {
+    display: none;
 }
 
 .sticky-profile {
+    flex: 0 0 380px; 
+    max-width: none;
+    padding-right: 0;
     height: fit-content;
     will-change: transform; 
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start; /* ✨ 恢復滑動吸附 ✨ */
 }
 
 .creator-header {
@@ -287,7 +316,7 @@ main {
     background: #1e1e1e;
     border-radius: 12px;
     padding: 0;
-    margin: 0 15px 30px 0;
+    margin: 0 0 30px 0; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     overflow: hidden;
     font-family: 'Fira Code', monospace;
@@ -309,7 +338,7 @@ main {
 .terminal-btn.green { background: #27c93f; }
 
 .terminal-title { margin-left: 10px; font-size: 0.8rem; color: #888; }
-.terminal-body { padding: 20px; font-size: 0.9rem; line-height: 1.6; }
+.terminal-body { padding: 15px 20px; font-size: 0.85rem; line-height: 1.6; } 
 
 .prompt { color: #27c93f; margin-right: 8px; }
 .cmd { color: #fff; }
@@ -319,24 +348,25 @@ main {
 
 .fetch-grid {
     display: flex;
-    gap: 20px;
+    gap: 15px; 
     margin-top: 15px;
     margin-bottom: 15px;
 }
 
 .apple-logo {
     color: #a9b7c6;
-    font-size: 4rem;
+    font-size: 3.5rem; 
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 10px;
+    padding: 0 5px;
 }
 
 /* 轮播滑动区域 */
 .horizontal-scroll-wrapper {
-    overflow: hidden;
-    position: relative;
+    flex: 0 0 auto; 
+    min-width: 0;
+    overflow: visible; 
     padding-bottom: 20px;
 }
 
@@ -370,24 +400,14 @@ main {
 }
 
 .scroll-mask-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 80px; 
-    background: linear-gradient(to right, var(--background-color) 15%, rgba(247, 248, 249, 0) 100%);
-    z-index: 10; 
-    pointer-events: none; 
+    display: none; 
 }
 
 .cards-scroll-container {
     display: flex;
     gap: 30px; 
-    overflow-x: auto;
-    padding: 40px 20px 40px 60px; 
-    scrollbar-width: none;
-    scroll-behavior: smooth; 
+    overflow-x: visible; /* ✨ 關閉內部滑動，由最外層 container 接管 ✨ */
+    padding: 80px 20px 40px 10px; 
 }
 .cards-scroll-container::-webkit-scrollbar { display: none; }
 
@@ -400,6 +420,7 @@ main {
     transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
     cursor: grab; 
     will-change: transform;
+    scroll-snap-align: start; /* ✨ 恢復滑動吸附 ✨ */
 }
 
 .scroll-card-thumbnail {
@@ -439,28 +460,26 @@ main {
 .podcast-layout {
     display: flex;
     align-items: flex-start;
-    gap: 40px; 
-    flex-wrap: wrap; 
+    gap: 50px; /* ✨ 統一 50px 間距 ✨ */
+    flex-wrap: nowrap; /* ✨ 禁止換行 ✨ */
     justify-content: center; 
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 0%; /* ✨ 統一百分比 Padding ✨ */
     width: 100%;
     box-sizing: border-box;
 }
 
 .podcast-left-stage {
-    flex: 1; 
-    max-width: 350px;
+    flex: 0 0 380px; 
     display: flex;
     flex-direction: column; 
     gap: 25px;
-    position: sticky;
-    top: 100px;
+    will-change: transform; 
     align-items: center; 
     user-select: none;
     -webkit-user-select: none;
-    /* ✨ 關鍵修復 2：加上右邊 40px 的內邊距，讓上方封面與下方音樂封面的中心點完美對齊 ✨ */
-    padding-right: 40px; 
+    padding-right: 0; 
 }
 
 .podcast-sidebar {
@@ -528,8 +547,8 @@ main {
 
 /* 播放器面板 */
 .podcast-player-card {
-    flex: 2; /* 对齐音乐右侧比例 */
-    min-width: 350px; 
+    flex: 1; /* ✨ 佔滿剩餘空間 ✨ */
+    min-width: 0; 
     background: white;
     border-radius: var(--global-border-radius);
     padding: 30px;
@@ -538,18 +557,23 @@ main {
     display: flex;
     flex-direction: column;
     min-height: 500px;
+    text-align: left; 
 }
 
-.episode-info-row { display: flex; gap: 30px; padding-bottom: 30px; }
-.episode-cover-box { flex: 0 0 200px; height: 200px; border-radius: 20px; overflow: hidden; background: #f0f0f0; box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative; top: 5px; z-index: 2; }
+/* ✨ 縮小封面並減少間距，把寶貴的橫向空間還給標題 ✨ */
+.episode-info-row { display: flex; gap: 25px; padding-bottom: 25px; }
+.episode-cover-box { flex: 0 0 180px; height: 180px; border-radius: 16px; overflow: hidden; background: #f0f0f0; box-shadow: 0 5px 15px rgba(0,0,0,0.1); position: relative; top: 5px; z-index: 2; }
 .episode-cover-box img { width: 100%; height: 100%; object-fit: cover; }
-.episode-text-content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-.episode-date { font-size: 0.9rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block; position: relative; padding-bottom: 5px; }
+.episode-text-content { flex: 1; display: flex; flex-direction: column; min-width: 0; justify-content: center; }
+.episode-date { font-size: 0.85rem; color: var(--primary-color); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block; position: relative; padding-bottom: 5px; }
 .episode-date::after { content: ''; position: absolute; bottom: 0; left: 0; width: 40px; height: 3px; background: var(--primary-color); border-radius: 2px; }
-.episode-text-content h3 { font-size: 1.7rem; color: var(--secondary-color); margin: 12px 0; line-height: 1.3; }
+
+/* ✨ 標題改為靠左對齊，稍微縮小字體並優化行高，徹底解決斷行如「細柱子」的問題 ✨ */
+.episode-text-content h3 { font-size: 1.45rem; color: var(--secondary-color); margin: 8px 0 12px; line-height: 1.35; text-align: left; font-weight: 700; word-break: normal; overflow-wrap: anywhere; }
 
 .episode-desc-wrapper { position: relative; display: flex; flex-direction: column; }
-.episode-text-content p { color: #666; line-height: 1.6; font-size: 1rem; margin-bottom: 5px; display: block; max-height: 3.2em; overflow: hidden; transition: max-height 1s cubic-bezier(0.175, 0.885, 0.32, 1.15); mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); overflow-wrap: break-word; word-break: break-word; }
+/* ✨ 內文改為靠左對齊，不再強制 justify 導致單字間距出現巨大空白 ✨ */
+.episode-text-content p { color: #666; line-height: 1.6; font-size: 0.95rem; margin-bottom: 5px; display: block; max-height: 3.2em; overflow: hidden; transition: max-height 1s cubic-bezier(0.175, 0.885, 0.32, 1.15); mask-image: linear-gradient(to bottom, black 60%, transparent 100%); -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%); text-align: left; overflow-wrap: break-word; }
 .episode-text-content p.expanded { mask-image: none; -webkit-mask-image: none; }
 .toggle-desc-btn { background: none; border: none; color: #bbb; cursor: pointer; font-size: 1.2rem; padding: 5px 0; width: auto; align-self: flex-end; display: flex; justify-content: center; transition: color 0.3s ease, transform 0.4s ease; outline: none; margin-top: 2px; }
 .toggle-desc-btn:hover { color: var(--primary-color); }
@@ -560,10 +584,7 @@ main {
 .hero-play-btn { flex: 0 0 55px; width: 55px; height: 55px; border-radius: 50%; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 6px 18px rgba(255, 107, 53, 0.35); flex-shrink: 0; }
 .hero-play-btn i { width: 24px; display: flex; justify-content: center; align-items: center; }
 .hero-play-btn .fa-play { margin-left: 4px; }
-/* 修正播放按鈕三角形視覺重心偏移 */
-.pro-controls .play-btn-main i.fa-play {
-    transform: translateX(2px);
-}
+.pro-controls .play-btn-main i.fa-play { transform: translateX(2px); }
 .hero-play-btn:hover { transform: scale(1.1); background: #ff5010; }
 .hero-play-btn:active { transform: scale(0.95); }
 
@@ -576,21 +597,51 @@ main {
 
 .podcast-divider { border-top: 1px dashed #e0e0e0; margin: 30px 0 20px; width: 100%; }
 .playlist-header { font-size: 1.1rem; color: var(--secondary-color); margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-.podcast-playlist-box { width: 100%; max-height: 250px; overflow-y: auto; border-radius: 10px; background: #fafafa; border: 1px solid #eee; padding: 10px; position: relative; isolation: isolate; }
+
+/* Podcast 列表样式并限制滚动互斥 */
+.podcast-playlist-box { 
+    width: 100%; 
+    max-height: 400px; 
+    overflow-y: auto; 
+    border-radius: 10px; 
+    background: transparent; 
+    border: none; 
+    padding: 0; 
+    padding-right: 10px; 
+    position: relative; 
+    isolation: isolate; 
+    overscroll-behavior: contain; 
+    display: flex;
+    flex-direction: column;
+    gap: 8px; 
+}
 .podcast-playlist-box::-webkit-scrollbar { width: 6px; }
-.podcast-playlist-box::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-.podcast-playlist-box::-webkit-scrollbar-thumb { background: #d1d1d1; border-radius: 10px; }
-.podcast-playlist-box::-webkit-scrollbar-thumb:hover { background: #bbb; }
+.podcast-playlist-box::-webkit-scrollbar-track { background: transparent; }
+.podcast-playlist-box::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
+.podcast-playlist-box::-webkit-scrollbar-thumb:hover { background: #d1d1d1; }
 
 .playlist-loading { padding: 20px; text-align: center; color: #999; }
-.playlist-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 15px; border-radius: 8px; cursor: pointer; border-bottom: 1px solid #f0f0f0; position: relative; z-index: 2; background: transparent; }
+.playlist-item { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 12px 18px; 
+    border-radius: 12px; 
+    cursor: pointer; 
+    border: 1px solid transparent; 
+    position: relative; 
+    z-index: 2; 
+    background: transparent; 
+    transition: 0.2s; 
+}
 .playlist-item:last-child { border-bottom: none; }
-.playlist-item:hover { background: rgba(0,0,0,0.02); }
-.playlist-backdrop { position: absolute; left: 5px; width: calc(100% - 10px); height: 0; background: rgba(255, 107, 53, 0.1); border-radius: 8px; pointer-events: none; z-index: 1; transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); opacity: 0; }
-.playlist-item.active .pi-title { color: var(--primary-color); font-weight: 700; transition: color 0.3s; }
+.playlist-item:hover { background: #f9f9f9; } 
+.playlist-item.active { background-color: #fff0ed; border: 1px solid #ffe4de; } 
+.playlist-item.active .pi-title { color: #ff5e3a; font-weight: 700; transition: color 0.3s; }
 .playlist-item.active .pi-date { color: rgba(255, 107, 53, 0.7); }
+
 .playlist-item-info { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
-.pi-title { font-size: 0.95rem; font-weight: 600; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pi-title { font-size: 0.95rem; font-weight: 600; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: 0.2s; }
 .pi-date { font-size: 0.8rem; color: #999; }
 .status-icon-container { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; margin-left: 10px; flex-shrink: 0; }
 .audio-wave { display: none; align-items: center; gap: 3px; height: 24px; width: 28px; justify-content: center; contain: layout paint; transform: translateZ(0); will-change: contents; }
@@ -607,7 +658,7 @@ main {
 
 .pro-player-layout {
     display: flex;
-    gap: 40px;
+    gap: 50px; 
     background: #ffffff; 
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); 
@@ -622,13 +673,12 @@ main {
 
 /* 左侧：控制台 */
 .pro-player-left {
-    flex: 1;
+    flex: 0 0 340px; 
     display: flex;
     flex-direction: column;
     align-items: center; 
     justify-content: center;
     text-align: center;
-    max-width: 350px;
     border-right: 2px dashed #f0f0f0; 
     padding-right: 40px; 
 }
@@ -646,7 +696,7 @@ main {
     display: flex; 
     align-items: center; 
     justify-content: center; 
-    gap: 18px; /* 從 25px 稍微縮小為 18px，讓 5 個按鈕完美塞入 */
+    gap: 18px; 
     width: 100%; 
 }
 .pro-controls button { background: none; border: none; color: #333; font-size: 1.3rem; cursor: pointer; transition: 0.2s cubic-bezier(0.25, 0.8, 0.25, 1); }
@@ -657,10 +707,37 @@ main {
 
 /* 右侧：播放列表 */
 .pro-player-right {
-    flex: 2;
+    flex: 1; 
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
+
+.playlist-header-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #f0f0f0; }
+.playlist-header-controls h4 { margin: 0; font-size: 1.1rem; color: #333; }
+.playlist-header-controls select { background: transparent; color: #555; border: none; padding: 5px; font-size: 0.9rem; outline: none; cursor: pointer; font-weight: 600; }
+
+.pro-playlist-container { 
+    flex: 1; 
+    overflow-y: auto; 
+    max-height: 400px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 8px; 
+    padding-right: 10px; 
+    overscroll-behavior: contain; /* 锁定 */
+}
+.pro-playlist-container::-webkit-scrollbar { width: 6px; }
+.pro-playlist-container::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
+
+.pro-playlist-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; border-radius: 12px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+.pro-playlist-item:hover { background: #f9f9f9; }
+.pro-playlist-item.active { background-color: #fff0ed; border: 1px solid #ffe4de; }
+.pro-playlist-item.active .pro-item-title, .pro-playlist-item.active .pro-item-artist { color: #ff5e3a; }
+.pro-item-info { display: flex; flex-direction: column; gap: 4px; }
+.pro-item-title { font-weight: 700; color: #333; font-size: 1rem; transition: 0.2s; }
+.pro-item-artist { font-size: 0.85rem; color: #888; transition: 0.2s; }
+.pro-item-like { color: #ff4757; font-size: 1.1rem; }
 
 /* =========================================
    悬浮迷你播放器 (Mini Player Card)
@@ -672,7 +749,7 @@ main {
     width: auto; 
     min-width: 220px;
     max-width: 280px;
-    background: rgba(255, 255, 255, 0.95); /* 半透明白底 */
+    background: rgba(255, 255, 255, 0.95); 
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-radius: 16px;
@@ -689,79 +766,19 @@ main {
 .mini-player.visible { opacity: 1; transform: translateY(0) scale(1); }
 .mini-player:active { cursor: grabbing; }
 
-.mini-player-inner {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    gap: 12px;
-}
-
-.mini-cover-wrapper {
-    position: relative;
-    width: 50px;
-    height: 50px;
-    border-radius: 10px;
-    overflow: hidden;
-    flex-shrink: 0;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
+.mini-player-inner { display: flex; align-items: center; padding: 12px; gap: 12px; }
+.mini-cover-wrapper { position: relative; width: 50px; height: 50px; border-radius: 10px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 #mini-cover { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
-
-.mini-overlay {
-    position: absolute; inset: 0; background: rgba(0,0,0,0.4);
-    display: flex; justify-content: center; align-items: center;
-    opacity: 0; transition: opacity 0.2s;
-}
+.mini-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.4); display: flex; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.2s; }
 .mini-player:hover .mini-overlay { opacity: 1; }
-
 #mini-play-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; padding: 0; }
 #mini-play-btn:hover { transform: scale(1.1); }
-
-.mini-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    overflow: hidden;
-    padding-right: 15px; /* 给右侧留点呼吸空间 */
-}
-
-.mini-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #333;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.mini-subtitle {
-    font-size: 0.8rem;
-    color: #888;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
+.mini-info { display: flex; flex-direction: column; gap: 4px; overflow: hidden; padding-right: 15px; }
+.mini-title { font-size: 0.95rem; font-weight: 700; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini-subtitle { font-size: 0.8rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mini-progress-bg { width: 100%; height: 3px; background: #eee; }
 .mini-progress-fill { height: 100%; width: 0%; background: var(--primary-color); transition: width 0.1s linear;}
 
-.playlist-header-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #f0f0f0; }
-.playlist-header-controls h4 { margin: 0; font-size: 1.1rem; color: #333; }
-.playlist-header-controls select { background: transparent; color: #555; border: none; padding: 5px; font-size: 0.9rem; outline: none; cursor: pointer; font-weight: 600; }
-
-.pro-playlist-container { flex: 1; overflow-y: auto; max-height: 400px; display: flex; flex-direction: column; gap: 8px; padding-right: 10px; }
-.pro-playlist-container::-webkit-scrollbar { width: 6px; }
-.pro-playlist-container::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 10px; }
-
-.pro-playlist-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; border-radius: 12px; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
-.pro-playlist-item:hover { background: #f9f9f9; }
-.pro-playlist-item.active { background-color: #fff0ed; border: 1px solid #ffe4de; }
-.pro-playlist-item.active .pro-item-title, .pro-playlist-item.active .pro-item-artist { color: #ff5e3a; }
-.pro-item-info { display: flex; flex-direction: column; gap: 4px; }
-.pro-item-title { font-weight: 700; color: #333; font-size: 1rem; transition: 0.2s; }
-.pro-item-artist { font-size: 0.85rem; color: #888; transition: 0.2s; }
-.pro-item-like { color: #ff4757; font-size: 1.1rem; }
 
 /* =========================================
    7. 实用工具区块 (Link Section)
@@ -862,17 +879,18 @@ main {
 .back-home-btn { display: inline-flex; align-items: center; gap: 8px; color: var(--secondary-color); text-decoration: none; font-weight: 600; margin-bottom: 30px; transition: color var(--transition-speed), transform var(--transition-speed); cursor: pointer; }
 .back-home-btn:hover { color: var(--primary-color); transform: translateX(-5px); }
 
-.games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-top: 20px; }
-.game-card { background: white; border-radius: var(--global-border-radius); overflow: hidden; box-shadow: var(--shadow-base); border: 1px solid rgba(0, 0, 0, 0.05); transition: transform var(--transition-speed), box-shadow var(--transition-speed); cursor: pointer; display: flex; flex-direction: column; }
-.game-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(255, 107, 53, 0.15); }
-.game-thumbnail { height: 200px; background-size: cover; background-position: center; position: relative; }
-.game-tags { position: absolute; bottom: 15px; left: 15px; display: flex; gap: 8px; }
-.game-inner-tag { background: rgba(0, 0, 0, 0.7); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; backdrop-filter: blur(5px); }
-.game-card-content { padding: 25px; display: flex; flex-direction: column; flex: 1; }
-.game-card-content h3 { color: var(--secondary-color); font-size: 1.3rem; margin-bottom: 10px; font-weight: 600; }
-.game-card-content p { color: #777; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; text-decoration: none; }
-.play-now-link { margin-top: auto; color: var(--primary-color); font-weight: 600; display: inline-flex; align-items: center; gap: 6px; font-size: 0.95rem; }
-.game-card:hover .play-now-link { text-decoration: none; }
+/* ✨ 遊戲卡片升級為高級感「左圖右文」水平排版 (與 journey 類似) ✨ */
+.games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 40px; margin-top: 20px; }
+.game-card { background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.04); transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; cursor: pointer; display: flex; flex-direction: row; min-height: 220px; align-items: stretch; text-decoration: none; }
+.game-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 15px 35px rgba(255, 107, 53, 0.15); border-color: transparent; }
+.game-thumbnail { flex: 0 0 240px; background-size: cover; background-position: center; position: relative; }
+.game-tags { position: absolute; bottom: 15px; left: 15px; display: flex; flex-wrap: wrap; gap: 6px; }
+.game-inner-tag { background: rgba(0, 0, 0, 0.7); color: white; padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; backdrop-filter: blur(5px); }
+.game-card-content { padding: 25px 30px; display: flex; flex-direction: column; flex: 1; justify-content: center; }
+.game-card-content h3 { color: var(--secondary-color); font-size: 1.3rem; margin-bottom: 10px; font-weight: 700; line-height: 1.3; }
+.game-card-content p { color: #777; font-size: 0.95rem; line-height: 1.6; margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.play-now-link { margin-top: auto; color: var(--primary-color); font-weight: 600; display: inline-flex; align-items: center; gap: 6px; font-size: 0.95rem; transition: color 0.3s ease; }
+.game-card:hover .play-now-link { color: #ff5010; }
 
 /* =========================================
    9. 黑苹果之旅 (Journey.html)
@@ -965,60 +983,20 @@ main.journey-container {
     .tag { font-size: 1rem; padding: 0.8rem 1.5rem; }
 }
 
-/* --- 平板横屏 / 小尺寸电脑 (601px - 1024px) --- */
-@media (min-width: 601px) and (max-width: 1024px) {
-    /* 1. 讓 Podcast 和 Music 同步縮小間距與內邊距，捨棄百分比硬限制 */
-    .podcast-layout { gap: 30px !important; }
+/* --- 平板横屏 / 小尺寸电脑 (769px - 1024px) --- */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .scroll-layout-container, .podcast-layout { gap: 30px !important; }
     .pro-player-layout { padding: 30px !important; gap: 30px !important; }
 
-    /* 2. 左側區域同步等比例縮小 */
-    .podcast-left-stage, .pro-player-left { 
-        max-width: 280px !important; /* 從 350px 同步縮小 */
+    /* ✨ 在較小螢幕上稍微縮減左側以防止過度擁擠 ✨ */
+    .sticky-profile, .podcast-left-stage { 
+        flex: 0 0 300px !important; 
+    }
+    
+    .pro-player-left { 
+        flex: 0 0 280px !important; 
         padding-right: 20px !important; 
     }
-
-    /* 3. 解除右側卡片的最小寬度限制，讓它們自由壓縮 */
-    .podcast-player-card { min-width: 0 !important; padding: 20px !important; }
-    .pro-player-right { min-width: 0 !important; }
-
-    /* 4. Podcast 內部元素的自適應微調 */
-    .podcast-stack { height: 260px !important; }
-    .stack-card { width: 100% !important; height: auto !important; aspect-ratio: 1 / 1; }
-    .episode-info-row { gap: 15px !important; }
-    .episode-cover-box { flex: 0 0 150px !important; height: 150px !important; }
-    .episode-text-content h3 { font-size: 1.3rem !important; }
-    .player-controls-row { gap: 10px !important; }
-}
-
-/* --- 移动端项目横滑专用 (1000px 以下) --- */
-@media (max-width: 1000px) {
-    .slider-controls { display: none !important; }
-    .horizontal-scroll-wrapper, .scroll-mask-container, .cards-scroll-container { display: contents !important; }
-    .scroll-layout-container {
-        display: grid !important;
-        grid-template-rows: 1fr 1fr !important; 
-        grid-auto-flow: column !important; 
-        grid-template-columns: 100vw !important; 
-        grid-auto-columns: 75vw !important; 
-        gap: 15px 20px !important; 
-        overflow-x: auto !important;
-        scroll-snap-type: x mandatory !important;
-        width: 100vw !important;
-        margin-left: -5vw !important; 
-        padding: 10px 5vw 20px 0 !important; 
-        scrollbar-width: none !important;
-        -webkit-overflow-scrolling: touch !important;
-    }
-    .scroll-layout-container::-webkit-scrollbar { display: none; }
-    .sticky-profile { grid-row: 1 / 3 !important; width: 100vw !important; padding: 0 5vw !important; box-sizing: border-box !important; scroll-snap-align: start !important; scroll-snap-stop: always !important; margin-bottom: 0 !important; position: static !important; transform: none !important; display: flex !important; flex-direction: column !important; justify-content: center !important; }
-    .scroll-card { scroll-snap-align: center !important; display: flex !important; flex-direction: column !important; margin-right: 0 !important; height: 100% !important; }
-    .scroll-card-thumbnail { flex: 1 !important; min-height: 100px !important; height: auto !important; }
-    .scroll-card-content { padding: 15px !important; flex-shrink: 0 !important; }
-    .scroll-card-content h3 { font-size: 1.05rem !important; margin-bottom: 5px !important; }
-    .scroll-card-content p { font-size: 0.85rem !important; line-height: 1.4 !important; margin-bottom: 0 !important; display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
-    .mobile-swipe-guide { display: inline-flex; align-items: center; gap: 8px; margin-top: 25px; padding: 10px 20px; background: rgba(255, 107, 53, 0.1); color: var(--primary-color); border-radius: 20px; font-size: 0.95rem; font-weight: 600; }
-    .guide-arrows { display: flex; animation: swipe-right 1.5s infinite; }
-    @keyframes swipe-right { 0%, 100% { transform: translateX(0); opacity: 0.5; } 50% { transform: translateX(8px); opacity: 1; } }
 }
 
 /* --- 平板端 / 较小尺寸 (900px 以下) --- */
@@ -1032,6 +1010,12 @@ main.journey-container {
     .article-sidebar { order: 2; }
     .article-content { order: 1; }
     .journey-header h1 { font-size: 2.2rem; }
+
+    /* ✨ 平板/手機端遊戲卡片自動恢復為垂直堆疊佈局 ✨ */
+    .games-grid { grid-template-columns: 1fr; gap: 30px; }
+    .game-card { flex-direction: column; min-height: auto; }
+    .game-thumbnail { flex: none; height: 220px; width: 100%; }
+    .game-card-content { padding: 25px; }
 }
 
 /* --- 手机端 (768px 以下) --- */
@@ -1040,6 +1024,26 @@ main.journey-container {
     .name-title h1 { font-size: 1.8rem; }
     .pro-player-layout { flex-direction: column; padding: 25px; gap: 25px; }
     .pro-player-left { max-width: 100%; border-right: none; border-bottom: 2px dashed #f0f0f0; padding-right: 0; padding-bottom: 25px; }
+    
+    /* 实验室项目：恢复为上下排列的移动端直观布局 */
+    .scroll-layout-container { 
+        flex-direction: column !important; 
+        padding: 0 5% !important; 
+        gap: 20px !important; 
+        overflow-x: visible !important; 
+        scroll-snap-type: none !important;
+    }
+    .sticky-profile { max-width: 100% !important; width: 100% !important; padding-right: 0 !important; display: flex !important; flex-direction: column !important; }
+    .slider-controls { display: none !important; }
+    .horizontal-scroll-wrapper { width: 100% !important; overflow: visible !important; }
+    .scroll-mask-container::before { display: none !important; }
+    .cards-scroll-container { display: flex !important; flex-wrap: nowrap !important; gap: 20px !important; overflow-x: auto !important; padding: 10px 0 30px !important; scrollbar-width: none !important; -webkit-overflow-scrolling: touch !important; }
+    .scroll-card { flex: 0 0 85vw !important; display: flex !important; flex-direction: column !important; }
+    .scroll-card-thumbnail { height: 200px !important; }
+    .scroll-card-content p { display: -webkit-box !important; -webkit-line-clamp: 2 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+    .mobile-swipe-guide { display: inline-flex; align-items: center; gap: 8px; margin-top: 20px; padding: 10px 20px; background: rgba(255, 107, 53, 0.1); color: var(--primary-color); border-radius: 20px; font-size: 0.95rem; font-weight: 600; }
+    .guide-arrows { display: flex; animation: swipe-right 1.5s infinite; }
+    @keyframes swipe-right { 0%, 100% { transform: translateX(0); opacity: 0.5; } 50% { transform: translateX(8px); opacity: 1; } }
 }
 
 /* --- 核心手机端 / 小屏幕 (600px 以下) --- */
@@ -1058,6 +1062,8 @@ main.journey-container {
     .podcast-player-card { min-height: auto; }
     .episode-info-row { flex-direction: column; align-items: center; text-align: center; padding-bottom: 10px; }
     .episode-date::after { left: 50%; transform: translateX(-50%); }
+    .episode-text-content h3 { text-align: center; font-size: 1.5rem; } /* ✨ 手机端标题恢复居中 ✨ */
+    .episode-text-content p { text-align: left; } /* ✨ 手机端内容依然靠左，確保閱讀體驗 ✨ */
     .episode-cover-box { margin-bottom: 20px; top: 0; width: 200px; height: 200px; flex: none; }
     .player-controls-row { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; align-items: center; gap: 15px 20px; margin-top: 20px; padding: 15px 0; }
     .hero-play-btn { order: 1; margin: 0; }

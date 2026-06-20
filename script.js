@@ -32,7 +32,8 @@ linkCards.forEach(card => {
 // ==========================================
 // Horizontal Scroll Logic
 // ==========================================
-const slider = document.getElementById('projectSlider');
+// ✨ 修改：將滾動目標改為負責一體化滾動的最外層容器 ✨
+const slider = document.querySelector('.scroll-layout-container');
 const prevBtn = document.querySelector('.prev-btn');
 const nextBtn = document.querySelector('.next-btn');
 
@@ -54,31 +55,15 @@ const smoothScrollTo = (element, target, duration) => {
 
 if (slider && prevBtn && nextBtn) {
     const scrollAmount = 430; 
-    nextBtn.addEventListener('click', () => { slider.scrollBy({ left: scrollAmount, behavior: 'smooth' }); });
-    prevBtn.addEventListener('click', () => { slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); });
+    nextBtn.addEventListener('click', () => { smoothScrollTo(slider, slider.scrollLeft + scrollAmount, 500); });
+    prevBtn.addEventListener('click', () => { smoothScrollTo(slider, slider.scrollLeft - scrollAmount, 500); });
     let isTicking = false;
-    let scrollTimeout = null;
-    
-    const snapToNearest = () => {
-        const center = slider.scrollLeft + slider.clientWidth / 2;
-        let minDistance = Infinity;
-        let targetCard = null;
-        const cards = slider.querySelectorAll('.scroll-card');
-        cards.forEach(card => {
-            const cardCenter = card.offsetLeft + card.offsetWidth / 2;
-            const distance = Math.abs(cardCenter - center);
-            if (distance < minDistance) { minDistance = distance; targetCard = card; }
-        });
-        if (targetCard) {
-            const targetLeft = targetCard.offsetLeft - (slider.clientWidth - targetCard.offsetWidth) / 2;
-            if (Math.abs(slider.scrollLeft - targetLeft) > 5) { smoothScrollTo(slider, targetLeft, 800); }
-        }
-    };
     
     slider.addEventListener('scroll', () => {
         if (!slider.classList.contains('is-scrolling')) { slider.classList.add('is-scrolling'); }
-        window.clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => { slider.classList.remove('is-scrolling'); snapToNearest(); }, 150);
+        window.clearTimeout(slider.scrollTimeout);
+        slider.scrollTimeout = setTimeout(() => { slider.classList.remove('is-scrolling'); }, 150);
+        
         if (!isTicking) {
             window.requestAnimationFrame(() => {
                 const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
@@ -90,7 +75,8 @@ if (slider && prevBtn && nextBtn) {
             isTicking = true;
         }
     });
-    prevBtn.disabled = true;
+    // 頁面載入時初始化按鈕狀態
+    setTimeout(() => { prevBtn.disabled = slider.scrollLeft <= 10; }, 100);
 }
 
 // ==========================================
@@ -940,20 +926,28 @@ setTimeout(fetchNetworkInfo, 500);
         switchBtn.textContent = currentLang === 'zh' ? 'EN' : '中'; 
     });
 
-    const initSpringSticky = (selector, topOffset = 100) => {
+    // ✨ 增加了 maxY 參數限制最大下移距離 ✨
+    const initSpringSticky = (selector, topOffset = 100, maxY = null) => {
         const element = document.querySelector(selector);
-        if (!element || window.innerWidth <= 1000) return;
+        if (!element || window.innerWidth <= 768) return;
         let currentY = 0, targetY = 0, velocity = 0;
         const stiffness = 0.05, damping = 0.75;
         const parent = element.parentElement;
         const update = () => {
-            if (window.innerWidth <= 1000) {
+            if (window.innerWidth <= 768) {
                 element.style.transform = '';
                 return;
             }
             const parentRect = parent.getBoundingClientRect();
             let desiredY = window.scrollY - (parentRect.top + window.scrollY) + topOffset;
-            desiredY = Math.max(0, Math.min(desiredY, parent.offsetHeight - element.offsetHeight));
+            
+            // 計算最大可能下移距離並加入 maxY 限制
+            let maxPossibleY = parent.offsetHeight - element.offsetHeight;
+            if (maxY !== null) {
+                maxPossibleY = Math.min(maxPossibleY, maxY);
+            }
+            
+            desiredY = Math.max(0, Math.min(desiredY, maxPossibleY));
             targetY = desiredY;
             const force = (targetY - currentY) * stiffness;
             velocity = (velocity + force) * damping;
@@ -963,7 +957,7 @@ setTimeout(fetchNetworkInfo, 500);
         };
         update();
     };
-    initSpringSticky('.sticky-profile', 100);
+    initSpringSticky('.podcast-left-stage', 100, 180); // ✨ 套用你指定的 421px 最大下移限制 ✨
 });
 
 async function loadTranslations(lang) { 
