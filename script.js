@@ -1,4 +1,19 @@
 document.addEventListener('DOMContentLoaded', async () => {
+
+// ✨ 全局滾動意圖檢測：解決滾動頁面時滑鼠誤觸列表或播客封面的問題 ✨
+let globalScrollIntentTimeout;
+window.addEventListener('scroll', () => {
+    // 只要開始滾動，就套用 is-scrolling，讓內部容器的 pointer-events 失效
+    if (!document.body.classList.contains('is-scrolling')) {
+        document.body.classList.add('is-scrolling');
+    }
+    clearTimeout(globalScrollIntentTimeout);
+    // 滾動停止 150ms 後，才解除鎖定，允許內部容器再次接管滑鼠
+    globalScrollIntentTimeout = setTimeout(() => {
+        document.body.classList.remove('is-scrolling');
+    }, 150);
+}, { passive: true });
+
 const navLinks = document.querySelectorAll('.nav-links a');
 navLinks.forEach(link => {
     link.addEventListener('mouseover', () => link.style.transform = 'translateY(-2px)');
@@ -122,7 +137,6 @@ const playlistContainer = document.getElementById('podcastPlaylist');
 const podcastSidebar = document.getElementById('podcastSidebar');
 const podcastStack = document.getElementById('podcastStack');
 
-let playlistBackdrop = null;
 let isDraggingProgress = false; 
 
 // Helper: Format Time
@@ -202,18 +216,6 @@ const updatePlayerState = (isPlaying) => {
     });
 };
 
-const updateSlidingBackdrop = (index) => {
-    if (!playlistBackdrop) return;
-    const items = document.querySelectorAll('.playlist-item');
-    if (!items[index]) return;
-    const activeItem = items[index];
-    const top = activeItem.offsetTop; 
-    const height = activeItem.offsetHeight;
-    playlistBackdrop.style.transform = `translateY(${top - 6}px)`;
-    playlistBackdrop.style.height = `${height}px`;
-    playlistBackdrop.style.opacity = '1';
-};
-
 const loadPodcastEpisode = (index) => {
     if (index < 0 || index >= podcastEpisodes.length) return;
     currentPodcastEpisodeIndex = index;
@@ -242,7 +244,6 @@ const loadPodcastEpisode = (index) => {
         if (idx === index) item.classList.add('active');
         else item.classList.remove('active');
     });
-    requestAnimationFrame(() => updateSlidingBackdrop(index));
     if(podcastDescEl) {
         podcastDescEl.style.maxHeight = null;
         podcastDescEl.classList.remove('expanded');
@@ -251,16 +252,29 @@ const loadPodcastEpisode = (index) => {
 };
 
 const playPodcast = (index) => {
+    window.podcastEpisodes = podcastEpisodes;
+    window.currentPodcastEpisodeIndex = currentPodcastEpisodeIndex;
+    window.playPodcastGlobal = playPodcast;
+    window.updatePlayerStateGlobal = updatePlayerState;
+
+    if (typeof togglePlayMusic === 'function' && typeof musicAudio !== 'undefined' && !musicAudio.paused) {
+        togglePlayMusic(false); 
+    }
+
     if (index !== currentPodcastEpisodeIndex || !podcastAudio) {
         loadPodcastEpisode(index);
+        window.currentPodcastEpisodeIndex = currentPodcastEpisodeIndex;
     }
     const ep = podcastEpisodes[currentPodcastEpisodeIndex];
+    
     if (currentAudio && !currentAudio.paused) {
         currentAudio.pause();
         document.querySelectorAll('.song-card').forEach(c => c.classList.remove('playing'));
     }
+
     if (!podcastAudio) {
         podcastAudio = new Audio();
+        window.podcastAudio = podcastAudio; 
         podcastAudio.src = ep.mp3Url;
         podcastAudio.addEventListener('timeupdate', () => {
             if (!isDraggingProgress && podcastAudio.duration) {
@@ -280,7 +294,10 @@ const playPodcast = (index) => {
             waveBars.forEach(b => b.style.height = '4px');
         });
     }
+    
     if (podcastAudio.paused) {
+        window.activeSource = 'podcast';
+        window.hasStartedPlaying = true; 
         podcastAudio.play().then(() => {
             updatePlayerState(true); 
         }).catch(e => {
@@ -291,6 +308,10 @@ const playPodcast = (index) => {
         podcastAudio.pause();
         updatePlayerState(false);
     }
+
+    setTimeout(() => {
+        if (typeof updateMiniPlayerState === 'function') updateMiniPlayerState();
+    }, 100);
 };
 
 if (podcastProgressWrapper) {
@@ -363,10 +384,6 @@ if (podcastProgressWrapper) {
 
 const renderPodcastList = () => {
     playlistContainer.innerHTML = ''; 
-    const backdrop = document.createElement('div');
-    backdrop.className = 'playlist-backdrop';
-    playlistContainer.appendChild(backdrop);
-    playlistBackdrop = backdrop; 
     podcastEpisodes.forEach((ep, index) => {
         const item = document.createElement('div');
         item.className = 'playlist-item';
@@ -923,47 +940,6 @@ setTimeout(fetchNetworkInfo, 500);
         switchBtn.textContent = currentLang === 'zh' ? 'EN' : '中'; 
     });
 
-    // ========== 綁定音樂卡片點擊事件 (帶有全域通行證) ==========
-    // window.attachMusicEvents = function() {
-    //     const songCards = document.querySelectorAll('.song-card');
-        
-    //     songCards.forEach(card => {
-    //         card.addEventListener('click', function() {
-    //             // 如果播客正在播放，先暫停它
-    //             if(podcastAudio && !podcastAudio.paused) {
-    //                 podcastAudio.pause();
-    //                 updatePlayerState(false); 
-    //             }
-                
-    //             const audioFile = this.dataset.audio;
-    //             if(!audioFile) return;
-                
-    //             // 檢查點擊的是不是當前正在播放的同一首歌
-    //             if(currentAudio && currentAudio.src.endsWith(encodeURI(audioFile).split('/').pop())) {
-    //                 if(currentAudio.paused) { 
-    //                     currentAudio.play(); 
-    //                     this.classList.add('playing'); 
-    //                 } else { 
-    //                     currentAudio.pause(); 
-    //                     this.classList.remove('playing'); 
-    //                 }
-    //             } else {
-    //                 // 如果點擊了另一首歌
-    //                 if(currentAudio) { 
-    //                     currentAudio.pause(); 
-    //                     songCards.forEach(c => c.classList.remove('playing')); 
-    //                 }
-    //                 currentAudio = new Audio(audioFile);
-    //                 currentAudio.play();
-    //                 this.classList.add('playing');
-    //                 currentAudio.addEventListener('ended', () => { 
-    //                     this.classList.remove('playing'); 
-    //                 });
-    //             }
-    //         });
-    //     });
-    // };
-
     const initSpringSticky = (selector, topOffset = 100) => {
         const element = document.querySelector(selector);
         if (!element || window.innerWidth <= 1000) return;
@@ -1021,32 +997,26 @@ function loadLanguage(lang) {
         })
         .then(translations => {
             applyTranslations(translations);
-            // 更新语言切换按钮文本
             document.querySelector('.lang-switch').textContent = lang === 'zh' ? 'EN' : '中文';
-            // 重新生成音乐卡片（因为歌曲列表在 JSON 中）
             renderMusic(translations.music.songs);
         })
         .catch(err => console.error('Load language error:', err));
 }
 
 function applyTranslations(data) {
-    // 遍历所有带有 data-i18n 的元素，设置 innerHTML
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         const value = getNestedValue(data, key);
         if (value !== undefined) {
-            // 如果元素内包含 HTML 标签，保留；否则直接文本
             el.innerHTML = value;
         }
     });
 }
 
-// 支持点号分隔的键，如 "nav.home"
 function getNestedValue(obj, path) {
     return path.split('.').reduce((current, key) => current?.[key], obj);
 }
 
-// 监听语言切换按钮
 document.addEventListener('DOMContentLoaded', function() {
     const langSwitch = document.querySelector('.lang-switch');
     langSwitch.addEventListener('click', function() {
@@ -1054,21 +1024,18 @@ document.addEventListener('DOMContentLoaded', function() {
         loadLanguage(newLang);
     });
 
-    // 初始加载语言
     loadLanguage(currentLang);
 });
 
 // ========== 全新音樂播放器核心邏輯 ==========
 let musicAudio = new Audio();
-let originalSongs = []; // 存儲原始 JSON 的順序
-let currentPlaylist = []; // 存儲當前排序後的播放列表
-let currentPlayingSong = null; // 當前正在播放的歌曲對象
+let originalSongs = []; 
+let currentPlaylist = []; 
+let currentPlayingSong = null; 
 let isMusicPlaying = false;
 
-// 從 localStorage 獲取喜歡的歌曲列表
 let likedSongs = JSON.parse(localStorage.getItem('likedSongs')) || [];
 
-// UI 元素綁定
 const proCover = document.getElementById('pro-cover');
 const proTitle = document.getElementById('pro-title');
 const proArtist = document.getElementById('pro-artist');
@@ -1080,7 +1047,6 @@ const proSeekbar = document.getElementById('pro-seekbar');
 const proPlaylistContainer = document.getElementById('pro-playlist');
 const proSortSelect = document.getElementById('pro-sort-select');
 
-// 格式化時間 (輔助函數)
 const formatMusicTime = (seconds) => {
     if (isNaN(seconds)) return "00:00";
     const m = Math.floor(seconds / 60);
@@ -1088,20 +1054,17 @@ const formatMusicTime = (seconds) => {
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
 };
 
-// 1. 初始化與渲染音樂 (取代舊的 renderMusic)
 window.renderMusic = function(songs) {
     if (!songs || songs.length === 0) return;
     originalSongs = [...songs];
     currentPlaylist = [...songs];
     renderPlaylistView();
     
-    // 如果還沒有選擇歌曲，默認加載第一首 (但不自動播放)
     if (!currentPlayingSong) {
         loadSong(currentPlaylist[0], false);
     }
 };
 
-// 2. 渲染右側清單
 function renderPlaylistView() {
     proPlaylistContainer.innerHTML = '';
     currentPlaylist.forEach((song) => {
@@ -1120,7 +1083,6 @@ function renderPlaylistView() {
                 ${isLiked ? '<i class="fas fa-heart"></i>' : ''}
             </div>
         `;
-        // 點擊列表播放該歌曲
         item.addEventListener('click', () => {
             loadSong(song, true);
         });
@@ -1128,12 +1090,10 @@ function renderPlaylistView() {
     });
 }
 
-// 3. 加載歌曲並更新左側 UI
 function loadSong(song, autoPlay = false) {
-    // 解決播客衝突：播放音樂時暫停播客
-    if (typeof podcastAudio !== 'undefined' && podcastAudio && !podcastAudio.paused) {
-        podcastAudio.pause();
-        updatePlayerState(false);
+    if (window.podcastAudio && !window.podcastAudio.paused) {
+        window.podcastAudio.pause();
+        if (typeof window.updatePlayerStateGlobal === 'function') window.updatePlayerStateGlobal(false);
     }
 
     currentPlayingSong = song;
@@ -1142,10 +1102,7 @@ function loadSong(song, autoPlay = false) {
     proTitle.textContent = song.title;
     proArtist.textContent = song.artist;
     
-    // 更新愛心狀態
     updateLikeButtonUI();
-
-    // 更新右側列表的 Active 狀態
     renderPlaylistView();
 
     if (autoPlay) {
@@ -1155,32 +1112,44 @@ function loadSong(song, autoPlay = false) {
     }
 }
 
-// 4. 播放/暫停控制 (完美解決只能播不能暫停的問題)
 function togglePlayMusic(forcePlay) {
+    const pausePodcast = () => {
+        if (window.podcastAudio && !window.podcastAudio.paused) {
+            window.podcastAudio.pause();
+            if (typeof window.updatePlayerStateGlobal === 'function') window.updatePlayerStateGlobal(false);
+        }
+    };
+
     if (forcePlay === true) {
+        pausePodcast();
         musicAudio.play();
         isMusicPlaying = true;
+        window.activeSource = 'music';   
+        window.hasStartedPlaying = true; 
     } else if (forcePlay === false) {
         musicAudio.pause();
         isMusicPlaying = false;
     } else {
-        // 切換狀態
         if (musicAudio.paused) {
+            pausePodcast();
             musicAudio.play();
             isMusicPlaying = true;
+            window.activeSource = 'music';
+            window.hasStartedPlaying = true;
         } else {
             musicAudio.pause();
             isMusicPlaying = false;
         }
     }
-    // 更新按鈕圖標
-    proPlayBtn.innerHTML = isMusicPlaying ? '<i class="fas fa-pause"></i>' : '<i class="fas fa-play"></i>';
+    
+    const playIconHTML = '<i class="fas fa-play" style="transform: translateX(2px);"></i>';
+    proPlayBtn.innerHTML = isMusicPlaying ? '<i class="fas fa-pause"></i>' : playIconHTML;
+    
+    if (typeof updateMiniPlayerState === 'function') updateMiniPlayerState();
 }
 
-// 綁定主播放按鈕
 proPlayBtn.addEventListener('click', togglePlayMusic);
 
-// 5. 喜歡 (Heart) 功能與 LocalStorage
 function updateLikeButtonUI() {
     if (!currentPlayingSong) return;
     const isLiked = likedSongs.includes(currentPlayingSong.title);
@@ -1199,17 +1168,16 @@ proLikeBtn.addEventListener('click', () => {
     const index = likedSongs.indexOf(songTitle);
     
     if (index > -1) {
-        likedSongs.splice(index, 1); // 移除喜歡
+        likedSongs.splice(index, 1); 
     } else {
-        likedSongs.push(songTitle); // 加入喜歡
+        likedSongs.push(songTitle); 
     }
     
     localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
     updateLikeButtonUI();
-    renderPlaylistView(); // 刷新列表上的小愛心
+    renderPlaylistView(); 
 });
 
-// 6. 進度條控制
 musicAudio.addEventListener('timeupdate', () => {
     if (musicAudio.duration) {
         const percent = (musicAudio.currentTime / musicAudio.duration) * 100;
@@ -1227,11 +1195,9 @@ proSeekbar.addEventListener('input', () => {
 });
 
 musicAudio.addEventListener('ended', () => {
-    // 自動播放下一首
     document.getElementById('pro-next-btn').click();
 });
 
-// 7. 上一首 / 下一首
 document.getElementById('pro-next-btn').addEventListener('click', () => {
     if(!currentPlayingSong) return;
     let index = currentPlaylist.findIndex(s => s.title === currentPlayingSong.title);
@@ -1246,7 +1212,6 @@ document.getElementById('pro-prev-btn').addEventListener('click', () => {
     loadSong(currentPlaylist[prevIndex], true);
 });
 
-// 8. 排序功能
 proSortSelect.addEventListener('change', (e) => {
     const mode = e.target.value;
     if (mode === 'default') {
@@ -1264,4 +1229,141 @@ proSortSelect.addEventListener('change', (e) => {
         }
     }
     renderPlaylistView();
+});
+
+// ==========================================
+// 懸浮迷你播放器邏輯 (Mini Player) - 終極修復版
+// ==========================================
+const miniPlayer = document.getElementById('mini-player');
+const miniCover = document.getElementById('mini-cover');
+const miniPlayBtn = document.getElementById('mini-play-btn');
+const miniTitle = document.getElementById('mini-title');
+const miniSubtitle = document.getElementById('mini-subtitle');
+const miniProgress = document.getElementById('mini-progress');
+
+window.activeSource = null; 
+window.hasStartedPlaying = false; 
+
+window.updateMiniPlayerState = function() {
+    let isPlaying = false;
+    
+    if (window.activeSource === 'music' && typeof currentPlayingSong !== 'undefined' && currentPlayingSong) {
+        miniCover.src = currentPlayingSong.cover;
+        miniTitle.textContent = currentPlayingSong.title;
+        miniSubtitle.textContent = currentPlayingSong.artist;
+        isPlaying = isMusicPlaying;
+    } else if (window.activeSource === 'podcast' && window.podcastEpisodes && window.podcastEpisodes[window.currentPodcastEpisodeIndex]) {
+        const ep = window.podcastEpisodes[window.currentPodcastEpisodeIndex];
+        miniCover.src = ep.imgUrl;
+        miniTitle.textContent = ep.title;
+        miniSubtitle.textContent = "Podcast"; 
+        isPlaying = window.podcastAudio && !window.podcastAudio.paused;
+    }
+
+    const playIconHTML = '<i class="fas fa-play" style="transform: translateX(2px);"></i>';
+    miniPlayBtn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : playIconHTML;
+};
+
+miniPlayBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); 
+    if (window.activeSource === 'music') {
+        if (typeof togglePlayMusic === 'function') togglePlayMusic();
+    } else if (window.activeSource === 'podcast') {
+        if (window.podcastAudio && !window.podcastAudio.paused) {
+            window.podcastAudio.pause();
+            if (typeof window.updatePlayerStateGlobal === 'function') window.updatePlayerStateGlobal(false);
+        } else {
+            if (typeof window.playPodcastGlobal === 'function') window.playPodcastGlobal(window.currentPodcastEpisodeIndex);
+        }
+    }
+    updateMiniPlayerState();
+});
+
+window.addEventListener('scroll', () => {
+    if (!window.activeSource || !window.hasStartedPlaying) return; 
+
+    let targetSection = null;
+    if (window.activeSource === 'music') {
+        targetSection = document.getElementById('Music');
+    } else if (window.activeSource === 'podcast') {
+        targetSection = document.getElementById('PodcastHero');
+    }
+
+    if (!targetSection) return;
+    const rect = targetSection.getBoundingClientRect();
+    
+    const isOutOfView = (rect.bottom < 80) || (rect.top > window.innerHeight - 80);
+
+    if (isOutOfView) {
+        if (!miniPlayer.classList.contains('show')) {
+            miniPlayer.classList.add('show');
+            setTimeout(() => miniPlayer.classList.add('visible'), 10);
+            updateMiniPlayerState();
+        }
+    } else {
+        miniPlayer.classList.remove('visible');
+        setTimeout(() => { 
+            if(!miniPlayer.classList.contains('visible')) miniPlayer.classList.remove('show'); 
+        }, 300);
+    }
+});
+
+setInterval(() => {
+    if (!miniPlayer.classList.contains('show')) return;
+    
+    if (window.activeSource === 'music' && typeof musicAudio !== 'undefined' && musicAudio.duration) {
+        miniProgress.style.width = `${(musicAudio.currentTime / musicAudio.duration) * 100}%`;
+    } else if (window.activeSource === 'podcast' && window.podcastAudio && window.podcastAudio.duration) {
+        miniProgress.style.width = `${(window.podcastAudio.currentTime / window.podcastAudio.duration) * 100}%`;
+    }
+}, 500);
+
+let isDraggingMini = false;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+
+miniPlayer.addEventListener("mousedown", (e) => {
+    if (e.target.closest('#mini-play-btn')) return; 
+    isDraggingMini = true;
+    miniPlayer.style.transition = 'none'; 
+    
+    e.preventDefault(); 
+    
+    const rect = miniPlayer.getBoundingClientRect();
+    dragOffsetX = e.clientX - rect.left;
+    dragOffsetY = e.clientY - rect.top;
+});
+
+document.addEventListener("mouseup", () => {
+    if (isDraggingMini) {
+        isDraggingMini = false;
+        
+        miniPlayer.style.transition = 'opacity 0.3s ease, transform 0.3s ease, left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; 
+        
+        const rect = miniPlayer.getBoundingClientRect();
+        const edgePadding = 20; 
+
+        if (rect.left + (rect.width / 2) < window.innerWidth / 2) {
+            miniPlayer.style.left = `${edgePadding}px`; 
+        } else {
+            miniPlayer.style.left = `${window.innerWidth - rect.width - edgePadding}px`; 
+        }
+    }
+});
+
+document.addEventListener("mousemove", (e) => {
+    if (!isDraggingMini) return;
+    e.preventDefault(); 
+    
+    let newX = e.clientX - dragOffsetX;
+    let newY = e.clientY - dragOffsetY;
+    
+    const rect = miniPlayer.getBoundingClientRect();
+    newX = Math.max(0, Math.min(newX, window.innerWidth - rect.width));
+    newY = Math.max(0, Math.min(newY, window.innerHeight - rect.height));
+    
+    miniPlayer.style.bottom = 'auto';
+    miniPlayer.style.right = 'auto';
+    miniPlayer.style.left = `${newX}px`;
+    miniPlayer.style.top = `${newY}px`;
 });

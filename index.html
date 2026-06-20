@@ -227,6 +227,8 @@
                 </div>
 
                 <div class="pro-controls">
+                    <button id="pro-mode-btn" title="列表循環"><i class="fas fa-retweet"></i></button>
+                    
                     <button id="pro-prev-btn"><i class="fas fa-step-backward"></i></button>
                     <button id="pro-play-btn" class="play-btn-main"><i class="fas fa-play"></i></button>
                     <button id="pro-next-btn"><i class="fas fa-step-forward"></i></button>
@@ -251,6 +253,24 @@
             </div>
         </div>
     </section>
+
+    <div id="mini-player" class="mini-player">
+        <div class="mini-player-inner">
+            <div class="mini-cover-wrapper">
+                <img id="mini-cover" src="https://via.placeholder.com/80" alt="cover">
+                <div class="mini-overlay">
+                    <button id="mini-play-btn"><i class="fas fa-play" style="transform: translateX(2px);"></i></button>
+                </div>
+            </div>
+            <div class="mini-info">
+                <div id="mini-title" class="mini-title">未选择</div>
+                <div id="mini-subtitle" class="mini-subtitle">--</div>
+            </div>
+        </div>
+        <div class="mini-progress-bg">
+            <div id="mini-progress" class="mini-progress-fill"></div>
+        </div>
+    </div>
 
     <!-- 工具区域 -->
     <section id="Link" class="link-section">
