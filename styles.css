@@ -206,16 +206,18 @@ main {
     letter-spacing: 1.5px;
 }
 
+/* ✨ 標籤區使用 Grid 以保證嚴格的對齊和三等分布局 ✨ */
 .tags {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 1.2rem;
-    max-width: 700px;
-    margin-bottom: auto;
+    max-width: 550px;
+    margin-bottom: auto; /* 將這塊推至上方 */
+    align-content: start;
 }
 
 .tag {
-    padding: 1rem 2rem;
+    padding: 0.8rem 1rem;
     border: calc(var(--border-width)) solid var(--primary-color);
     border-radius: var(--tag-radius) !important;
     color: var(--primary-color);
@@ -224,6 +226,7 @@ main {
     transition: all var(--transition-speed);
     cursor: pointer;
     background: white;
+    text-align: center; /* 使標籤內部文字居中 */
 }
 
 .tag:hover {
@@ -838,6 +841,41 @@ main {
 .status-icon { font-size: 1.1rem; }
 .status-icon.neutral { color: #d1d5db; }
 
+/* 延遲測試塊的頂部動作區 */
+.link-dashboard-action {
+    max-width: 1200px; 
+    margin: 30px auto 15px; 
+    display: flex; 
+    justify-content: flex-end;
+}
+
+.ping-refresh-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    padding: 10px 20px;
+    background: white;
+    border-radius: 25px;
+    box-shadow: var(--shadow-base);
+    border: 1px solid rgba(0,0,0,0.05);
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    font-weight: 600;
+}
+.ping-refresh-btn:hover {
+    color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+.ping-refresh-btn i {
+    transition: transform 0.4s ease;
+}
+.ping-refresh-btn:hover i {
+    transform: rotate(180deg);
+}
+
 /* 链接卡片 */
 .link-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
 .link-card { position: relative; border-radius: var(--global-border-radius); padding: 25px; min-height: 120px; overflow: hidden; cursor: pointer; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease; display: flex; align-items: center; background: var(--card-bg-tint, rgba(255, 255, 255, 0.4)); border: 1px solid rgba(255, 255, 255, 0.6); box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.5); z-index: 1; }
@@ -1054,8 +1092,8 @@ main.journey-container {
     .name-title p { font-size: 1rem !important; }
     
     /* 个人标签：九宫格排版 */
-    .tags { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 8px 10px !important; width: 100% !important; max-width: 340px !important; margin: 0 auto !important; justify-content: stretch !important; }
-    .tag { padding: 6px 2px !important; font-size: 0.8rem !important; text-align: center !important; border-width: 1.5px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+    .tags { gap: 10px !important; width: 100% !important; max-width: 380px !important; margin: 0 auto !important; justify-content: stretch !important; }
+    .tag { padding: 6px 2px !important; font-size: 0.85rem !important; text-align: center !important; border-width: 1.5px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
 
     /* Podcast 区域 */
     .podcast-left-stage { transform: scale(0.9); }

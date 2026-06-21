@@ -1,84 +1,145 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Biased Coin Tossing with History Log</title>
-        <script src="script.js"></script>
-        <link rel="stylesheet" href="style.css">
-    </head>
+<html lang="zh-TW">
 
-    <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biased Coin Lab | oops</title>
+    <!-- 引入 Chart.js 和 FontAwesome -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
 
-        <!-- Main container for the coin toss simulator -->
-        <div>
-            <h2>Biased Coin Tossing with History Log</h2>
+<body>
+    <!-- 導航欄 -->
+    <nav>
+        <div class="username">oops | Lab</div>
+        <button class="lang-switch" onclick="toggleLanguage()">EN</button>
+    </nav>
 
-            <!-- User inputs: number of tosses and probability of heads -->
-            <p>
-                Number of tosses: &nbsp;&nbsp;
-                <input id="input_tosses" name="input_tosses" type="text" size="25">
-            </p>
+    <main>
+        <a href="javascript:history.back()" class="back-home-btn">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="backHome">返回主頁</span>
+        </a>
 
-            <!-- Input field for the probability of heads (0.0 - 1.0) -->
-            <p>
-                Probablity of heads (0.0 - 1.0): &nbsp;
-                <input id="input_probability" type="text" name="input_probability" size="14">
-            </p>
-
-            <br>
-
-            <!-- Table layout: left column shows statistics, right column shows history -->
-            <table border="0">
-                <tr>
-                    <td class="h3">Results &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;</td>
-                    <td class="h3">History (most recent run)</td>
-                </tr>
-
-                <!-- Left column: statistical results -->
-                <tr>
-                    <td>
-                        <p>
-                            Heads: 
-                            <span id="print_headsCounter">0</span> 
-                        </p>
-                        <p>
-                            Tails: 
-                            <span id="print_tailsCounter">0</span>
-                        </p>
-                        <p>
-                            Heads %: 
-                            <span id="print_headsPercentage">0.0%</span>
-                        </p>
-                        <p>
-                            Tails %: 
-                            <span id="print_tailsPercentage">0.0%</span>
-                        </p>
-                    </td>
-
-                    <!-- Right column: history textarea -->
-                    <td>
-                        <tt><textarea id="print_tossesResult" rows="10" cols="32">Please enter the number of tosses and the probability first!</textarea></tt>
-                    </td>
-
-                    <!-- Row for buttons: Start Tossing and Reset -->
-                    <td>
-                        &emsp;<input type="button" value="Start Tossing" onclick="startTossing()" class="button">
-                        <br><br><br>
-                        &emsp;<input type="button" value="Reset" onclick="resetAll()" class="button">
-                    </td>
-                </tr>
-            </table>
-
-            <!-- Support message and links to gambling recovery resources -->
-            <tt>
-                <p class="notes">Note: If you need support to quit gambling, you can call the Hong Kong Gamblers Recovery Centre hotline (+852) 2426 6262 to receive professional counseling and assistance.</p>
-                <p class="notes">註：如果您需要戒賭支持，可以撥打香港戒賭中心戒賭熱線(+852) 2426 6262，獲取專業的輔導和幫助。</p>
-            </tt>
-
-            <!-- External links to recovery centre -->
-            <br>
-            <a href="https://www.hkgamblers-recovery.org/" alt="Hong Kong Gamblers Recovery Centre">Website : Hong Kong Gamblers Recovery Centre</a>
-            <br>
-            <a href="https://www.hkgamblers-recovery.org/eng/contact_us.php" alt="Hotline : (+852) 2426 6262">Hotline : (+852) 2426 6262</a>
+        <div class="page-header">
+            <h1 data-i18n="pageTitle">Biased Coin Tossing Lab</h1>
+            <p data-i18n="subtitle">-- 概率論與折騰的奇妙碰撞 --</p>
         </div>
-    </body>
+
+        <div class="alert-bar">
+            <div class="alert-info">
+                <i class="fas fa-heartbeat"></i>
+                <div>
+                    <p data-i18n="alertWarning">賭博無必勝，折騰有極限。如果發現自己對概率遊戲產生依賴，請及時尋求幫助。</p>
+                    <p style="color: #e17055; font-size: 0.85rem; margin-top: 5px;" data-i18n="hotline">香港戒賭中心熱線: +852 2426 6262</p>
+                </div>
+            </div>
+            <a href="https://www.hkgamblers-recovery.org/" target="_blank" class="alert-link" data-i18n="visitSite">訪問戒賭輔導網站 <i class="fas fa-external-link-alt"></i></a>
+        </div>
+
+        <div class="lab-grid">
+            <div class="left-panel">
+                <div class="card" style="margin-bottom: 25px;">
+                    <h3 data-i18n="paramTitle"><i class="fas fa-sliders-h"></i> 實驗參數設置</h3>
+
+                    <div class="mode-toggle">
+                        <button class="mode-btn active" id="btn_mode_random" onclick="setMode('random')" data-i18n="modeRandom">隨機</button>
+                        <button class="mode-btn" id="btn_mode_fixed" onclick="setMode('fixed')" data-i18n="modeFixed">自定義概率</button>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="input-header">
+                            <label data-i18n="tossNum">拋擲數量</label>
+                            <input type="number" id="input_tosses_num" class="num-input" value="1" min="1" max="10000">
+                        </div>
+                        <input type="range" id="input_tosses_range" min="1" max="1000" value="1">
+                        <small id="acc_hint" style="color: #888; font-size: 0.8rem; display: block; margin-top: 5px;" data-i18n="accumulateHint">* 每次點擊拋擲將會把數量「累積」到總數據中</small>
+                    </div>
+                    
+                    <div class="input-group" id="prob_group">
+                        <div class="input-header">
+                            <label data-i18n="probHeads">正面概率 (Heads)</label>
+                            <input type="number" id="input_probability" class="num-input" value="0.5" step="0.01" min="0" max="1">
+                        </div>
+                        <input type="range" id="input_prob_range" min="0" max="1" step="0.01" value="0.5">
+
+                        <div class="input-header" style="margin-top: 15px;">
+                            <label data-i18n="probTails">反面概率 (Tails)</label>
+                            <input type="number" id="input_tails_probability" class="num-input" value="0.5" step="0.01" min="0" max="1">
+                        </div>
+                        <input type="range" id="input_tails_prob_range" min="0" max="1" step="0.01" value="0.5">
+
+                        <small id="prob_hint" style="color: #888; font-size: 0.8rem; display: none; margin-top: 8px;" data-i18n="randomHint">* 隨機模式下強制使用 50% 真實隨機率</small>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" onclick="resetAll()"><span id="btn_reset_text" data-i18n="btnReset"><i class="fas fa-undo"></i> 重置</span></button>
+                        <button class="btn btn-primary" onclick="startSimulation()"><i class="fas fa-play"></i> <span id="btn_toss_text" data-i18n="btnTossAcc">拋擲</span></button>
+                    </div>
+                </div>
+
+                <div class="fallacy-notice" id="gamblers_fallacy_notice">
+                    <h4 data-i18n="fallacyTitle"><i class="fas fa-brain"></i> 認知突破：大數法則與賭徒謬誤</h4>
+                    <p>
+                        <span data-i18n="fallacyP1">下一投出現正面的理論概率：</span><span class="next-prob">50%</span><span data-i18n="fallacyP2"><br><br>不管您之前连续抛出了多少次，下一投出现正面的理论概率永远是50%，因为硬币并没有记忆。<br><br>所以每一次抛掷都是<strong>完全独立的事件</strong>。<br><br>但人们常误以为「越抛不中，下次中奖机率越大」，但透过右侧的常态分布你可以清楚发现，这只是认知的偏差。</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <div class="card">
+                    <h3 data-i18n="boardTitle"><i class="fas fa-chart-pie"></i> 結果看板</h3>
+                    
+                    <div class="results-panel">
+                        <div class="stats-col">
+                            <div class="combined-box">
+                                <div class="stat-row">
+                                    <div class="stat-label" id="label_heads"><i class="fas fa-circle highlight-text"></i> <span data-i18n="accHeads">累積正面</span></div>
+                                    <div class="stat-value highlight-text" id="res_heads">0<span data-i18n="unitTimes">次</span></div>
+                                </div>
+                                <div class="stat-row">
+                                    <div class="stat-label" id="label_tails"><i class="fas fa-circle" style="color:#cbd5e1;"></i> <span data-i18n="accTails">累積反面</span></div>
+                                    <div class="stat-value" id="res_tails">0<span data-i18n="unitTimes">次</span></div>
+                                </div>
+                                <div class="stat-row" style="border-top: 1px dashed #e5e5e5; padding-top: 12px; margin-top: 5px;">
+                                    <div class="stat-label" id="label_total"><i class="fas fa-layer-group" style="color: #64748b;"></i> <span data-i18n="totalTosses">總計拋擲</span></div>
+                                    <div class="stat-value highlight-text" id="total_tosses_badge" style="font-size: 1.3rem;">0<span data-i18n="unitToss">拋</span></div>
+                                </div>
+                            </div>
+
+                            <div class="combined-box">
+                                <div class="stat-row">
+                                    <div class="stat-label"><i class="fas fa-bolt" style="color:#facc15;"></i> <span data-i18n="maxStreak">最長連擊</span></div>
+                                    <div class="stat-value" id="res_streak">0<span data-i18n="unitTimes">次</span></div>
+                                </div>
+                                <div class="stat-row">
+                                    <div class="stat-label"><i class="fas fa-star" style="color:#a855f7;"></i> <span data-i18n="luckEval">運氣評估</span></div>
+                                    <div class="stat-value" id="res_luck" style="font-size: 1rem;">-</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-col">
+                            <div class="chart-container">
+                                <canvas id="distributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 data-i18n="rawStreamTitle"><i class="fas fa-terminal"></i> 歷史數據流 (Raw Stream)</h3>
+                    <div class="history-stream" id="history_stream">
+                        <span style="color: #666; font-size: 0.95rem;" data-i18n="waitingData">等待拋擲數據寫入...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<script src="script.js"></script>
+</body>
+
 </html>

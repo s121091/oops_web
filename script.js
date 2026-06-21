@@ -30,35 +30,33 @@ linkCards.forEach(card => {
 });
 
 // ==========================================
-// Horizontal Scroll Logic
+// Horizontal Scroll Logic (修復原生滾動衝突)
 // ==========================================
-// ✨ 修改：將滾動目標改為負責一體化滾動的最外層容器 ✨
 const slider = document.querySelector('.scroll-layout-container');
 const prevBtn = document.querySelector('.prev-btn');
 const nextBtn = document.querySelector('.next-btn');
 
-const smoothScrollTo = (element, target, duration) => {
-    const start = element.scrollLeft;
-    const change = target - start;
-    const startTime = performance.now();
-    const animateScroll = (currentTime) => {
-        const timeElapsed = currentTime - startTime;
-        if (timeElapsed < duration) {
-            const t = timeElapsed / duration;
-            const ease = 1 - (--t) * t * t * t; 
-            element.scrollLeft = start + change * ease;
-            requestAnimationFrame(animateScroll);
-        } else { element.scrollLeft = target; }
-    };
-    requestAnimationFrame(animateScroll);
-};
-
 if (slider && prevBtn && nextBtn) {
     const scrollAmount = 430; 
-    nextBtn.addEventListener('click', () => { smoothScrollTo(slider, slider.scrollLeft + scrollAmount, 500); });
-    prevBtn.addEventListener('click', () => { smoothScrollTo(slider, slider.scrollLeft - scrollAmount, 500); });
+    
+    // 改用原生的 scrollBy，它能完美兼容 CSS scroll-snap
+    nextBtn.addEventListener('click', () => { 
+        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' }); 
+    });
+    
+    prevBtn.addEventListener('click', () => { 
+        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); 
+    });
+
     let isTicking = false;
     
+    const updateButtons = () => {
+        const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
+        const buffer = 10; 
+        if(prevBtn) prevBtn.disabled = slider.scrollLeft <= buffer;
+        if(nextBtn) nextBtn.disabled = slider.scrollLeft >= maxScrollLeft - buffer;
+    };
+
     slider.addEventListener('scroll', () => {
         if (!slider.classList.contains('is-scrolling')) { slider.classList.add('is-scrolling'); }
         window.clearTimeout(slider.scrollTimeout);
@@ -66,17 +64,14 @@ if (slider && prevBtn && nextBtn) {
         
         if (!isTicking) {
             window.requestAnimationFrame(() => {
-                const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
-                const buffer = 10; 
-                if(prevBtn) prevBtn.disabled = slider.scrollLeft <= buffer;
-                if(nextBtn) nextBtn.disabled = slider.scrollLeft >= maxScrollLeft - buffer;
+                updateButtons();
                 isTicking = false;
             });
             isTicking = true;
         }
     });
     // 頁面載入時初始化按鈕狀態
-    setTimeout(() => { prevBtn.disabled = slider.scrollLeft <= 10; }, 100);
+    setTimeout(updateButtons, 100);
 }
 
 // ==========================================
@@ -791,6 +786,42 @@ const API_LIST = [
     }
 ];
 
+// 重置網絡信息的 UI，提供直觀的刷新反饋
+const resetNetworkUI = () => {
+    const elV4 = document.getElementById('ip-address-v4');
+    if(elV4) { elV4.textContent = 'IPv4: Detecting...'; elV4.style.color = ''; elV4.classList.remove('found'); elV4.style.display = 'inline-block'; }
+    
+    const elV6 = document.getElementById('ip-address-v6');
+    if(elV6) { elV6.style.display = 'none'; }
+    
+    const locEl = document.getElementById('ip-location');
+    if(locEl) locEl.textContent = '...';
+    
+    const asnEl = document.getElementById('asn-tags');
+    if(asnEl) asnEl.innerHTML = '<span class="info-tag tag-loading" data-i18n="tools.analyzing">Analyzing...</span>';
+    
+    const tagsEl = document.getElementById('ip-tags');
+    if(tagsEl) tagsEl.innerHTML = '<span class="info-tag tag-loading" data-i18n="tools.analyzing">Analyzing...</span>';
+    
+    const scoreEl = document.getElementById('fraud-score');
+    if(scoreEl) { scoreEl.textContent = 'Calculating...'; scoreEl.className = 'value safe-score'; scoreEl.style.color = ''; }
+    
+    const serviceEl = document.getElementById('service-type-val');
+    if(serviceEl) serviceEl.textContent = 'Detecting...';
+    
+    const ids = ['d-vpn', 'd-proxy', 'd-tor', 'd-relay', 'd-hosting', 'd-anycast', 'd-mobile', 'd-edu', 'd-satellite'];
+    ids.forEach(id => {
+        const li = document.getElementById(id);
+        if (li) {
+            const iconSpan = li.querySelector('.status-icon');
+            if (iconSpan) {
+                iconSpan.className = 'fas fa-spinner fa-spin status-icon neutral';
+                iconSpan.innerHTML = '';
+            }
+        }
+    });
+};
+
 async function fetchNetworkInfo() {
     const updateUI = (data, isV4 = false) => {
         if (isV4) {
@@ -868,7 +899,8 @@ async function fetchNetworkInfo() {
 }
 
 setTimeout(fetchNetworkInfo, 500);
-    const testLatency = () => {
+
+const testLatency = () => {
     const cards = document.querySelectorAll('.link-card[data-test-url]');
     cards.forEach(card => {
         const url = card.dataset.testUrl;
@@ -910,54 +942,66 @@ setTimeout(fetchNetworkInfo, 500);
         img.src = url + '?t=' + startTime;
     });
 };
-    setTimeout(testLatency, 1000);
-    const refreshBtn = document.getElementById('retest-btn');
-    if(refreshBtn) refreshBtn.addEventListener('click', () => { testLatency(); fetchNetworkInfo(); });
+setTimeout(testLatency, 1000);
 
-    let currentLang = 'zh';
-    const langMap = { zh: 'en', en: 'zh' };
-    const savedLang = localStorage.getItem('lang') || 'zh';
-    if (savedLang !== 'zh') { await applyTranslations(savedLang); currentLang = savedLang; }
-    const switchBtn = document.querySelector('.lang-switch');
-    if(switchBtn) switchBtn.addEventListener('click', async () => { 
-        currentLang = langMap[currentLang]; 
-        await applyTranslations(currentLang); 
-        localStorage.setItem('lang', currentLang); 
-        switchBtn.textContent = currentLang === 'zh' ? 'EN' : '中'; 
-    });
+// 為頂部按鈕綁定網絡刷新邏輯
+const refreshBtn = document.getElementById('retest-btn');
+if(refreshBtn) refreshBtn.addEventListener('click', () => { 
+    resetNetworkUI(); 
+    fetchNetworkInfo(); 
+});
 
-    // ✨ 增加了 maxY 參數限制最大下移距離 ✨
-    const initSpringSticky = (selector, topOffset = 100, maxY = null) => {
-        const element = document.querySelector(selector);
-        if (!element || window.innerWidth <= 768) return;
-        let currentY = 0, targetY = 0, velocity = 0;
-        const stiffness = 0.05, damping = 0.75;
-        const parent = element.parentElement;
-        const update = () => {
-            if (window.innerWidth <= 768) {
-                element.style.transform = '';
-                return;
-            }
-            const parentRect = parent.getBoundingClientRect();
-            let desiredY = window.scrollY - (parentRect.top + window.scrollY) + topOffset;
-            
-            // 計算最大可能下移距離並加入 maxY 限制
-            let maxPossibleY = parent.offsetHeight - element.offsetHeight;
-            if (maxY !== null) {
-                maxPossibleY = Math.min(maxPossibleY, maxY);
-            }
-            
-            desiredY = Math.max(0, Math.min(desiredY, maxPossibleY));
-            targetY = desiredY;
-            const force = (targetY - currentY) * stiffness;
-            velocity = (velocity + force) * damping;
-            currentY += velocity;
-            element.style.transform = `translate3d(0, ${currentY}px, 0)`;
-            requestAnimationFrame(update);
-        };
-        update();
+// 專為下方 Ping 卡片綁定的刷新按鈕
+const pingRefreshBtn = document.getElementById('retest-ping-btn');
+if(pingRefreshBtn) pingRefreshBtn.addEventListener('click', () => {
+    testLatency();
+});
+
+let currentLang = 'zh';
+const langMap = { zh: 'en', en: 'zh' };
+const savedLang = localStorage.getItem('lang') || 'zh';
+if (savedLang !== 'zh') { await applyTranslations(savedLang); currentLang = savedLang; }
+const switchBtn = document.querySelector('.lang-switch');
+if(switchBtn) switchBtn.addEventListener('click', async () => { 
+    currentLang = langMap[currentLang]; 
+    await applyTranslations(currentLang); 
+    localStorage.setItem('lang', currentLang); 
+    switchBtn.textContent = currentLang === 'zh' ? 'EN' : '中'; 
+});
+
+// ✨ 增加了 maxY 參數限制最大下移距離 ✨
+const initSpringSticky = (selector, topOffset = 100, maxY = null) => {
+    const element = document.querySelector(selector);
+    if (!element || window.innerWidth <= 768) return;
+    let currentY = 0, targetY = 0, velocity = 0;
+    const stiffness = 0.05, damping = 0.75;
+    const parent = element.parentElement;
+    const update = () => {
+        if (window.innerWidth <= 768) {
+            element.style.transform = '';
+            return;
+        }
+        const parentRect = parent.getBoundingClientRect();
+        let desiredY = window.scrollY - (parentRect.top + window.scrollY) + topOffset;
+        
+        // 計算最大可能下移距離並加入 maxY 限制
+        let maxPossibleY = parent.offsetHeight - element.offsetHeight;
+        if (maxY !== null) {
+            maxPossibleY = Math.min(maxPossibleY, maxY);
+        }
+        
+        desiredY = Math.max(0, Math.min(desiredY, maxPossibleY));
+        targetY = desiredY;
+        const force = (targetY - currentY) * stiffness;
+        velocity = (velocity + force) * damping;
+        currentY += velocity;
+        element.style.transform = `translate3d(0, ${currentY}px, 0)`;
+        requestAnimationFrame(update);
     };
-    initSpringSticky('.podcast-left-stage', 100, 180); // ✨ 套用你指定的 421px 最大下移限制 ✨
+    update();
+};
+initSpringSticky('.podcast-left-stage', 100, 180); // ✨ 套用你指定的 421px 最大下移限制 ✨
+
 });
 
 async function loadTranslations(lang) { 
@@ -992,7 +1036,7 @@ function loadLanguage(lang) {
         .then(translations => {
             applyTranslations(translations);
             document.querySelector('.lang-switch').textContent = lang === 'zh' ? 'EN' : '中文';
-            renderMusic(translations.music.songs);
+            if(translations.music && translations.music.songs) renderMusic(translations.music.songs);
         })
         .catch(err => console.error('Load language error:', err));
 }
@@ -1013,11 +1057,12 @@ function getNestedValue(obj, path) {
 
 document.addEventListener('DOMContentLoaded', function() {
     const langSwitch = document.querySelector('.lang-switch');
-    langSwitch.addEventListener('click', function() {
-        const newLang = currentLang === 'zh' ? 'en' : 'zh';
-        loadLanguage(newLang);
-    });
-
+    if(langSwitch) {
+        langSwitch.addEventListener('click', function() {
+            const newLang = currentLang === 'zh' ? 'en' : 'zh';
+            loadLanguage(newLang);
+        });
+    }
     loadLanguage(currentLang);
 });
 
@@ -1052,14 +1097,15 @@ window.renderMusic = function(songs) {
     if (!songs || songs.length === 0) return;
     originalSongs = [...songs];
     currentPlaylist = [...songs];
-    renderPlaylistView();
+    if(typeof renderPlaylistView === 'function') renderPlaylistView();
     
     if (!currentPlayingSong) {
-        loadSong(currentPlaylist[0], false);
+        if(typeof loadSong === 'function') loadSong(currentPlaylist[0], false);
     }
 };
 
 function renderPlaylistView() {
+    if(!proPlaylistContainer) return;
     proPlaylistContainer.innerHTML = '';
     currentPlaylist.forEach((song) => {
         const isLiked = likedSongs.includes(song.title);
@@ -1092,9 +1138,9 @@ function loadSong(song, autoPlay = false) {
 
     currentPlayingSong = song;
     musicAudio.src = song.audio;
-    proCover.src = song.cover;
-    proTitle.textContent = song.title;
-    proArtist.textContent = song.artist;
+    if(proCover) proCover.src = song.cover;
+    if(proTitle) proTitle.textContent = song.title;
+    if(proArtist) proArtist.textContent = song.artist;
     
     updateLikeButtonUI();
     renderPlaylistView();
@@ -1136,16 +1182,18 @@ function togglePlayMusic(forcePlay) {
         }
     }
     
-    const playIconHTML = '<i class="fas fa-play" style="transform: translateX(2px);"></i>';
-    proPlayBtn.innerHTML = isMusicPlaying ? '<i class="fas fa-pause"></i>' : playIconHTML;
+    if(proPlayBtn) {
+        const playIconHTML = '<i class="fas fa-play" style="transform: translateX(2px);"></i>';
+        proPlayBtn.innerHTML = isMusicPlaying ? '<i class="fas fa-pause"></i>' : playIconHTML;
+    }
     
     if (typeof updateMiniPlayerState === 'function') updateMiniPlayerState();
 }
 
-proPlayBtn.addEventListener('click', togglePlayMusic);
+if(proPlayBtn) proPlayBtn.addEventListener('click', togglePlayMusic);
 
 function updateLikeButtonUI() {
-    if (!currentPlayingSong) return;
+    if (!currentPlayingSong || !proLikeBtn) return;
     const isLiked = likedSongs.includes(currentPlayingSong.title);
     if (isLiked) {
         proLikeBtn.classList.add('liked');
@@ -1156,74 +1204,87 @@ function updateLikeButtonUI() {
     }
 }
 
-proLikeBtn.addEventListener('click', () => {
-    if (!currentPlayingSong) return;
-    const songTitle = currentPlayingSong.title;
-    const index = likedSongs.indexOf(songTitle);
-    
-    if (index > -1) {
-        likedSongs.splice(index, 1); 
-    } else {
-        likedSongs.push(songTitle); 
-    }
-    
-    localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
-    updateLikeButtonUI();
-    renderPlaylistView(); 
-});
+if(proLikeBtn) {
+    proLikeBtn.addEventListener('click', () => {
+        if (!currentPlayingSong) return;
+        const songTitle = currentPlayingSong.title;
+        const index = likedSongs.indexOf(songTitle);
+        
+        if (index > -1) {
+            likedSongs.splice(index, 1); 
+        } else {
+            likedSongs.push(songTitle); 
+        }
+        
+        localStorage.setItem('likedSongs', JSON.stringify(likedSongs));
+        updateLikeButtonUI();
+        renderPlaylistView(); 
+    });
+}
 
 musicAudio.addEventListener('timeupdate', () => {
     if (musicAudio.duration) {
         const percent = (musicAudio.currentTime / musicAudio.duration) * 100;
-        proSeekbar.value = percent;
-        proTimeCurrent.textContent = formatMusicTime(musicAudio.currentTime);
-        proTimeTotal.textContent = formatMusicTime(musicAudio.duration);
+        if(proSeekbar) proSeekbar.value = percent;
+        if(proTimeCurrent) proTimeCurrent.textContent = formatMusicTime(musicAudio.currentTime);
+        if(proTimeTotal) proTimeTotal.textContent = formatMusicTime(musicAudio.duration);
     }
 });
 
-proSeekbar.addEventListener('input', () => {
-    if (musicAudio.duration) {
-        const seekTime = (proSeekbar.value / 100) * musicAudio.duration;
-        musicAudio.currentTime = seekTime;
-    }
-});
+if(proSeekbar) {
+    proSeekbar.addEventListener('input', () => {
+        if (musicAudio.duration) {
+            const seekTime = (proSeekbar.value / 100) * musicAudio.duration;
+            musicAudio.currentTime = seekTime;
+        }
+    });
+}
 
 musicAudio.addEventListener('ended', () => {
-    document.getElementById('pro-next-btn').click();
+    const nextBtn = document.getElementById('pro-next-btn');
+    if(nextBtn) nextBtn.click();
 });
 
-document.getElementById('pro-next-btn').addEventListener('click', () => {
-    if(!currentPlayingSong) return;
-    let index = currentPlaylist.findIndex(s => s.title === currentPlayingSong.title);
-    let nextIndex = index + 1 >= currentPlaylist.length ? 0 : index + 1;
-    loadSong(currentPlaylist[nextIndex], true);
-});
+const nextBtn = document.getElementById('pro-next-btn');
+if(nextBtn) {
+    nextBtn.addEventListener('click', () => {
+        if(!currentPlayingSong) return;
+        let index = currentPlaylist.findIndex(s => s.title === currentPlayingSong.title);
+        let nextIndex = index + 1 >= currentPlaylist.length ? 0 : index + 1;
+        loadSong(currentPlaylist[nextIndex], true);
+    });
+}
 
-document.getElementById('pro-prev-btn').addEventListener('click', () => {
-    if(!currentPlayingSong) return;
-    let index = currentPlaylist.findIndex(s => s.title === currentPlayingSong.title);
-    let prevIndex = index - 1 < 0 ? currentPlaylist.length - 1 : index - 1;
-    loadSong(currentPlaylist[prevIndex], true);
-});
+const prevBtnPro = document.getElementById('pro-prev-btn');
+if(prevBtnPro) {
+    prevBtnPro.addEventListener('click', () => {
+        if(!currentPlayingSong) return;
+        let index = currentPlaylist.findIndex(s => s.title === currentPlayingSong.title);
+        let prevIndex = index - 1 < 0 ? currentPlaylist.length - 1 : index - 1;
+        loadSong(currentPlaylist[prevIndex], true);
+    });
+}
 
-proSortSelect.addEventListener('change', (e) => {
-    const mode = e.target.value;
-    if (mode === 'default') {
-        currentPlaylist = [...originalSongs];
-    } else if (mode === 'alphabet') {
-        currentPlaylist.sort((a, b) => a.title.localeCompare(b.title));
-    } else if (mode === 'artist') {
-        currentPlaylist.sort((a, b) => a.artist.localeCompare(b.artist));
-    } else if (mode === 'liked') {
-        currentPlaylist = originalSongs.filter(song => likedSongs.includes(song.title));
-        if(currentPlaylist.length === 0) {
-            alert('你還沒有喜歡的歌曲哦！顯示默認列表。');
-            proSortSelect.value = 'default';
+if(proSortSelect) {
+    proSortSelect.addEventListener('change', (e) => {
+        const mode = e.target.value;
+        if (mode === 'default') {
             currentPlaylist = [...originalSongs];
+        } else if (mode === 'alphabet') {
+            currentPlaylist.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (mode === 'artist') {
+            currentPlaylist.sort((a, b) => a.artist.localeCompare(b.artist));
+        } else if (mode === 'liked') {
+            currentPlaylist = originalSongs.filter(song => likedSongs.includes(song.title));
+            if(currentPlaylist.length === 0) {
+                alert('你還沒有喜歡的歌曲哦！顯示默認列表。');
+                proSortSelect.value = 'default';
+                currentPlaylist = [...originalSongs];
+            }
         }
-    }
-    renderPlaylistView();
-});
+        renderPlaylistView();
+    });
+}
 
 // ==========================================
 // 懸浮迷你播放器邏輯 (Mini Player) - 終極修復版
@@ -1242,39 +1303,43 @@ window.updateMiniPlayerState = function() {
     let isPlaying = false;
     
     if (window.activeSource === 'music' && typeof currentPlayingSong !== 'undefined' && currentPlayingSong) {
-        miniCover.src = currentPlayingSong.cover;
-        miniTitle.textContent = currentPlayingSong.title;
-        miniSubtitle.textContent = currentPlayingSong.artist;
+        if(miniCover) miniCover.src = currentPlayingSong.cover;
+        if(miniTitle) miniTitle.textContent = currentPlayingSong.title;
+        if(miniSubtitle) miniSubtitle.textContent = currentPlayingSong.artist;
         isPlaying = isMusicPlaying;
     } else if (window.activeSource === 'podcast' && window.podcastEpisodes && window.podcastEpisodes[window.currentPodcastEpisodeIndex]) {
         const ep = window.podcastEpisodes[window.currentPodcastEpisodeIndex];
-        miniCover.src = ep.imgUrl;
-        miniTitle.textContent = ep.title;
-        miniSubtitle.textContent = "Podcast"; 
+        if(miniCover) miniCover.src = ep.imgUrl;
+        if(miniTitle) miniTitle.textContent = ep.title;
+        if(miniSubtitle) miniSubtitle.textContent = "Podcast"; 
         isPlaying = window.podcastAudio && !window.podcastAudio.paused;
     }
 
-    const playIconHTML = '<i class="fas fa-play" style="transform: translateX(2px);"></i>';
-    miniPlayBtn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : playIconHTML;
+    if(miniPlayBtn) {
+        const playIconHTML = '<i class="fas fa-play" style="transform: translateX(2px);"></i>';
+        miniPlayBtn.innerHTML = isPlaying ? '<i class="fas fa-pause"></i>' : playIconHTML;
+    }
 };
 
-miniPlayBtn.addEventListener('click', (e) => {
-    e.stopPropagation(); 
-    if (window.activeSource === 'music') {
-        if (typeof togglePlayMusic === 'function') togglePlayMusic();
-    } else if (window.activeSource === 'podcast') {
-        if (window.podcastAudio && !window.podcastAudio.paused) {
-            window.podcastAudio.pause();
-            if (typeof window.updatePlayerStateGlobal === 'function') window.updatePlayerStateGlobal(false);
-        } else {
-            if (typeof window.playPodcastGlobal === 'function') window.playPodcastGlobal(window.currentPodcastEpisodeIndex);
+if(miniPlayBtn) {
+    miniPlayBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        if (window.activeSource === 'music') {
+            if (typeof togglePlayMusic === 'function') togglePlayMusic();
+        } else if (window.activeSource === 'podcast') {
+            if (window.podcastAudio && !window.podcastAudio.paused) {
+                window.podcastAudio.pause();
+                if (typeof window.updatePlayerStateGlobal === 'function') window.updatePlayerStateGlobal(false);
+            } else {
+                if (typeof window.playPodcastGlobal === 'function') window.playPodcastGlobal(window.currentPodcastEpisodeIndex);
+            }
         }
-    }
-    updateMiniPlayerState();
-});
+        updateMiniPlayerState();
+    });
+}
 
 window.addEventListener('scroll', () => {
-    if (!window.activeSource || !window.hasStartedPlaying) return; 
+    if (!window.activeSource || !window.hasStartedPlaying || !miniPlayer) return; 
 
     let targetSection = null;
     if (window.activeSource === 'music') {
@@ -1303,7 +1368,7 @@ window.addEventListener('scroll', () => {
 });
 
 setInterval(() => {
-    if (!miniPlayer.classList.contains('show')) return;
+    if (!miniPlayer || !miniPlayer.classList.contains('show') || !miniProgress) return;
     
     if (window.activeSource === 'music' && typeof musicAudio !== 'undefined' && musicAudio.duration) {
         miniProgress.style.width = `${(musicAudio.currentTime / musicAudio.duration) * 100}%`;
@@ -1316,48 +1381,50 @@ let isDraggingMini = false;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 
-miniPlayer.addEventListener("mousedown", (e) => {
-    if (e.target.closest('#mini-play-btn')) return; 
-    isDraggingMini = true;
-    miniPlayer.style.transition = 'none'; 
-    
-    e.preventDefault(); 
-    
-    const rect = miniPlayer.getBoundingClientRect();
-    dragOffsetX = e.clientX - rect.left;
-    dragOffsetY = e.clientY - rect.top;
-});
-
-document.addEventListener("mouseup", () => {
-    if (isDraggingMini) {
-        isDraggingMini = false;
+if(miniPlayer) {
+    miniPlayer.addEventListener("mousedown", (e) => {
+        if (e.target.closest('#mini-play-btn')) return; 
+        isDraggingMini = true;
+        miniPlayer.style.transition = 'none'; 
         
-        miniPlayer.style.transition = 'opacity 0.3s ease, transform 0.3s ease, left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; 
+        e.preventDefault(); 
         
         const rect = miniPlayer.getBoundingClientRect();
-        const edgePadding = 20; 
+        dragOffsetX = e.clientX - rect.left;
+        dragOffsetY = e.clientY - rect.top;
+    });
 
-        if (rect.left + (rect.width / 2) < window.innerWidth / 2) {
-            miniPlayer.style.left = `${edgePadding}px`; 
-        } else {
-            miniPlayer.style.left = `${window.innerWidth - rect.width - edgePadding}px`; 
+    document.addEventListener("mouseup", () => {
+        if (isDraggingMini) {
+            isDraggingMini = false;
+            
+            miniPlayer.style.transition = 'opacity 0.3s ease, transform 0.3s ease, left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1)'; 
+            
+            const rect = miniPlayer.getBoundingClientRect();
+            const edgePadding = 20; 
+
+            if (rect.left + (rect.width / 2) < window.innerWidth / 2) {
+                miniPlayer.style.left = `${edgePadding}px`; 
+            } else {
+                miniPlayer.style.left = `${window.innerWidth - rect.width - edgePadding}px`; 
+            }
         }
-    }
-});
+    });
 
-document.addEventListener("mousemove", (e) => {
-    if (!isDraggingMini) return;
-    e.preventDefault(); 
-    
-    let newX = e.clientX - dragOffsetX;
-    let newY = e.clientY - dragOffsetY;
-    
-    const rect = miniPlayer.getBoundingClientRect();
-    newX = Math.max(0, Math.min(newX, window.innerWidth - rect.width));
-    newY = Math.max(0, Math.min(newY, window.innerHeight - rect.height));
-    
-    miniPlayer.style.bottom = 'auto';
-    miniPlayer.style.right = 'auto';
-    miniPlayer.style.left = `${newX}px`;
-    miniPlayer.style.top = `${newY}px`;
-});
+    document.addEventListener("mousemove", (e) => {
+        if (!isDraggingMini) return;
+        e.preventDefault(); 
+        
+        let newX = e.clientX - dragOffsetX;
+        let newY = e.clientY - dragOffsetY;
+        
+        const rect = miniPlayer.getBoundingClientRect();
+        newX = Math.max(0, Math.min(newX, window.innerWidth - rect.width));
+        newY = Math.max(0, Math.min(newY, window.innerHeight - rect.height));
+        
+        miniPlayer.style.bottom = 'auto';
+        miniPlayer.style.right = 'auto';
+        miniPlayer.style.left = `${newX}px`;
+        miniPlayer.style.top = `${newY}px`;
+    });
+}
