@@ -1,83 +1,378 @@
-.controls {
-    margin: 10px 0;
+/* =========================================
+    1. 全局变量与基础重置
+    ========================================= */
+:root {
+    --primary-color: #FF6B35;
+    --secondary-color: #2E3038;
+    --background-color: rgb(247, 248, 249);
+    --global-border-radius: 24px;
+    --blur-value: 12px;
+    --transition-speed: 0.3s;
+    --nav-height: 80px;
+    --shadow-base: 0 10px 30px rgba(0, 0, 0, 0.05);
+    --status-good: #4ade80;
 }
 
-button {
-    padding: 8px 15px;
-    background-color: rgb(204,225,158);
-    border: orange dashed 2px;
-    margin: 5px;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-.game-container {
-    width: 1150px;
-    margin: 0 auto;
-    overflow: hidden;
-}
-
-.board {
-    margin: 20px auto;
-    overflow: hidden;
-}
-
-.basic-grid {
-    width: 560px;
-    margin: auto;
-}
-
-.advanced-grid {
-    width: 840px;
-}
-
-.card {
-    width: 120px;
-    height: 120px;
-    margin: 10px;
-    float: left;
-    background: #ffcb74;
-    border: 2px solid #333;
-    cursor: pointer;
-    text-align: center;
-    line-height: 120px;
-    font-size: 40px;
+* {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
 }
 
-.card.matched {
-    background: #90EE90;
-    pointer-events: none;
+body {
+    background: var(--background-color);
+    background-image: radial-gradient(circle at top right, rgba(255, 107, 53, 0.05), transparent 40%),
+                        radial-gradient(circle at bottom left, rgba(46, 48, 56, 0.05), transparent 40%);
+    min-height: 100vh;
+    color: var(--secondary-color);
+    overflow-x: hidden;
 }
-.card img {
+
+/* =========================================
+    2. 导航栏 & 顶部控制栏
+    ========================================= */
+nav {
+    position: fixed;
+    top: 0;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: var(--nav-height);
+    padding: 0 5%;
+    backdrop-filter: blur(var(--blur-value));
+    -webkit-backdrop-filter: blur(var(--blur-value));
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-.left_box {
-    margin: 200px auto;
-    border: black solid 2px;
-    background-color: beige;
-    font-size: 1rem;
+.username {
+    color: var(--secondary-color);
+    font-weight: 700;
+    font-size: 1.4rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.left_box.clock {
-    float: left;
-    margin: 200px 20px 0 0;
+.username i { color: var(--primary-color); }
+
+/* 语言切换按钮 */
+.lang-switch {
+    background: none;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 6px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all var(--transition-speed);
+    outline: none;
 }
 
-#game-board{
-    float: left;
-    margin:  0 0 0 50;
+.lang-switch:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
 }
 
-.controls{
-    float: left;
-    margin:  0 0 0 55;
+/* Body 内的左上角返回按钮 */
+.top-action-bar {
+    max-width: 1200px;
+    margin: calc(var(--nav-height) + 20px) auto 0;
+    padding: 0 5%;
+    display: flex;
+    justify-content: flex-start;
 }
 
-.game_h1{
-    float: left;
-    margin: 0 0 0 55;
+.back-home-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.05rem;
+    transition: color var(--transition-speed), transform var(--transition-speed);
+}
+
+.back-home-btn:hover {
+    color: var(--primary-color);
+    transform: translateX(-5px);
+}
+
+/* =========================================
+    3. 游戏主布局 (桌面端保持原有左右布局)
+    ========================================= */
+.main-container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    padding: 0 5% 60px;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+}
+
+/* 左侧侧边栏 */
+.sidebar {
+    flex: 0 0 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.glass-card {
+    background: white;
+    border-radius: var(--global-border-radius);
+    padding: 30px;
+    box-shadow: var(--shadow-base);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    text-align: center;
+}
+
+/* 时钟卡片 */
+.clock-container canvas {
+    display: block;
+    margin: 0 auto 15px;
+}
+
+.digital-clock p {
+    font-size: 0.95rem;
+    color: #666;
+    margin: 5px 0;
+    font-weight: 500;
+}
+
+.digital-clock span {
+    color: var(--primary-color);
+    font-family: monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* 独立的计分板卡片 */
+.stats-board {
+    display: flex;
+    justify-content: space-around;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-item .label { font-size: 0.8rem; color: #888; text-transform: uppercase; font-weight: 600;}
+.stat-item .value { font-size: 1.8rem; color: var(--secondary-color); font-weight: 700; font-family: monospace; }
+
+/* 咖啡泡茶互动小玩具 */
+.toy-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: var(--secondary-color);
+}
+.toy-scene {
+    height: 140px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+.cup-container { position: relative; display: flex; flex-direction: column; align-items: center; }
+
+.steam-container { position: absolute; top: -35px; display: flex; gap: 6px; opacity: 0; transition: opacity 0.5s ease; }
+.steam-container.active { opacity: 1; }
+.steam-container span { width: 3px; height: 15px; background: #ccc; border-radius: 5px; filter: blur(1px); animation: steam-rise 1.5s infinite ease-in; opacity: 0; }
+.steam-container span:nth-child(2) { animation-delay: 0.4s; height: 20px; }
+.steam-container span:nth-child(3) { animation-delay: 0.8s; }
+
+@keyframes steam-rise { 0% { transform: translateY(0) scaleX(1); opacity: 0; } 50% { opacity: 0.6; } 100% { transform: translateY(-30px) scaleX(2); opacity: 0; } }
+
+.cup-wrapper-inner { position: relative; }
+.cup-body { width: 70px; height: 60px; background: rgba(255, 255, 255, 0.8); border: 3px solid #ddd; border-top: none; border-radius: 0 0 35px 35px; position: relative; overflow: hidden; z-index: 2; box-shadow: inset 0 -4px 8px rgba(0,0,0,0.05); }
+.cup-handle { position: absolute; right: -16px; top: 8px; width: 25px; height: 32px; border: 3px solid #ddd; border-radius: 0 15px 15px 0; z-index: 1; }
+.liquid { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: linear-gradient(180deg, #5D4037 0%, #3E2723 100%); transition: height 0.1s linear; }
+.saucer { width: 100px; height: 8px; background: #ddd; border-radius: 50%; margin-top: -3px; z-index: 3; }
+
+.toy-controls { display: flex; gap: 10px; justify-content: center; }
+.toy-controls .oops-btn { padding: 6px 15px; font-size: 0.85rem; user-select: none; }
+
+/* 右侧核心游戏区 */
+.game-core {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.game-header h1 {
+    font-size: 2.5rem;
+    color: var(--secondary-color);
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+}
+
+.game-header p {
+    color: var(--primary-color);
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 40px;
+    justify-content: center;
+}
+
+.oops-btn {
+    background: white;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 10px 24px;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    outline: none;
+}
+
+.oops-btn:active { transform: translateY(0) scale(0.95); }
+.oops-btn.active-mode { background: var(--primary-color); color: white; }
+
+/* =========================================
+    4. 3D 翻转卡牌核心样式
+    ========================================= */
+.board {
+    display: grid;
+    gap: 15px;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.basic-grid { grid-template-columns: repeat(4, 1fr); }
+.advanced-grid { grid-template-columns: repeat(6, 1fr); }
+
+.card { width: 110px; height: 110px; cursor: pointer; position: relative; }
+
+.card-inner {
+    width: 100%; height: 100%; position: relative;
+    transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform-style: preserve-3d;
+    border-radius: 16px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.card.flipped .card-inner { transform: rotateY(180deg); }
+
+.card-front, .card-back {
+    position: absolute; width: 100%; height: 100%;
+    -webkit-backface-visibility: hidden; backface-visibility: hidden;
+    border-radius: 16px; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.card-front { background: linear-gradient(135deg, var(--primary-color), #ff8a5c); color: white; font-size: 2.5rem; border: 2px solid rgba(255,255,255,0.2); }
+.card-front::after { content: '\f0f4'; font-family: 'Font Awesome 6 Free'; font-weight: 900; opacity: 0.3; font-size: 3rem; position: absolute; }
+.card-back { background: white; transform: rotateY(180deg); border: 2px solid #eee; padding: 10px; }
+.card-back img { width: 120%; height: 120%; border-radius: 13px; object-fit: contain; user-select: none; -webkit-user-drag: none; }
+
+.card.matched .card-inner { transform: rotateY(180deg) scale(0.95); box-shadow: 0 0 20px var(--status-good); border: 2px solid var(--status-good); }
+.card.matched { pointer-events: none; }
+
+/* 胜利提示 */
+.win-banner {
+    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+    background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+    padding: 40px 60px; border-radius: var(--global-border-radius);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2); text-align: center;
+    z-index: 2000; transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.win-banner.show { transform: translate(-50%, -50%) scale(1); }
+.win-banner h2 { color: var(--primary-color); font-size: 2.5rem; margin-bottom: 15px; }
+.win-banner p { color: var(--secondary-color); font-size: 1.2rem; margin-bottom: 25px; }
+
+/* =========================================
+    5. 响应式规则 (重点：仅针对手机端调整排版顺序)
+    ========================================= */
+.site-footer {
+    text-align: center;
+    padding: 30px 0;
+    color: #888;
+    border-top: 1px dashed #ddd;
+    margin-top: 40px;
+    font-size: 0.9rem;
+}
+
+/* 移动端 900px 以下激活重排逻辑 */
+@media (max-width: 900px) {
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    /* 使用 contents 消除左右父容器的束缚，让所有内部卡片直接作为 flex-item 排列 */
+    .sidebar, .game-core {
+        display: contents;
+    }
+
+    /* --- 以下是手机端特供排序逻辑 --- */
+    
+    /* 1. 标题 */
+    .game-header { order: 1; width: 100%; margin-bottom: 10px; }
+    
+    /* 2. 难度选择与偷看功能 */
+    .controls { order: 2; width: 100%; margin-bottom: 0; }
+    
+    /* 3. 时钟和时间日期 (变成横向组件) */
+    .clock-container { 
+        order: 3; 
+        width: 100%; 
+        display: flex; 
+        flex-direction: row; 
+        align-items: center; 
+        justify-content: center; 
+        gap: 25px; 
+        padding: 15px 20px;
+    }
+    .clock-container canvas { width: 80px !important; height: 80px !important; margin: 0; }
+    .digital-clock p { text-align: left; }
+    
+    /* 4. 分数板 */
+    .stats-board { order: 4; width: 100%; margin-bottom: 15px; }
+    
+    /* 5. 游戏本体 */
+    .board { order: 5; margin-bottom: 30px; }
+    
+    /* 6. 解压小玩具放到最后 */
+    .toy-card { order: 6; width: 100%; }
+
+    .advanced-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 500px) {
+    .basic-grid, .advanced-grid { grid-template-columns: repeat(3, 1fr); }
+    .card { width: 90px; height: 90px; }
+    .game-header h1 { font-size: 2rem; }
+    .controls { gap: 10px; }
+    .oops-btn { padding: 8px 18px; font-size: 0.85rem; }
 }

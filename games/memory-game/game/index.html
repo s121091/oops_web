@@ -1,39 +1,126 @@
-<html>
-    <head>
-        <title>Game Page</title>
-        <link rel="stylesheet" href="game.css">
-        <link rel="stylesheet" href="universal_style.css">
-    </head>
-    <body onload="initGame('basic'), Clock()">
-        <div class="nav">
-            <a href="../../../index.html">Home</a>
-        </div>
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee & Tea Memory Game | oops</title>
+    <!-- 引入 FontAwesome 图标库以配合设计语言 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="game.css">
+</head>
 
-        <div class="center game-container">
-                <div class="left_box clock">
-                    <canvas id="canvas" width="200" height="200" class="clock"></canvas>
-                    <p>Today is <span id="day"></span></p>
-                    <p>The time now is <span id="time"></span></p>
+<body onload="initApp()">
+    
+    <!-- 导航栏 -->
+    <nav>
+        <a href="../../../index.html" class="username">
+            <i class="fas fa-mug-hot"></i> oops | Lab
+        </a>
+        <div class="nav-links">
+            <button class="lang-switch" id="lang-switch" onclick="toggleLanguage()">EN</button>
+        </div>
+    </nav>
+
+    <!-- Body 内左上角返回主页按钮 -->
+    <div class="top-action-bar">
+        <a href="../../../index.html" class="back-home-btn">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="backHome">返回主页</span>
+        </a>
+    </div>
+
+    <!-- 游戏主容器 -->
+    <main class="main-container">
+        
+        <!-- 左侧侧边栏 (桌面端呈现) -->
+        <aside class="sidebar">
+            
+            <!-- 时钟卡片 -->
+            <div class="glass-card clock-container">
+                <canvas id="canvas" width="200" height="200"></canvas>
+                <div class="digital-clock">
+                    <p><span data-i18n="dayLabel">今日</span> <span id="day"></span></p>
+                    <p><span data-i18n="timeLabel">时间</span> <span id="time"></span></p>
                 </div>
-
-                <h1 class="game_h1">Coffee & Tea Memory Game</h1>
-
-                <div class="controls">
-                    <button id="btn-basic">Basic level</button>
-                    <button id="btn-advanced">Advanced level</button>
-                    <button id="btn-reset">Reset Game</button>
-                    <button id="btn-peek">👀 Peek All Cards</button>
+            </div>
+            
+            <!-- 计分板 (单独分离出来) -->
+            <div class="glass-card stats-board">
+                <div class="stat-item">
+                    <span class="label" data-i18n="movesLabel">尝试步数</span>
+                    <span class="value" id="move-counter">0</span>
                 </div>
+                <div class="stat-item">
+                    <span class="label" data-i18n="matchedLabel">已匹配</span>
+                    <span class="value" id="match-counter">0/8</span>
+                </div>
+            </div>
 
-                <div id="game-board" class="board"></div>
-        </div>
+            <!-- 解压现磨咖啡小互动 -->
+            <div class="glass-card toy-card">
+                <h3 data-i18n="toyTitle"><i class="fas fa-mug-hot"></i> 解压咖啡站</h3>
+                <div class="toy-scene">
+                    <div class="cup-container">
+                        <div class="steam-container" id="steam-effect">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="cup-wrapper-inner">
+                            <div class="cup-handle"></div>
+                            <div class="cup-body">
+                                <div class="liquid" id="coffee-liquid"></div>
+                            </div>
+                        </div>
+                        <div class="saucer"></div>
+                    </div>
+                </div>
+                <div class="toy-controls">
+                    <button class="oops-btn" id="btn-pour" 
+                            onmousedown="startPouring()" 
+                            onmouseup="stopPouring()" 
+                            onmouseleave="stopPouring()" 
+                            ontouchstart="startPouring(event)" 
+                            ontouchend="stopPouring(event)">
+                        <i class="fas fa-fill-drip"></i> <span data-i18n="pourBtn">倒咖啡</span>
+                    </button>
+                    <button class="oops-btn" onclick="drinkCoffee()">
+                        <i class="fas fa-check"></i> <span data-i18n="drinkBtn">喝掉</span>
+                    </button>
+                </div>
+            </div>
+        </aside>
 
-        <div class="footer">
-            <button id="home_button">Home</button>
-            <p>Copyright © 2026 Coffee and Tea. All rights reserved.</p>
-        </div>
+        <!-- 右侧核心游戏区 (桌面端呈现) -->
+        <section class="game-core">
+            <header class="game-header">
+                <h1 data-i18n="gameTitle">Coffee & Tea Memory</h1>
+                <p data-i18n="gameSub">-- 测试你的瞬间记忆力 / Test Your Memory --</p>
+            </header>
 
-        <script src="game.js"></script>
-        <script src="universal_script.js"></script>
-    </body>
+            <div class="controls">
+                <button id="btn-basic" class="oops-btn active-mode"><i class="fas fa-th-large"></i> <span data-i18n="btnBasic">基础模式 (4x4)</span></button>
+                <button id="btn-advanced" class="oops-btn"><i class="fas fa-th"></i> <span data-i18n="btnAdv">进阶模式 (4x6)</span></button>
+                <button id="btn-peek" class="oops-btn"><i class="fas fa-eye"></i> <span data-i18n="btnPeek">偷看卡牌</span></button>
+                <button id="btn-reset" class="oops-btn"><i class="fas fa-redo"></i> <span data-i18n="btnReset">重置游戏</span></button>
+            </div>
+
+            <div id="game-board" class="board"></div>
+        </section>
+    </main>
+
+    <!-- 胜利提示横幅 -->
+    <div id="win-banner" class="win-banner">
+        <h2 data-i18n="winTitle">🎉 恭喜通关！</h2>
+        <p><span data-i18n="winDesc1">你总共使用了 </span><strong id="final-moves" style="color: var(--primary-color);">0</strong><span data-i18n="winDesc2"> 步完成匹配。</span></p>
+        <button class="oops-btn" onclick="initGame(currentLevel); document.getElementById('win-banner').classList.remove('show');">
+            <span data-i18n="winBtn">再来一局</span>
+        </button>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="site-footer">
+        <p data-i18n="footerText">© 2026 oops. 保留一切权利.</p>
+    </footer>
+
+    <!-- JavaScript 逻辑区 -->
+    <script src="game.js"></script>
+</body>
 </html>
