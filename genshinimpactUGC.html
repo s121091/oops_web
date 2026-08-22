@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hackintosh 折騰之旅 | oops</title>
+    <title>千星編輯器開發實錄 | oops</title>
     <!-- 引入全域樣式 -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
-    <!-- 導航欄 -->
+    <!-- 導航欄 (與原頁面保持一致) -->
     <nav>
         <div class="username" onclick="window.open('index.html', '_self')" style="cursor: pointer;">oops</div>
         <div class="nav-links">
@@ -32,16 +32,42 @@
 
         <!-- 頁面標題區 -->
         <div class="journey-header">
-            <h1>My Hackintosh Journey</h1>
-            <p class="subtitle">-- Tinkering never ends / 折騰永無止境 --</p>
+            <h1>我努力過了，但千星編輯器還是讓我爛尾了</h1>
+            <p class="subtitle">-- 從「想省錢」到「做不出來」的開發全紀錄 --</p>
         </div>
 
         <div class="article-grid">
-            <!-- 左側：影片與當前配置 -->
+            <!-- ========================================== -->
+            <!-- 左側：專案資訊側邊欄 (與 Hackintosh 風格一致) -->
+            <!-- ========================================== -->
             <div class="article-sidebar">
+                <!-- 專案狀態卡片 -->
+                <div class="article-card status-card">
+                    <h3><i class="fas fa-project-diagram"></i> 專案狀態</h3>
+                    <ul class="hardware-list">
+                        <li><strong>狀態：</strong><span style="color: #f87171;">⚡ 爛尾(待重啟)</span></li>
+                        <li><strong>開發時長：</strong>約 4 週</li>
+                        <li><strong>開發模式：</strong>經典模式</li>
+                        <li><strong>主要瓶頸：</strong>聖遺物 API 未開放</li>
+                    </ul>
+                </div>
+
+                <!-- 技術棧卡片 -->
+                <div class="article-card tech-card">
+                    <h3><i class="fas fa-code"></i> 技術棧</h3>
+                    <div class="thanks-tags">
+                        <span class="thanks-tag">千星編輯器</span>
+                        <span class="thanks-tag">節點圖</span>
+                        <span class="thanks-tag">字典 & 結構體</span>
+                        <span class="thanks-tag">懸浮交互頁</span>
+                        <span class="thanks-tag">經典模式</span>
+                    </div>
+                </div>
+
+                <!-- 推薦 BGM 卡片 (與 Hackintosh 的影片卡片對應) -->
                 <div class="article-card video-card">
-                    <h3><i class="fab fa-bilibili"></i>推薦一首歌</h3>
-                    <p class="video-desc">可以邊聽歌邊看哦（點擊播放聲音）</p>
+                    <h3><i class="fas fa-headphones"></i> 好歌推薦</h3>
+                    <p class="video-desc"> 點擊播放</p>
                     <div class="video-wrapper">
                         <iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=21174982&bvid=BV1ZW411g7Di&cid=34768747&p=1&danmaku=0&muted=0" frameborder="no" scrolling="no" allowfullscreen></iframe>
                     </div>
@@ -49,56 +75,106 @@
                         BGM: 灰澈 x Jimce何 - <a href="https://www.bilibili.com/video/BV1ZW411g7Di/" target="_blank">Source</a>
                     </div>
                 </div>
-
-                <div class="article-card hardware-card">
-                    <h3><i class="fas fa-desktop"></i> Current Build</h3>
-                    <ul class="hardware-list">
-                        <li><strong>OS:</strong> macOS Sequoia (OpenCore)</li>
-                        <li><strong>CPU:</strong> Intel Core i7</li>
-                        <li><strong>GPU:</strong> AMD Radeon RX 6950 XT</li>
-                        <li><strong>Status:</strong> 完美驅動 (AirDrop, Handoff 正常)</li>
-                    </ul>
-                    <a href="https://github.com/s121091/Hackintosh-Opencore-B250M_KYLIN-HD530-6950XT" target="_blank" class="github-btn">
-                        <i class="fab fa-github"></i> 查看 GitHub 倉庫
-                    </a>
-                </div>
             </div>
 
-            <!-- 右側：故事正文 -->
+            <!-- ========================================== -->
+            <!-- 右側：正文內容 -->
+            <!-- ========================================== -->
             <div class="article-content">
+                <!-- 故事正文 -->
                 <div class="article-card story-card">
-                    <h2>緣起：算法的奇妙推薦</h2>
-                    <p>「黑蘋果 (Hackintosh)」指的是在非蘋果電腦上運行 macOS 作業系統。我踏入這個領域純粹是個偶然。那是在我初一的時候，Bilibili 的推薦算法給我推播了 UP 主 <a href="https://space.bilibili.com/91666249" target="_blank" class="text-link">道源者也</a> 的一個影片： <a href="https://www.bilibili.com/video/BV1W44112792/?share_source=copy_web&vd_source=b211b73a7a1940a91e7a68c94fadb5cf" target="_blank" class="text-link">【Win10加MacOS双系统体验完美黑苹果10.14.6保姆级教程（使用intel UHD630核显）~[折腾之王]】</a>。出於純粹的好奇心和「這看起來很好玩」的心態，我決定跟著他的教程一步步嘗試。</p>
-                    
-                    <h2>翻車與成長：不小心清空了 Windows</h2>
-                    <p>正是這個影片，為我打開了折騰電腦的大門，並讓我的電腦技術突飛猛進。我記得很清楚：在第一次嘗試時，我需要格式化硬碟來為 macOS 創建分區；結果，我一不小心把原來的 Windows 系統給抹除了。</p>
-                    <p>當時我嚇壞了，以為電腦徹底報廢了。後來上網查資料才發現，原來我只是刪除了系統，重裝一下就能恢復。順著這條線索，我學會了如何擦除磁盤、分區、更改分區表格式、啟用系統以及安裝驅動。</p>
+                    <h2>為什麼想做這個？</h2>
+                    <p>從原神私服消失之後，我一直有一個需求：我想要一個地方，可以在我原本的角色面板基礎上，直接測試專武的傷害差距。</p>
+                    <p>看測評影片、看攻略文章，永遠是「別人的面板」。千個玩家有千種練度，只有親手裝上武器、親手砍出傷害，才知道這把武器對自己值不值得抽。畢竟抽專武不是一筆小錢。</p>
+                    <p>你可能會說：「現在 UGC 裡面有木樁啊，進去測不就好了？」但目前的木樁關卡，大多需要玩家自己拿計算機，手動輸入攻擊力、暴擊率、暴擊傷害……非常繁瑣。沒有一個關卡是「選武器 → 自動換面板 → 直接砍」。</p>
+                    <p>所以我想做一個東西：原神版的「訓練營」。後來想想，反正都要做武器系統了，不如連命座也一起做，這樣大家還能試試命座的提升到底有沒有用。</p>
 
-                    <h2>進階：從「能用」到「完美」</h2>
-                    <p>有了重裝系統的經驗後，我再次尝试安裝 macOS。過程依然坎坷：起初因為看不懂 config 文件，一直選錯配置，導致連 macOS 的恢復介面都進不去。後來好不容易調整好 config 進了系統，卻發現顯卡沒有正確驅動，整個介面卡頓無比。當時我甚至覺得，黑蘋果只是個鬧著玩的噱頭。</p>
-                    <p>直到後來網路上的教程越來越完善，我才重新燃起了折騰的慾望。一步步地，我從依賴別人做好的驅動文件，到自己手動修復一個個瑕疵。甚至因為對現有的音效卡驅動不滿意，我跟著教程去 Linux 環境下提取音頻文件和電壓值，自己定制了 ALC 音效驅動。</p>
+                    <!-- 圖片佔位符 1：UI 設計稿 -->
+                    <div class="blog-image">
+                        <img src="images/qianxing-ui-placeholder.jpg" alt="千星編輯器 UI 設計稿" onerror="this.style.display='none'">
+                        <p class="image-caption">▲ 初期規劃的 UI 界面設計</p>
+                    </div>
 
-                    <h2>現在：折騰永無止境</h2>
-                    <p>如今，我的 macOS 環境已經趨近完美。除了玩遊戲或一些只能在 Windows 上完成的工作外，我幾乎已經離不開 macOS 了。回顧這段經歷，真的非常奇妙。我相信，<strong>正是這段折騰黑蘋果的旅程，讓我徹底愛上了研究電腦與寫程式。</strong></p>
+                    <h2>我覺得我可以做出來</h2>
+                    <p>開發前期，我先從最簡單的 UI 控件開始。千星的 UI 編輯器其實不難，稍微摸一下就會了。但因為我選的是經典模式，所以第一個坑就來了：開關按鈕只能放在「懸浮交互頁」裡面，而且必須綁定變量才能使用。我一開始不知道這件事，卡了很久。</p>
+                    <p>另外，我起初不知道素材庫可以做通用模板。比如做一個文本框，綁定變量 <code>{1}</code>，就能實現同一套素材顯示不同文字。結果我創建了大量重複的美術文件，後期維護非常痛苦。</p>
+
+                    <h2>節點圖才是真正的噩夢</h2>
+                    <p>UI 弄完之後，進入節點圖開發。這是最難的部分。我猜項目組是為了照顧不會寫代碼的開發者，也為了避免一些安全問題，所以才用節點圖代替代碼。但對我來說，這基本上等於重新學一門語言。我反反覆覆地去翻開發者文檔，試錯，再翻，再試錯。</p>
+
+                    <!-- 圖片佔位符 2：節點圖截圖 -->
+                    <div class="blog-image">
+                        <img src="images/qianxing-nodegraph.jpg" alt="千星編輯器節點圖" onerror="this.style.display='none'">
+                        <p class="image-caption">▲ 節點圖</p>
+                    </div>
+
+                    <h3>第一個問題：獲取實體</h3>
+                    <p>假設我把節點圖掛在角色身上，那「獲取實體」應該拿到的就是角色實體吧？結果不是。拿到的是一個不知道是什麼的實體 ID。為什麼不知道？因為日誌只會返回一串數字，而你沒辦法用這串數字去反查它是誰。你只能猜。</p>
+                    <p>後來我找到了兩個方法可以拿到角色實體：一個是用「實體創建時」事件觸發節點，把輸出的實體保存下來；另一個是用「獲取在場所有角色列表」，然後取列表的第 0 位。</p>
+
+                    <h3>第二個問題：效果系統</h3>
+                    <p>當我要實現角色數值修改時，第一時間想到的是「添加單位狀態」——這聽起來就是 Buff 系統吧？結果不行。效果只對造物和物品起效，對玩家角色無效。武器也不能綁定效果。這條路直接封死。</p>
+
+                    <h3>第三個問題：字典的運算佔用</h3>
+                    <p>因為訓練營要覆蓋所有可能性，所以我需要建立角色信息庫和武器信息庫。千星只提供兩種儲存方式：字典和結構體。字典上限是 100 個鍵，而原神角色超過 100 個，所以我需要開兩本字典。每個鍵對應一個結構體，裡面存角色名稱、元素屬性、武器類型。這勉強還能處理。</p>
+                    <p>但武器庫就不一樣了。246 把武器，每把 25 條數據，全部塞進字典，開局就消耗將近 50,000 點負載。結果就是：根本進不了關卡。</p>
+
+                    <!-- 圖片佔位符 3：負載爆炸的錯誤日誌 -->
+                    <div class="blog-image">
+                        <img src="images/qianxing-load-error.jpg" alt="負載爆炸錯誤日誌" onerror="this.style.display='none'">
+                        <p class="image-caption">▲ 負載爆炸的錯誤日誌</p>
+                    </div>
+
+                    <p>後來我的解法是分字典加延遲載入。先建立單手劍字典，延遲 1 秒，再建立雙手劍字典，再延遲 1 秒，再建立法器……但這個方法時好時壞。有時不加延遲也能跑，有時加了延遲還是爆。</p>
+                    <p>有兩個問題我一直沒搞懂。第一，節點圖中 A 執行完再執行 B，這本身就是順序執行了，那延遲到底起到了什麼作用？第二，官方從來沒有解釋過負載到底是怎麼計算的，日誌裡的負載值到底代表什麼。</p>
+
+                    <h3>小插曲：UI 卡頓</h3>
+                    <p>本來 UI 那邊的設計是一種武器開一個單選項窗口，然後用節點圖判斷當前角色是什麼武器類型，再來顯隱對應的窗口。結果發現窗口太多，界面會非常卡頓。後來換成了頁籤的方式來顯示武器列表。</p>
+
+                    <h2>真正讓我放棄的原因</h2>
+                    <p>到這裡，其實已經解決了不少問題。但最終讓我決定放棄的，是一個我無法繞過的限制。</p>
+                    <p>武器詞條能修改的屬性有限：攻擊力、防禦力、生命值、暴擊率、暴擊傷害、物理傷害加成。元素充能效率和元素精通沒辦法改。這代表有一部分武器注定無法被模擬。</p>
+                    <p>但最致命的不是這個，而是攻擊力的計算。上面我提過，因為我們只能基於角色原有面板做加法，所以我們要考慮的不只是武器白值和武器副詞條，還要考慮聖遺物的影響。</p>
+
+                    <!-- 圖片佔位符 4：攻擊力計算公式的筆記 -->
+                    <div class="blog-image">
+                        <img src="images/qianxing-formula.jpg" alt="攻擊力計算公式筆記" onerror="this.style.display='none'">
+                        <p class="image-caption">▲ 攻擊力計算公式</p>
+                    </div>
+
+                    <p>比如，原武器白值是 100，副詞條是攻擊力提升 20%。那最終的計算不是單純的：新攻擊力 = 原攻擊力 - 舊武器白值 + 新武器白值 +（最終白值 × 0.2）。還要再加上聖遺物提供的白值，以及最終白值乘以聖遺物提供的攻擊力提升百分比。</p>
+                    <p>問題就卡在這裡了。千星沒有提供獲取角色聖遺物數值的接口。我沒辦法直接讀到「聖遺物提供了多少白值」和「聖遺物提供了多少攻擊力%」。</p>
+                    <p>我唯一能做的，是從總攻擊力反推出聖遺物的「總貢獻」——但我沒辦法拆開那兩項。而這兩項對換武器後的最終面板影響是不一樣的。所以，我沒辦法做到準確的面板修改。</p>
+
+                    <h2>我決定放棄了</h2>
+                    <p>很遺憾，這個項目爛尾了。因為攻擊力的計算需要結合聖遺物的百分比加成，而千星沒有提供讀取聖遺物數據的接口，所以無法精確算出換武器後的最終攻擊力面板。</p>
+                    <p>但回頭看，這個失敗其實在開發前期就注定了：我沒有先確認「聖遺物數據能不能讀取」，就開始做 UI 和武器庫了。</p>
+
+                    <h2>但我還是學到了很多</h2>
+                    <p>雖然項目爛尾了，但這段經歷還是很值得。我學到了 GUI 式開發的思維方式，學會了字典和結構體的多層嵌套與查詢，學會了在工具限制下做性能優化，也學會了判斷一個功能到底可不可行。</p>
+                    <p>下次如果再做類似的項目，我會先確認所有數據接口是否可用，先做一個最小可行性的原型，而不是一開始就想著覆蓋所有武器和所有角色。</p>
+
+                    <h2>最後</h2>
+                    <p>這段和千星編輯器「鬥智鬥勇」的經歷真的很過癮。我也徹底摸清了這套工具的上下限，知道了下一次該怎麼做。</p>
+                    <p>期待未來官方能開放更多 API，也許到那時，我會把這個「100% 完美的私人定製傷害模擬器」真正做出來。但在那之前，先讓這個項目好好躺著吧。</p>
                 </div>
 
-                <!-- 致謝區塊 -->
+                <!-- 致謝區塊 (與 Hackintosh 風格一致) -->
                 <div class="article-card thanks-card">
-                    <h3><i class="fas fa-heart"></i> 致謝 (Acknowledgements)</h3>
-                    <p>感謝開源社區與前輩們的無私奉獻，沒有他們就沒有這段旅程：</p>
+                    <h3><i class="fas fa-heart"></i> 致謝</h3>
+                    <p>感謝這段時間一起討論技術的朋友們，以及千星編輯器官網社群中提供線索的開發者：</p>
                     <div class="thanks-tags">
-                        <a href="https://github.com/acidanthera" target="_blank" class="thanks-tag">Acidanthera</a>
-                        <a href="https://dortania.github.io/OpenCore-Install-Guide/" target="_blank" class="thanks-tag">Dortania's Guide</a>
-                        <a href="https://blog.daliansky.net/" target="_blank" class="thanks-tag">黑果小兵的部落閣</a>
-                        <a href="https://space.bilibili.com/91666249" target="_blank" class="thanks-tag">道源者也</a>
-                        <a href="https://space.bilibili.com/321864713" target="_blank" class="thanks-tag">草原企鵝2018</a>
+                        <a href="https://developer.mihoyo.com/" target="_blank" class="thanks-tag">千星編輯器官網</a>
+                        <a href="https://www.miyoushe.com/" target="_blank" class="thanks-tag">米游社開發者板塊</a>
+                        <span class="thanks-tag">UGC 開發者群</span>
+                        <span class="thanks-tag">Bilibili 技術區</span>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- 頁腳 -->
+    <!-- 頁腳 (與原頁面保持一致) -->
     <footer class="site-footer">
         <div class="footer-container">
             <div class="footer-section">
@@ -112,10 +188,10 @@
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>信号追踪</h4>
+                <h4>信號追蹤</h4>
                 <div class="social-links">
-                    <a href="mailto:mail@oops.us.kg"><i class="fab fa-google text-2xl"></i>： mail@oops.us.kg</a>
-                    <a href="https://github.com/s121091"><i class="fab fa-github text-2xl"></i>： s121091</a>
+                    <a href="mailto:mail@oops.us.kg"><i class="fab fa-google"></i>：mail@oops.us.kg</a>
+                    <a href="https://github.com/s121091"><i class="fab fa-github"></i>：s121091</a>
                 </div>
             </div>
         </div>
