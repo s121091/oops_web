@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>碳足跡追蹤器 | oops</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- 導航欄 -->
+    <nav>
+        <div class="username" onclick="window.open('index.html', '_self')" style="cursor: pointer;">oops</div>
+        <div class="nav-links">
+            <a href="index.html#Ps" data-i18n="nav.home">個人卡片</a>
+            <a href="index.html#Projects" data-i18n="nav.projects">項目&隨筆</a>
+            <a href="index.html#PodcastHero" data-i18n="nav.podcast">播客</a>
+            <a href="index.html#Music" data-i18n="nav.music">音樂</a>
+            <a href="index.html#Link" data-i18n="nav.tools">實用工具</a>
+            <button class="lang-switch" onclick="window.open('index.html', '_self')">HOME</button>
+        </div>
+    </nav>
+
+    <main class="journey-container">
+        <!-- 返回按鈕 -->
+        <a href="index.html" class="back-home-btn">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="carbon.backHome">返回主頁</span>
+        </a>
+
+        <!-- 頁面標題 -->
+        <div class="journey-header">
+            <h1 data-i18n="carbon.title">碳足跡追蹤器</h1>
+            <p class="subtitle" data-i18n="carbon.subtitle">-- AI 輔助開發的 SwiftUI iOS App --</p>
+        </div>
+
+        <div class="article-grid">
+            <!-- ====== 左側邊欄 ====== -->
+            <div class="article-sidebar">
+                <!-- 專案狀態 -->
+                <div class="article-card status-card">
+                    <h3><i class="fas fa-project-diagram"></i> <span data-i18n="carbon.statusTitle">專案狀態</span></h3>
+                    <ul class="hardware-list">
+                        <li><strong data-i18n="carbon.statusLabel">狀態：</strong><span style="color: #4ade80;" data-i18n="carbon.statusValue">✅ 已完成（MVP）</span></li>
+                        <li><strong data-i18n="carbon.durationLabel">開發時長：</strong><span data-i18n="carbon.durationValue">約 2 週</span></li>
+                        <li><strong data-i18n="carbon.modeLabel">開發模式：</strong><span data-i18n="carbon.modeValue">AI 輔助（提示詞工程 + 迭代除錯）</span></li>
+                        <li><strong data-i18n="carbon.bottleneckLabel">主要瓶頸：</strong><span data-i18n="carbon.bottleneckValue">SwiftUI 狀態管理 & 計算邏輯除錯</span></li>
+                    </ul>
+                </div>
+
+                <!-- 技術棧 -->
+                <div class="article-card tech-card">
+                    <h3><i class="fas fa-code"></i> <span data-i18n="carbon.techTitle">技術棧</span></h3>
+                    <div class="thanks-tags">
+                        <span class="thanks-tag">SwiftUI</span>
+                        <span class="thanks-tag">iOS</span>
+                        <span class="thanks-tag">MVVM</span>
+                        <span class="thanks-tag">Swift</span>
+                        <span class="thanks-tag">Xcode</span>
+                        <span class="thanks-tag">AI 輔助</span>
+                    </div>
+                </div>
+
+                <!-- 推薦 BGM -->
+                <div class="article-card video-card">
+                    <h3><i class="fas fa-headphones"></i> <span data-i18n="carbon.bgmTitle">好歌推薦</span></h3>
+                    <p class="video-desc" data-i18n="carbon.bgmDesc">點擊播放</p>
+                    <div class="video-wrapper">
+                        <iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=21174982&bvid=BV1ZW411g7Di&cid=34768747&p=1&danmaku=0&muted=0" frameborder="no" scrolling="no" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-credit">
+                        BGM: 灰澈 x Jimce何 - <a href="https://www.bilibili.com/video/BV1ZW411g7Di/" target="_blank">Source</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 右側正文 ====== -->
+            <div class="article-content">
+                <div class="article-card story-card">
+
+                    <!-- 第一章：為什麼想做這個？ -->
+                    <h2 data-i18n="carbon.s1.title">為什麼想做這個？</h2>
+                    <p data-i18n="carbon.s1.p1">在日常生活中，我們每天都會產生碳排放——開車、用電、吃肉、購物……但大多數人對這些行為的環境影響沒有具體概念。市面上的碳足跡計算器要麼過於簡化（只算幾個大項），要麼複雜到需要輸入幾十個數據，讓使用者望而卻步。</p>
+                    <p data-i18n="carbon.s1.p2">所以我希望打造一個 <strong>簡單、直觀、有反饋</strong> 的 iOS App，讓使用者可以用最少的操作記錄日常活動，並即時看到自己的碳足跡。更重要的是，透過「種樹吸收」的視覺化比喻，讓抽象的碳排放數據變得具體可感。</p>
+
+                    <!-- 圖片佔位 -->
+                    <div class="blog-image">
+                        <img src="./assets/images/CarbonFootprintTracker/main.png" alt="App 截圖" onerror="this.style.display='none'" style="width: 304px; max-width: 100%; height: auto;">
+                        <div class="image-caption" data-i18n="carbon.s1.imgcaption">▲ App 主畫面：總覽與記錄列表</div>
+                    </div>
+
+                    <!-- 第二章：如何實現目標？ -->
+                    <h2 data-i18n="carbon.s2.title">如何實現目標？</h2>
+
+                    <h3 data-i18n="carbon.s2.h1">核心功能設計</h3>
+                    <p data-i18n="carbon.s2.p1">App 將日常活動分為四大類別：<strong>交通出行、家庭能源、飲食習慣、購物消費</strong>。每個類別下再細分具體活動（例如「開汽油車」、「使用空調」、「食用紅肉」等），使用者只需選擇活動並輸入數量（如里程、用電度數、食物克數），系統就會自動計算碳排放。</p>
+                    <p data-i18n="carbon.s2.p2">計算引擎基於碳排放係數（Emission Factor），例如汽油車每公里排放 0.18 kgCO2e，紅肉每公斤排放 25 kgCO2e。同時支援「本地採購」、「有機食品」、「二手商品」等減排選項，讓計算更貼近真實情境。</p>
+
+                    <h3 data-i18n="carbon.s2.h2">視覺化反饋</h3>
+                    <p data-i18n="carbon.s2.p3">除了數字，App 提供兩種視覺化方式：<strong>分類排放概覽</strong>（以彩色卡片顯示各類別佔比）和 <strong>「種樹吸收」比喻</strong>（告訴使用者需要種幾棵樹、光合作用多久才能吸收這些碳排放）。這種設計讓抽象的數據變得直觀、有感。</p>
+
+                    <h3 data-i18n="carbon.s2.h3">技術架構</h3>
+                    <p data-i18n="carbon.s2.p4">使用 <strong>SwiftUI</strong> 構建 UI，採用 <strong>MVVM</strong> 設計模式（ActivityStore 作為 ViewModel 管理數據）。所有數據模型（ActivityType、ActivityDetail、ActivityRecord）都使用 Swift 的 enum 和 struct 定義，確保型別安全。碳排放計算邏輯集中封裝，易於測試和擴展。</p>
+
+                    <!-- 第三章：AI 輔助開發 -->
+                    <h2 data-i18n="carbon.s3.title">AI 輔助開發流程</h2>
+                    <p data-i18n="carbon.s3.p1">這個專案最特別的地方在於：<strong>所有代碼均由 AI 生成</strong>（主要是 SwiftUI 程式碼），我扮演的是 <strong>產品經理 + 提示詞工程師 + QA 測試員</strong> 的角色。</p>
+                    <ul style="margin-left: 20px; margin-bottom: 20px; color: #444; line-height: 1.8;">
+                        <li data-i18n="carbon.s3.li1">🎯 構思功能需求與用戶流程</li>
+                        <li data-i18n="carbon.s3.li2">📝 撰寫精確的提示詞，引導 AI 生成符合架構的代碼</li>
+                        <li data-i18n="carbon.s3.li3">🐛 迭代除錯：發現編譯錯誤、邏輯漏洞、UI 異常，回饋給 AI 修正</li>
+                        <li data-i18n="carbon.s3.li4">🏗️ 把控整體架構，確保各模組之間協作正確</li>
+                    </ul>
+                    <p data-i18n="carbon.s3.p2">這種開發方式讓我深刻體會到：<strong>程式設計師的價值不再僅限於「寫代碼」，而是「解決問題的能力」</strong>——包括需求分析、架構設計、品質把關和跨領域溝通。</p>
+
+                    <!-- 第四章：測試與成果 -->
+                    <h2 data-i18n="carbon.s4.title">測試與成果</h2>
+                    <p data-i18n="carbon.s4.p1">經過多輪測試與除錯，App 目前已可正常運行，涵蓋以下功能：</p>
+                    <ul style="margin-left: 20px; margin-bottom: 20px; color: #444; line-height: 1.8;">
+                        <li data-i18n="carbon.s4.li1">✅ 四大類別、數十種活動的碳排放計算</li>
+                        <li data-i18n="carbon.s4.li2">✅ 數據持久化（活動記錄保存）</li>
+                        <li data-i18n="carbon.s4.li3">✅ 分類排放概覽與視覺化卡片</li>
+                        <li data-i18n="carbon.s4.li4">✅ 「種樹吸收」比喻（動態計算樹木需求）</li>
+                    </ul>
+                    
+                    <!-- 圖片佔位 -->
+                    <div class="blog-image">
+                        <img src="./assets/images/CarbonFootprintTracker/app.gif" alt="詳細功能截圖" onerror="this.style.display='none'" style="width: 322px; max-width: 100%; height: auto;">
+                        <div class="image-caption" data-i18n="carbon.s2.imgcaption">▲ 整體效果</div>
+                    </div>
+
+                    <!-- 第五章：未來展望 -->
+                    <h2 data-i18n="carbon.s5.title">未來展望</h2>
+                    <ul style="margin-left: 20px; margin-bottom: 20px; color: #444; line-height: 1.8;">
+                        <li data-i18n="carbon.s5.li1">加入圖表（折線圖、柱狀圖）顯示長期趨勢</li>
+                        <li data-i18n="carbon.s5.li2">個人化減排目標設定與達成進度</li>
+                        <li data-i18n="carbon.s5.li3">在地化排放係數（根據地區電網碳強度調整）</li>
+                        <li data-i18n="carbon.s5.li4">數據匯出（CSV / PDF 報告）</li>
+                    </ul>
+                </div>
+
+                <!-- 致謝區塊 -->
+                <div class="article-card thanks-card">
+                    <h3><i class="fas fa-heart"></i> <span data-i18n="carbon.thanksTitle">致謝</span></h3>
+                    <p data-i18n="carbon.thanksText">感謝 AI 輔助開發工具（如 ChatGPT / Claude）提供的代碼生成與除錯協助，讓這個專案得以在短時間內完成。</p>
+                    <div class="thanks-tags">
+                        <span class="thanks-tag">SwiftUI</span>
+                        <span class="thanks-tag">AI 輔助</span>
+                        <span class="thanks-tag">Carbon Footprint</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4 data-i18n="footer.copyrightTitle">版權</h4>
+                <p data-i18n="footer.copyright">© 2026 oops. 保留一切權利.</p>
+            </div>
+            <div class="footer-section">
+                <h4 data-i18n="footer.navTitle">導航鏈接</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html" data-i18n="footer.navLink">未完待續...</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4 data-i18n="footer.signalTitle">信號追蹤</h4>
+                <div class="social-links">
+                    <a href="mailto:mail@oops.us.kg"><i class="fab fa-google"></i> mail@oops.us.kg</a>
+                    <a href="https://github.com/s121091"><i class="fab fa-github"></i> s121091</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 引用 script.js -->
+    <script src="script.js"></script>
+</body>
+
+</html>

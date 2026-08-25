@@ -257,8 +257,8 @@ main {
     position: relative; 
     
     /* ✨ 恢復原生 CSS 吸附並使用 proximity 修復蘋果橡皮筋回彈抽搐 ✨ */
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
+    overflow-x: hidden; /* 將原本的 auto 改為 hidden */
+    scroll-snap-type: none; /* 既然改成了輪播，就不需要原生吸附了 */
     scrollbar-width: none;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
@@ -366,8 +366,9 @@ main {
 }
 
 /* 轮播滑动区域 */
+/* 修改 1：強制右側容器佔滿剩餘的所有寬度 */
 .horizontal-scroll-wrapper {
-    flex: 0 0 auto; 
+    flex: 1; /* 原本是 0 0 auto，請改成 1 */
     min-width: 0;
     overflow: visible; 
     padding-bottom: 20px;
@@ -1136,15 +1137,17 @@ main.journey-container {
 .blog-image {
     margin: 30px 0;
     border-radius: 16px;
-    overflow: hidden;
     background: #f5f5f5;
     border: 1px solid #eee;
+    padding: 20px 0 0 0;      /* 只在圖片上方留 20px，下方不留 */
+    text-align: center;       /* 保留，作為備用 */
 }
 
 .blog-image img {
-    width: 100%;
+    display: block;           /* ✅ 改成 block，徹底消滅基線間隙 */
+    max-width: 90%;
     height: auto;
-    display: block;
+    margin: 0 auto;           /* ✅ 用 margin auto 來置中 */
 }
 
 .image-caption {
@@ -1154,7 +1157,7 @@ main.journey-container {
     text-align: center;
     background: #fafafa;
     border-top: 1px solid #eee;
-    margin: 0;
+    margin: 20px 0 0 0;                /* ✅ 確保 caption 沒有任何上下外距 */
 }
 
 /* 文章內的小標籤 (inline code) */
@@ -1191,4 +1194,186 @@ main.journey-container {
         font-size: 0.75rem;
         padding: 8px 12px;
     }
+}
+
+/* ========================================
+   层叠卡片轮播（覆盖原有滚动样式）
+   ======================================== */
+#projectSlider.carousel-mode {
+    position: relative;
+    width: 100%;
+    height: 420px;
+    overflow: visible;
+    display: block;
+    padding: 0;
+}
+
+#projectSlider.carousel-mode .scroll-card {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    width: 380px;
+    height: 100%;
+    transform: translateX(-50%) scale(1) rotate(0deg);
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+                opacity 0.5s ease;
+    opacity: 0;
+    pointer-events: none;
+    flex: none;
+    margin: 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-radius: 16px;
+    overflow: hidden;
+    will-change: transform, opacity;
+    background: white;  /* 保持原背景 */
+}
+
+#projectSlider.carousel-mode .scroll-card.active {
+    opacity: 1;
+    transform: translateX(-50%) scale(1) rotate(0deg);
+    z-index: 10;
+    pointer-events: auto;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+#projectSlider.carousel-mode .scroll-card.next-1 {
+    opacity: 1;
+    transform: translateX(calc(-50% + 30%)) scale(0.9) rotate(4deg);
+    z-index: 5;
+}
+#projectSlider.carousel-mode .scroll-card.next-2 {
+    opacity: 1;
+    transform: translateX(calc(-50% + 55%)) scale(0.8) rotate(8deg);
+    z-index: 4;
+}
+#projectSlider.carousel-mode .scroll-card.prev-1 {
+    opacity: 1;
+    transform: translateX(calc(-50% - 30%)) scale(0.9) rotate(-4deg);
+    z-index: 5;
+}
+#projectSlider.carousel-mode .scroll-card.prev-2 {
+    opacity: 1;
+    transform: translateX(calc(-50% - 55%)) scale(0.8) rotate(-8deg);
+    z-index: 4;
+}
+
+#projectSlider.carousel-mode .scroll-card.hidden-right {
+    opacity: 0;
+    transform: translateX(calc(-50% + 80%)) scale(0.7) rotate(12deg);
+    z-index: 1;
+}
+#projectSlider.carousel-mode .scroll-card.hidden-left {
+    opacity: 0;
+    transform: translateX(calc(-50% - 80%)) scale(0.7) rotate(-12deg);
+    z-index: 1;
+}
+
+/* 圆点指示器 */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 10px 0;
+}
+.carousel-dots .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+    transition: background 0.3s, transform 0.3s;
+    cursor: pointer;
+}
+.carousel-dots .dot.active {
+    background: var(--primary-color, #FF6B35);
+    transform: scale(1.2);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    #projectSlider.carousel-mode {
+        height: 380px;
+    }
+    #projectSlider.carousel-mode .scroll-card {
+        width: 85vw;
+        max-width: 380px;
+    }
+    #projectSlider.carousel-mode .scroll-card.next-1 {
+        transform: translateX(calc(-50% + 20%)) scale(0.85) rotate(3deg);
+    }
+    #projectSlider.carousel-mode .scroll-card.next-2 {
+        transform: translateX(calc(-50% + 40%)) scale(0.75) rotate(6deg);
+    }
+    #projectSlider.carousel-mode .scroll-card.prev-1 {
+        transform: translateX(calc(-50% - 20%)) scale(0.85) rotate(-3deg);
+    }
+    #projectSlider.carousel-mode .scroll-card.prev-2 {
+        transform: translateX(calc(-50% - 40%)) scale(0.75) rotate(-6deg);
+    }
+}
+
+/* --- 全新底部控制區樣式 (圖二風格) --- */
+.carousel-bottom-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 100px;
+    width: 100%;
+}
+
+/* 覆寫預設的 .nav-btn 以符合圖二 */
+.carousel-bottom-controls .nav-btn {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 30px;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+/* 左側：純圓形返回鍵 */
+.carousel-bottom-controls .prev-btn {
+    width: 44px;
+    padding: 0;
+}
+
+/* 右側：帶文字的橢圓 Next 鍵 */
+.carousel-bottom-controls .next-btn {
+    padding: 0 20px 0 24px;
+    width: auto;
+    gap: 8px;
+}
+
+.carousel-bottom-controls .nav-btn:hover:not(:disabled) {
+    background: #fdfdfd;
+    border-color: #d0d0d0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* 點點容器與還原樣式 */
+.carousel-dots {
+    display: flex;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+}
+
+/* 覆寫預設的點點狀態 */
+.carousel-dots .dot {
+    width: 8px;
+    height: 8px;
+    background: #d1d1d1;
+    transform: none; /* 關閉原本的放大動畫，還原圖二的平靜感 */
+}
+
+.carousel-dots .dot.active {
+    background: #555;
+    transform: none;
 }

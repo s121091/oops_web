@@ -197,5 +197,69 @@
         "signalTitle": "Signal Tracking",
         "email": "mail@oops.us.kg",
         "github": "s121091"
+    },
+    
+    "fyp": {
+        "backHome": "Back to Home",
+        "title": "Reaction Training Game Console",
+        "subtitle": "-- A Cognitive Rehabilitation Device for the Elderly --",
+        "statusTitle": "Project Status",
+        "statusLabel": "Status:",
+        "statusValue": "✅ Completed (MVP)",
+        "durationLabel": "Duration:",
+        "durationValue": "~ 4 months",
+        "modeLabel": "Development Mode:",
+        "modeValue": "Iterative (MVP → Cloud Integration)",
+        "bottleneckLabel": "Main Bottleneck:",
+        "bottleneckValue": "ESP32 Memory & SPI Driver",
+        "techTitle": "Tech Stack",
+        "bgmTitle": "Recommended BGM",
+        "bgmDesc": "Click to play",
+        "s1": {
+            "title": "Why This Project?",
+            "p1": "With the global aging population, cognitive decline and slower reaction times have become serious challenges. According to WHO (2025), the number of people over 60 will double in the coming years, and falls are a leading cause of injury among the elderly, with high medical costs. Traditional rehabilitation methods are often repetitive, boring, or purely touchscreen-based, lacking interactivity and real-time feedback, making it difficult to sustain patient engagement.",
+            "p2": "So we set out to build a dedicated reaction training console tailored for seniors. By combining physical buttons, an intuitive visual interface, and cloud data tracking, we aim to make rehabilitation both engaging and measurable. The device must work offline, have ultra-low latency, be intuitive to operate, and automatically log training data.",
+            "imgcaption": "▲ Elderly user operating the training console"
+        },
+        "s2": {
+            "title": "How We Achieved It",
+            "h1": "Hardware Design",
+            "p1": "Core: ESP32 microcontroller with a 3.5-inch TFT touchscreen (ILI9341) and a 3x3 matrix keypad. We designed an ergonomic 3D-printed enclosure with large buttons (>1.2 cm diameter) and wide spacing. High-contrast UI and adjustable font sizes ensure readability for users with vision impairment.",
+            "p2": "A non-slip grip on the left side prevents accidental drops, and internal reinforcements prevent deformation from repeated pressing.",
+            "imgcaption": "▲ 3D-printed enclosure",
+            "h2": "Firmware & Game Logic",
+            "p3": "We used FreeRTOS on the ESP32 to handle multi-tasking (input scanning, game logic, UI rendering), keeping button latency below 100ms. Two games are included: a Memory Game (repeat a sequence of lit buttons) and a Counting Game (count shapes and press the corresponding number). Difficulty levels: Easy, Hard, and Auto (dynamically adjusts to performance).",
+            "p4": "All game data (score, reaction time, mode) is stored locally in NVS and automatically syncs to Firebase Realtime Database when Wi-Fi is available.",
+            "h3": "Cloud Dashboard",
+            "p5": "We built a Web Dashboard (React + Chart.js) to visualize training records. Caregivers can view total sessions, highest scores, performance trends, and generate PDF reports. A nursing log is also included for recording observations and suggestions.",
+            "imgcaption2": "▲ Dashboard showing record list and trend chart"
+        },
+        "s3": {
+            "title": "Testing & Results",
+            "p1": "We conducted thorough unit and system integration tests covering key response, offline storage, Wi-Fi connectivity, and cloud sync. Results show:",
+            "li1": "✅ Button latency consistently under 60ms",
+            "li2": "✅ Offline data is fully preserved and automatically uploaded when reconnected",
+            "li3": "✅ High-contrast mode and large font switch seamlessly",
+            "li4": "✅ Dashboard reflects latest records in real-time",
+            "imgcaption": "▲ Firebase Realtime Database receiving data"
+        },
+        "s4": {
+            "title": "Technical Challenges & Solutions",
+            "h1": "Graphics Library Compatibility & SPI Timing",
+            "p1": "Initial attempts with LVGL and TFT_eSPI failed, causing a white screen. We switched to Adafruit_GFX + Adafruit_ILI9341 and adjusted SPI pins (CS=5, DC=17, RST=16) based on open-source references. We also fixed a deadlock issue caused by FreeRTOS mutex.",
+            "h2": "Non-blocking Delay",
+            "p2": "In the Memory Game, displaying a sequence required delays. Using `delay()` blocked button scanning. We implemented non-blocking timing with `millis()`, allowing users to interrupt or exit at any time.",
+            "h3": "Offline Data Serialization",
+            "p3": "ESP32's Preferences library doesn't support struct storage. We serialized game records into a 17-byte buffer, stored via `putBytes()`, and deserialized on boot, ensuring no data loss during prolonged offline use."
+        },
+        "s5": {
+            "title": "Future Scope",
+            "li1": "Global leaderboard and social features (via Firebase extension)",
+            "li2": "Voice-guided instructions (integrating TTS)",
+            "li3": "Built-in battery for wireless portability",
+            "li4": "Machine learning model for personalized difficulty prediction"
+        },
+        "thanksTitle": "Acknowledgements",
+        "thanksText": "Thanks to our supervisor Mr. Sunny Wan, HKU SPACE CC Lab for equipment, all family members who helped test, and the open-source community."
     }
 }

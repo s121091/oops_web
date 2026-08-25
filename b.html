@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>層疊卡片輪播效果</title>
+  <style>
+    /* 基本頁面排版 */
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #f3f7fb; /* 淺藍灰背景 */
+      font-family: sans-serif;
+      overflow: hidden;
+    }
+
+    /* 輪播容器 */
+    .carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 卡片共用樣式 */
+    .card {
+      position: absolute;
+      width: 450px;
+      height: 300px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+      
+      /* 動畫核心：讓所有的變形都有 0.5 秒的平滑過渡 */
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+                  opacity 0.5s ease, 
+                  z-index 0s; 
+      
+      /* 預設為隱藏狀態 */
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 卡片內容樣式 (裝飾用) */
+    .card h2 { margin-bottom: 10px; color: #333; }
+    .card p { color: #666; font-size: 14px; margin-bottom: 20px; }
+    .card button {
+      padding: 10px 24px;
+      background: #4f85f6;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    /* --- 狀態 Class 定義 (核心魔法) --- */
+
+    /* 當前主角卡片 */
+    .card.active {
+      opacity: 1;
+      transform: translateX(0) scale(1) rotate(0deg);
+      z-index: 10;
+      pointer-events: auto; /* 只有最上面的卡片可以點擊 */
+    }
+
+    /* 右邊第一張 */
+    .card.next-1 {
+      opacity: 1;
+      transform: translateX(25%) scale(0.9) rotate(4deg);
+      z-index: 5;
+    }
+
+    /* 右邊第二張 */
+    .card.next-2 {
+      opacity: 1;
+      transform: translateX(45%) scale(0.8) rotate(8deg);
+      z-index: 4;
+    }
+
+    /* 左邊第一張 */
+    .card.prev-1 {
+      opacity: 1;
+      transform: translateX(-25%) scale(0.9) rotate(-4deg);
+      z-index: 5;
+    }
+
+    /* 左邊第二張 */
+    .card.prev-2 {
+      opacity: 1;
+      transform: translateX(-45%) scale(0.8) rotate(-8deg);
+      z-index: 4;
+    }
+
+    /* 藏在更後面的卡片 */
+    .card.hidden-right {
+      opacity: 0;
+      transform: translateX(60%) scale(0.7) rotate(12deg);
+      z-index: 1;
+    }
+    .card.hidden-left {
+      opacity: 0;
+      transform: translateX(-60%) scale(0.7) rotate(-12deg);
+      z-index: 1;
+    }
+
+    /* 控制按鈕區 */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    .nav-btn {
+      padding: 10px 20px;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transition: background 0.2s;
+    }
+    .nav-btn:hover { background: #f9f9f9; }
+    .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .dots { display: flex; gap: 8px; }
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: #ccc;
+      border-radius: 50%;
+    }
+    .dot.active { background: #555; }
+  </style>
+</head>
+<body>
+
+  <div class="carousel-container">
+    <!-- 卡片列表 -->
+    <div class="card">
+      <h2>Meet the new emoji icons</h2>
+      <p>Express yourself in fun and meaningful ways.</p>
+      <button>Add emoji</button>
+    </div>
+    <div class="card">
+      <h2>Let your imagination spin</h2>
+      <p>Freeform rotate in Paint gives you the freedom.</p>
+      <button>Start creating</button>
+    </div>
+    <div class="card">
+      <h2>Start Menu, built around you</h2>
+      <p>Easily find, launch, and customise your workspace.</p>
+      <button>Explore menu</button>
+    </div>
+    <div class="card">
+      <h2>Battery status, always in sight</h2>
+      <p>Your PC's power level is always visible right where you need it.</p>
+      <button>Turn it on</button>
+    </div>
+    <div class="card">
+      <h2>Another Feature</h2>
+      <p>Just demonstrating how adding more cards works.</p>
+      <button>Learn more</button>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="nav-btn" id="prevBtn">←</button>
+    <div class="dots" id="dotsContainer"></div>
+    <button class="nav-btn" id="nextBtn">Next →</button>
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll('.card');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dotsContainer = document.getElementById('dotsContainer');
+    
+    let currentIndex = 0;
+
+    // 初始化底部的小圓點
+    cards.forEach((_, index) => {
+      const dot = document.createElement('div');
+      dot.classList.add('dot');
+      if (index === currentIndex) dot.classList.add('active');
+      dotsContainer.appendChild(dot);
+    });
+    const dots = document.querySelectorAll('.dot');
+
+    // 核心更新函數
+    function updateCards() {
+      cards.forEach((card, index) => {
+        // 先清除所有狀態 Class
+        card.className = 'card';
+        
+        // 計算這張卡片相對於當前主角卡片的距離
+        const offset = index - currentIndex;
+
+        // 根據距離賦予對應的樣式
+        if (offset === 0) {
+          card.classList.add('active');
+        } else if (offset === 1) {
+          card.classList.add('next-1');
+        } else if (offset === 2) {
+          card.classList.add('next-2');
+        } else if (offset === -1) {
+          card.classList.add('prev-1');
+        } else if (offset === -2) {
+          card.classList.add('prev-2');
+        } else if (offset > 2) {
+          card.classList.add('hidden-right');
+        } else if (offset < -2) {
+          card.classList.add('hidden-left');
+        }
+      });
+
+      // 更新圓點狀態
+      dots.forEach(dot => dot.classList.remove('active'));
+      dots[currentIndex].classList.add('active');
+
+      // 更新按鈕可用狀態
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === cards.length - 1;
+    }
+
+    // 綁定點擊事件
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < cards.length - 1) {
+        currentIndex++;
+        updateCards();
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCards();
+      }
+    });
+
+    // 初始執行一次，排好第一張的畫面
+    updateCards();
+  </script>
+
+</body>
+</html>

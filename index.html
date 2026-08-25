@@ -55,10 +55,6 @@
             <h2 class="section-title">
                 <span data-i18n="projects.title">實驗室 & 隨筆 （施工中🚧）</span>
                 <span class="rocket-icon">🧪</span>
-                <div class="slider-controls">
-                    <button class="nav-btn prev-btn" disabled><i class="fas fa-chevron-left"></i></button>
-                    <button class="nav-btn next-btn"><i class="fas fa-chevron-right"></i></button>
-                </div>
             </h2>
         </div>
 
@@ -134,12 +130,32 @@
                         </div>
 
                         <!-- 项目卡片 2 -->
+                        <div class="scroll-card" onclick="window.open('./CarbonFootprintTracker.html', '_self')">
+                            <div class="scroll-card-thumbnail" style="background-image: url('./assets/images/CarbonFootprintTracker.png')">
+                                <div class="card-tag" data-i18n="projects.project1Tag">iOS</div>
+                            </div>
+                            <div class="scroll-card-content">
+                                <h3>碳足跡追蹤器</h3>
+                                <p>初嘗AI 輔助開發（提示詞工程 + 架構規劃 + 迭代除錯）</p>
+                            </div>
+                        </div>
+
+                        <div class="scroll-card" onclick="window.open('./AssoFYP.html', '_self')">
+                            <div class="scroll-card-thumbnail" style="background-image: url('./assets/images/AssoFYP.png')">
+                                <div class="card-tag" data-i18n="projects.project1Tag">畢設</div>
+                            </div>
+                            <div class="scroll-card-content">
+                                <h3>反應訓練遊戲主機</h3>
+                                <p>為銀髮族設計的認知復健裝置</p>
+                            </div>
+                        </div>
+
                         <div class="scroll-card" onclick="window.open('./genshinimpactUGC.html', '_self')">
                             <div class="scroll-card-thumbnail" style="background-image: url('./assets/images/千星奇域.png')">
                                 <div class="card-tag" data-i18n="projects.project1Tag">Story</div>
                             </div>
                             <div class="scroll-card-content">
-                                <h3> 原神千星奇域开发分享</h3>
+                                <h3>原神千星奇域开发分享</h3>
                                 <p>訓練營開發的踩坑與經驗分享</p>
                             </div>
                         </div>
@@ -155,6 +171,14 @@
                             </div>
                         </div>
                     </div>
+
+                <div class="carousel-bottom-controls">
+                    <button class="nav-btn prev-btn" disabled><i class="fas fa-arrow-left"></i></button>
+                    <!-- JS 會把小圓點掛載到這個容器裡 -->
+                    <div id="dots-mount-point"></div>
+                    <button class="nav-btn next-btn">Next <i class="fas fa-arrow-right"></i></button>
+                </div>
+
                 </div>
             </div>
         </div>

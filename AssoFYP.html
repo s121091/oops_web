@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>反應訓練遊戲主機 | oops</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- 導航欄 (與主頁一致) -->
+    <nav>
+        <div class="username" onclick="window.open('index.html', '_self')" style="cursor: pointer;">oops</div>
+        <div class="nav-links">
+            <a href="index.html#Ps" data-i18n="nav.home">個人卡片</a>
+            <a href="index.html#Projects" data-i18n="nav.projects">項目&隨筆</a>
+            <a href="index.html#PodcastHero" data-i18n="nav.podcast">播客</a>
+            <a href="index.html#Music" data-i18n="nav.music">音樂</a>
+            <a href="index.html#Link" data-i18n="nav.tools">實用工具</a>
+            <button class="lang-switch" onclick="window.open('index.html', '_self')">HOME</button>
+        </div>
+    </nav>
+
+    <main class="journey-container">
+        <!-- 返回按鈕 -->
+        <a href="index.html" class="back-home-btn">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="fyp.backHome">返回主頁</span>
+        </a>
+
+        <!-- 頁面標題 -->
+        <div class="journey-header">
+            <h1 data-i18n="fyp.title">反應訓練遊戲主機</h1>
+            <p class="subtitle" data-i18n="fyp.subtitle">-- 為銀髮族設計的認知復健裝置 --</p>
+        </div>
+
+        <div class="article-grid">
+            <!-- ====== 左側邊欄 ====== -->
+            <div class="article-sidebar">
+                <!-- 專案狀態 -->
+                <div class="article-card status-card">
+                    <h3><i class="fas fa-project-diagram"></i> <span data-i18n="fyp.statusTitle">專案狀態</span></h3>
+                    <ul class="hardware-list">
+                        <li><strong data-i18n="fyp.statusLabel">狀態：</strong><span style="color: #4ade80;" data-i18n="fyp.statusValue">✅ 已完成（MVP）</span></li>
+                        <li><strong data-i18n="fyp.durationLabel">開發時長：</strong><span data-i18n="fyp.durationValue">約 4 個月</span></li>
+                        <li><strong data-i18n="fyp.modeLabel">開發模式：</strong><span data-i18n="fyp.modeValue">迭代式 (MVP → 雲端整合)</span></li>
+                        <li><strong data-i18n="fyp.bottleneckLabel">主要瓶頸：</strong><span data-i18n="fyp.bottleneckValue">ESP32 記憶體限制 & SPI 驅動</span></li>
+                    </ul>
+                    <a href="https://youtu.be/PlpT6m0v1no" target="_blank" class="github-btn">
+                        <i class="fab fa-youtube"></i> 查看項目演示
+                    </a>
+                </div>
+
+                <!-- 技術棧 -->
+                <div class="article-card tech-card">
+                    <h3><i class="fas fa-code"></i> <span data-i18n="fyp.techTitle">技術棧</span></h3>
+                    <div class="thanks-tags">
+                        <span class="thanks-tag">ESP32</span>
+                        <span class="thanks-tag">Arduino</span>
+                        <span class="thanks-tag">FreeRTOS</span>
+                        <span class="thanks-tag">Adafruit_GFX</span>
+                        <span class="thanks-tag">Firebase</span>
+                        <span class="thanks-tag">React.js</span>
+                        <span class="thanks-tag">Chart.js</span>
+                        <span class="thanks-tag">3D 列印</span>
+                    </div>
+                </div>
+
+                <!-- 推薦 BGM -->
+                <div class="article-card video-card">
+                    <h3><i class="fas fa-headphones"></i> <span data-i18n="fyp.bgmTitle">好歌推薦</span></h3>
+                    <p class="video-desc" data-i18n="fyp.bgmDesc">點擊播放</p>
+                    <div class="video-wrapper">
+                        <iframe src="https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=21174982&bvid=BV1ZW411g7Di&cid=34768747&p=1&danmaku=0&muted=0" frameborder="no" scrolling="no" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-credit">
+                        BGM: 灰澈 x Jimce何 - <a href="https://www.bilibili.com/video/BV1ZW411g7Di/" target="_blank">Source</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====== 右側正文 ====== -->
+            <div class="article-content">
+                <div class="article-card story-card">
+
+                    <!-- 第一章：為什麼想做這個？ -->
+                    <h2 data-i18n="fyp.s1.title">為什麼想做這個？</h2>
+                    <p data-i18n="fyp.s1.p1">隨著全球人口高齡化，認知衰退與反應速度下降已成為嚴峻的挑戰。根據世界衛生組織（2025），60 歲以上人口將在未來幾年內倍增；而跌倒更是老年人受傷的主因，醫療成本高昂。傳統的復健方式多為重複性、枯燥的紙筆或單純觸控螢幕遊戲，缺乏互動性與即時反饋，難以維持患者的參與意願。</p>
+                    <p data-i18n="fyp.s1.p2">所以我們希望打造一台專為銀髮族設計的反應訓練主機。通過使用實體按鍵、直觀的視覺化介面與雲端數據追蹤，讓復健變得有趣且數據可量化。而且這臺裝置必須能離線運作、延遲極低、操作符合直覺，並能自動記錄訓練數據。</p>
+
+                    <!-- 第二章：如何實現目標？ -->
+                    <h2 data-i18n="fyp.s2.title">如何實現目標？</h2>
+
+                    <h3 data-i18n="fyp.s2.h1">硬體設計</h3>
+                    <p data-i18n="fyp.s2.p1">核心採用 ESP32 微控制器，搭配 3.5 吋 TFT 觸控螢幕（ILI9341）與 3x3 實體矩陣鍵盤。我們設計了符合人體工學的 3D 列印外殼，將按鍵加大（直徑 > 1.2 cm）、間距加寬；顯示採用高對比度 UI 與可調字型大小，確保視力退化的長者也能輕鬆操作。</p>
+                    <p data-i18n="fyp.s2.p2">外殼左側增設防滑握把，避免遊戲過程中不慎掉落；內部強化按鍵支撐結構，防止反覆按壓導致變形。</p>
+
+                    <!-- 圖片 1：3DP照片 -->
+                    <div class="blog-image">
+                        <img src="./assets/images/AssoFYP/3DPrintedEnclosure.png" alt="硬體實拍" onerror="this.style.display='none'" style="width: 351px; max-width: 100%; height: auto;">
+                        <div class="image-caption" data-i18n="fyp.s2.imgcaption">▲ 3D 列印外殼</div>
+                    </div>
+
+                    <h3 data-i18n="fyp.s2.h2">韌體與遊戲邏輯</h3>
+                    <p data-i18n="fyp.s2.p3">我們在 ESP32 上使用 FreeRTOS 實現多任務處理（輸入掃描、遊戲邏輯、UI 渲染），確保按鍵延遲低於 100ms。內建兩款遊戲：記憶遊戲（依序重複亮起的按鈕序列）與計數遊戲（計算螢幕上圖形數量並按對應次數）。遊戲難度分為「簡單」、「困難」與「自動」三種模式，自動模式會根據玩家表現動態調整。</p>
+                    <p data-i18n="fyp.s2.p4">所有遊戲數據（分數、反應時間、模式）都會儲存在本地 NVS（非揮發性記憶體），當 Wi-Fi 可用時自動同步至 Firebase Realtime Database。</p>
+
+                    <h3 data-i18n="fyp.s2.h3">雲端儀表板</h3>
+                    <p data-i18n="fyp.s2.p5">我們開發了一個 Web Dashboard（React + Chart.js），可視化玩家的訓練記錄。醫護人員或家屬能透過此儀表板查看累計場次、最高分、近期表現趨勢，並匯出 PDF 報告。儀表板也包含護理日誌功能，方便記錄觀察與建議。</p>
+
+                    <!-- 圖片佔位 3.1：儀表板截圖 -->
+                    <div class="blog-image">
+                        <img src="./assets/images/AssoFYP/Dashboard.png" alt="Web Dashboard" onerror="this.style.display='none'">
+                        <div class="image-caption" data-i18n="fyp.s2.imgcaption2">▲ 儀表板</div>>
+                    </div>
+                    <!-- 圖片佔位 3.2：儀表板截圖 -->
+                    <div class="blog-image">
+                        <img src="./assets/images/AssoFYP/DashboardRecordTrendChart.png" alt="Web Dashboard" onerror="this.style.display='none'">
+                        <div class="image-caption" data-i18n="fyp.s2.imgcaption2">▲ 儀表板-記錄列表與趨勢圖</div>
+                    </div>
+
+                    <!-- 第三章：測試與成果 -->
+                    <h2 data-i18n="fyp.s3.title">測試與成果</h2>
+                    <p data-i18n="fyp.s3.p1">我們進行了完整的單元測試與系統整合測試，涵蓋按鍵響應、離線儲存、Wi-Fi 連線與雲端同步。結果顯示：</p>
+                    <ul style="margin-left: 20px; margin-bottom: 20px; color: #444; line-height: 1.8;">
+                        <li data-i18n="fyp.s3.li1">✅ 按鍵延遲穩定在 60ms 以內</li>
+                        <li data-i18n="fyp.s3.li2">✅ 離線時數據完整保存，連線後自動補傳</li>
+                        <li data-i18n="fyp.s3.li3">✅ 高對比度模式與大字體切換順暢</li>
+                        <li data-i18n="fyp.s3.li4">✅ 儀表板即時呈現最新訓練記錄</li>
+                    </ul>
+
+                    <!-- 圖片佔位 4：測試截圖（Firebase 接收） -->
+                    <div class="blog-image">
+                        <img src="./assets/images/AssoFYP/Firebase.png" alt="Firebase 數據接收" onerror="this.style.display='none'">
+                        <div class="image-caption" data-i18n="fyp.s3.imgcaption">▲ Firebase 即時資料庫接收記錄</div>
+                    </div>
+
+                    <!-- 第四章：技術挑戰與解決方案 -->
+                    <h2 data-i18n="fyp.s4.title">技術挑戰與解決方案</h2>
+
+                    <h3 data-i18n="fyp.s4.h1">圖形庫相容性與 SPI 時序</h3>
+                    <p data-i18n="fyp.s4.p1">初期使用 LVGL 搭配 TFT_eSPI 失敗，導致白屏。最後切換至 Adafruit_GFX + Adafruit_ILI9341，並參考開源專案調整 SPI 腳位（CS=5, DC=17, RST=16），成功驅動螢幕。同時修正了 FreeRTOS 互斥鎖造成的死結問題。</p>
+
+                    <h3 data-i18n="fyp.s4.h2">非阻塞式延遲</h3>
+                    <p data-i18n="fyp.s4.p2">記憶遊戲中需連續顯示燈號序列，若使用 `delay()` 會阻斷按鍵掃描。我們改用 `millis()` 實現非阻塞計時，確保玩家可隨時按下按鈕中斷或退出。</p>
+
+                    <h3 data-i18n="fyp.s4.h3">離線數據序列化</h3>
+                    <p data-i18n="fyp.s4.p3">ESP32 的 Preferences 庫不支援結構體儲存，我們將遊戲記錄序列化為 17 位元組的緩衝區，利用 `putBytes()` 寫入 NVS，讀取時反序列化，實現在無網路環境下數據不流失。</p>
+
+                    <!-- 第五章：未來展望 -->
+                    <h2 data-i18n="fyp.s5.title">未來展望</h2>
+                    <ul style="margin-left: 20px; margin-bottom: 20px; color: #444; line-height: 1.8;">
+                        <li data-i18n="fyp.s5.li1">全球排行榜與社交功能（透過 Firebase 擴展）</li>
+                        <li data-i18n="fyp.s5.li2">語音引導指令（整合 TTS）</li>
+                        <li data-i18n="fyp.s5.li3">內建鋰電池，實現無線攜帶</li>
+                        <li data-i18n="fyp.s5.li4">導入機器學習模型，提供個人化難度預測</li>
+                    </ul>
+                </div>
+
+                <!-- 致謝區塊 -->
+                <div class="article-card thanks-card">
+                    <h3><i class="fas fa-heart"></i> <span data-i18n="fyp.thanksTitle">致謝</span></h3>
+                    <p data-i18n="fyp.thanksText">感謝指導老師 Sunny Wan 先生、HKU SPACE CC 實驗室提供設備，以及所有協助測試的家人與開源社群貢獻者。</p>
+                    <div class="thanks-tags">
+                        <span class="thanks-tag">HKU SPACE CC</span>
+                        <span class="thanks-tag">ESP32</span>
+                        <span class="thanks-tag">Adafruit</span>
+                        <span class="thanks-tag">Firebase</span>
+                        <span class="thanks-tag">React</span>
+                        <span class="thanks-tag">Chart.js</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h4 data-i18n="footer.copyrightTitle">版權</h4>
+                <p data-i18n="footer.copyright">© 2026 oops. 保留一切權利.</p>
+            </div>
+            <div class="footer-section">
+                <h4 data-i18n="footer.navTitle">導航鏈接</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html" data-i18n="footer.navLink">未完待續...</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4 data-i18n="footer.signalTitle">信號追蹤</h4>
+                <div class="social-links">
+                    <a href="mailto:mail@oops.us.kg"><i class="fab fa-google"></i> mail@oops.us.kg</a>
+                    <a href="https://github.com/s121091"><i class="fab fa-github"></i> s121091</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 引用 script.js （處理語言切換） -->
+    <script src="script.js"></script>
+</body>
+
+</html>

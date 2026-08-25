@@ -30,48 +30,96 @@ linkCards.forEach(card => {
 });
 
 // ==========================================
-// Horizontal Scroll Logic (修復原生滾動衝突)
+// 层叠卡片轮播（替代原水平滚动）
 // ==========================================
-const slider = document.querySelector('.scroll-layout-container');
+const slider = document.getElementById('projectSlider');
 const prevBtn = document.querySelector('.prev-btn');
 const nextBtn = document.querySelector('.next-btn');
 
-if (slider && prevBtn && nextBtn) {
-    const scrollAmount = 430; 
-    
-    // 改用原生的 scrollBy，它能完美兼容 CSS scroll-snap
-    nextBtn.addEventListener('click', () => { 
-        slider.scrollBy({ left: scrollAmount, behavior: 'smooth' }); 
-    });
-    
-    prevBtn.addEventListener('click', () => { 
-        slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); 
+if (slider) {
+    // 启用轮播模式
+    slider.classList.add('carousel-mode');
+    const cards = slider.querySelectorAll('.scroll-card');
+    let currentIndex = 0;
+    const total = cards.length;
+
+    // 创建圆点容器
+    const dotsContainer = document.createElement('div');
+    dotsContainer.className = 'carousel-dots';
+    cards.forEach((_, i) => {
+        const dot = document.createElement('span');
+        dot.classList.add('dot');
+        if (i === 0) dot.classList.add('active');
+        dot.dataset.index = i;
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
     });
 
-    let isTicking = false;
-    
-    const updateButtons = () => {
-        const maxScrollLeft = slider.scrollWidth - slider.clientWidth;
-        const buffer = 10; 
-        if(prevBtn) prevBtn.disabled = slider.scrollLeft <= buffer;
-        if(nextBtn) nextBtn.disabled = slider.scrollLeft >= maxScrollLeft - buffer;
-    };
+// 將圓點精準插入到我們新建的底部掛載點
+    const mountPoint = document.getElementById('dots-mount-point');
+    if (mountPoint) {
+        mountPoint.appendChild(dotsContainer);
+    }
 
-    slider.addEventListener('scroll', () => {
-        if (!slider.classList.contains('is-scrolling')) { slider.classList.add('is-scrolling'); }
-        window.clearTimeout(slider.scrollTimeout);
-        slider.scrollTimeout = setTimeout(() => { slider.classList.remove('is-scrolling'); }, 150);
-        
-        if (!isTicking) {
-            window.requestAnimationFrame(() => {
-                updateButtons();
-                isTicking = false;
-            });
-            isTicking = true;
-        }
+    const dots = dotsContainer.querySelectorAll('.dot');
+
+    function updateCarousel() {
+        cards.forEach((card, index) => {
+            const offset = index - currentIndex;
+            // 清除所有状态类
+            card.classList.remove('active', 'next-1', 'next-2', 'prev-1', 'prev-2', 'hidden-right', 'hidden-left');
+            
+            if (offset === 0) {
+                card.classList.add('active');
+            } else if (offset === 1) {
+                card.classList.add('next-1');
+            } else if (offset === 2) {
+                card.classList.add('next-2');
+            } else if (offset === -1) {
+                card.classList.add('prev-1');
+            } else if (offset === -2) {
+                card.classList.add('prev-2');
+            } else if (offset > 2) {
+                card.classList.add('hidden-right');
+            } else if (offset < -2) {
+                card.classList.add('hidden-left');
+            }
+        });
+
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentIndex);
+        });
+
+        if (prevBtn) prevBtn.disabled = currentIndex === 0;
+        if (nextBtn) nextBtn.disabled = currentIndex === total - 1;
+    }
+
+    function goTo(index) {
+        if (index < 0 || index >= total) return;
+        currentIndex = index;
+        updateCarousel();
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            if (currentIndex > 0) goTo(currentIndex - 1);
+        });
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            if (currentIndex < total - 1) goTo(currentIndex + 1);
+        });
+    }
+
+    // 初始化
+    updateCarousel();
+
+    // 窗口尺寸变化时刷新（可选）
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(updateCarousel, 200);
     });
-    // 頁面載入時初始化按鈕狀態
-    setTimeout(updateButtons, 100);
 }
 
 // ==========================================
