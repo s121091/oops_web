@@ -240,7 +240,7 @@ main {
    4. 项目 & 随笔区块 (Creator Section)
    ========================================= */
 .creator-section {
-    padding: 80px 5%;
+    padding: 80px 5% 40px;
     background: var(--background-color);
 }
 
@@ -276,6 +276,8 @@ main {
     display: flex;
     flex-direction: column;
     scroll-snap-align: start; /* ✨ 恢復滑動吸附 ✨ */
+    position: relative; 
+    z-index: 20;
 }
 
 .creator-header {
@@ -1320,6 +1322,7 @@ main.journey-container {
     gap: 20px;
     margin-top: 100px;
     width: 100%;
+    overflow: hidden;
 }
 
 /* 覆寫預設的 .nav-btn 以符合圖二 */
