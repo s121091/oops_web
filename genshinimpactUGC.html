@@ -32,8 +32,8 @@
 
         <!-- 頁面標題區 -->
         <div class="journey-header">
-            <h1>我努力過了，但千星編輯器還是讓我爛尾了</h1>
-            <p class="subtitle">-- 從「想省錢」到「做不出來」的開發全紀錄 --</p>
+            <h1>原神「訓練營」</h1>
+            <p class="subtitle">-- 千星奇域開發記 --</p>
         </div>
 
         <div class="article-grid">
@@ -91,8 +91,11 @@
 
                     <!-- 圖片佔位符 1：UI 設計稿 -->
                     <div class="blog-image">
-                        <img src="images/qianxing-ui-placeholder.jpg" alt="千星編輯器 UI 設計稿" onerror="this.style.display='none'">
-                        <p class="image-caption">▲ 初期規劃的 UI 界面設計</p>
+                        <img src="./assets/images/GI_UGC/UI.png" alt="UI" onerror="this.style.display='none'">
+                        <img src="./assets/images/GI_UGC/UI2.png" alt="UI" onerror="this.style.display='none'">
+                        <img src="./assets/images/GI_UGC/UI3.png" alt="UI" onerror="this.style.display='none'">
+                        <img src="./assets/images/GI_UGC/UI4.png" alt="UI" onerror="this.style.display='none'">
+                        <div class="image-caption">▲ UI 界面設計</div>
                     </div>
 
                     <h2>我覺得我可以做出來</h2>
@@ -104,7 +107,7 @@
 
                     <!-- 圖片佔位符 2：節點圖截圖 -->
                     <div class="blog-image">
-                        <img src="images/qianxing-nodegraph.jpg" alt="千星編輯器節點圖" onerror="this.style.display='none'">
+                        <img src="./assets/images/GI_UGC/節點圖.png" alt="千星編輯器節點圖" onerror="this.style.display='none'">
                         <div class="image-caption">▲ 節點圖</div>
                     </div>
 
@@ -121,8 +124,10 @@
 
                     <!-- 圖片佔位符 3：負載爆炸的錯誤日誌 -->
                     <div class="blog-image">
-                        <img src="images/qianxing-load-error.jpg" alt="負載爆炸錯誤日誌" onerror="this.style.display='none'">
-                        <div class="image-caption">▲ 負載爆炸的錯誤日誌</div>
+                        <img src="./assets/images/GI_UGC/爆資產.png" alt="負載爆炸錯誤" onerror="this.style.display='none'">
+                        <img src="./assets/images/GI_UGC/爆負載.png" alt="負載爆炸錯誤_2" onerror="this.style.display='none'">
+                        <img src="./assets/images/GI_UGC/爆負載2.png" alt="負載爆炸錯誤_3" onerror="this.style.display='none'">
+                        <div class="image-caption">▲ 負載爆炸的回傳日誌</div>
                     </div>
 
                     <p>後來我的解法是分字典加延遲載入。先建立單手劍字典，延遲 1 秒，再建立雙手劍字典，再延遲 1 秒，再建立法器……但這個方法時好時壞。有時不加延遲也能跑，有時加了延遲還是爆。</p>
@@ -139,6 +144,161 @@
                     <!-- 圖片佔位符 4：攻擊力計算公式的筆記 -->
                     <div class="blog-image">
                         <img src="images/qianxing-formula.jpg" alt="攻擊力計算公式筆記" onerror="this.style.display='none'">
+
+                        <div class="formula-section">
+                            <h3 style="margin-top: 30px; border-left: 4px solid var(--primary-color); padding-left: 15px; color: var(--secondary-color);">
+                                <i class="fas fa-calculator" style="color: var(--primary-color);"></i> 攻擊力計算公式（只做加法模式）
+                            </h3>
+                            <p style="color: #666; font-size: 0.95rem; margin-bottom: 20px;">
+                                由於千星編輯器不允許讀取聖遺物內部數據，我們只能基於角色「舊面板」做增量加法。
+                                以下是換武器時，最終面板攻擊力的完整計算邏輯。
+                            </p>
+
+                            <!-- ⚠️ 免責與偏差說明（置頂醒目） -->
+                            <div style="background: #fff3cd; border-left: 6px solid #ffc107; border-radius: 12px; padding: 18px 22px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(255, 193, 7, 0.15);">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span style="font-size: 1.8rem;">⚠️</span>
+                                    <div>
+                                        <div style="font-weight: 700; color: #856404; font-size: 1.05rem;">重要：本公式為「妥協版」</div>
+                                        <div style="color: #856404; font-size: 0.92rem; line-height: 1.6; margin-top: 4px;">
+                                            由於<strong>千星編輯器未開放聖遺物數據讀取接口</strong>，我們無法取得「聖遺物攻擊力%」與「羽毛固定值」。<br>
+                                            因此本公式使用 <code style="background: #e8d5a3; padding: 1px 6px; border-radius: 4px; font-weight: 600;">舊攻擊力 ÷ 舊總白值</code> 作為「黑盒平均倍率」來替代，<br>
+                                            這會導致計算結果與遊戲實際值之間存在 <strong style="color: #d63031;">約 0.5%～1.5% 的誤差</strong>（詳見下方實測對照）。
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 1. 變數定義表 -->
+                            <div style="background: #f8f9fa; border-radius: 16px; padding: 20px; margin-bottom: 25px; border: 1px solid #eee;">
+                                <h4 style="margin: 0 0 12px 0; color: #333; font-size: 1rem;">📌 變數定義</h4>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 20px; font-size: 0.9rem; color: #444;">
+                                    <div><code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">舊攻擊力</code> 換武器前的面板總攻擊力</div>
+                                    <div><code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">舊總白值</code> 角色基礎 + 舊武器基礎</div>
+                                    <div><code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">舊武器白值</code> 舊武器的基礎攻擊力</div>
+                                    <div><code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">新武器白值</code> 新武器的基礎攻擊力</div>
+                                    <div><code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">基礎權重</code> 根據星級&白值查表（如 0.331）</div>
+                                    <div><code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">新技能%</code> 新武器技能攻擊力%（小數）</div>
+                                    <div><code style="background: #e9ecef; padding: 2px 6px; border-radius: 4px;">舊技能%</code> 舊武器技能攻擊力%（小數，需扣掉）</div>
+                                </div>
+                            </div>
+
+                            <!-- 2. 推導過程 -->
+                            <div style="margin-bottom: 25px;">
+                                <h4 style="color: #333; font-size: 1rem; margin-bottom: 15px;">🧮 第一步：算出基礎值</h4>
+                                
+                                <div style="background: #fff; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; border-left: 4px solid #FF6B35; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                                    <div style="font-size: 0.85rem; color: #888; margin-bottom: 4px;">角色基礎攻擊力</div>
+                                    <div style="font-size: 1.1rem; font-weight: 600; color: #222; font-family: 'Courier New', monospace;">
+                                        角色基礎 = 舊總白值 - 舊武器白值
+                                    </div>
+                                </div>
+
+                                <div style="background: #fff; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; border-left: 4px solid #FF6B35; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                                    <div style="font-size: 0.85rem; color: #888; margin-bottom: 4px;">換上新武器後的總白值</div>
+                                    <div style="font-size: 1.1rem; font-weight: 600; color: #222; font-family: 'Courier New', monospace;">
+                                        新總白值 = 角色基礎 + 新武器白值
+                                    </div>
+                                </div>
+
+                                <div style="background: #fff; border-radius: 12px; padding: 15px 20px; margin-bottom: 12px; border-left: 4px solid #FF6B35; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                                    <div style="font-size: 0.85rem; color: #888; margin-bottom: 4px;">副詞條轉換（攻擊力%）</div>
+                                    <div style="font-size: 1.1rem; font-weight: 600; color: #222; font-family: 'Courier New', monospace;">
+                                        副詞條% = 基礎權重 × 1.5
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3. 核心公式 -->
+                            <div style="margin-bottom: 25px;">
+                                <h4 style="color: #333; font-size: 1rem; margin-bottom: 15px;">⚡ 第二步：總增量公式（核心）</h4>
+                                
+                                <div style="background: #fff8f5; border-radius: 16px; padding: 25px 25px; border: 2px solid #FF6B35; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.08);">
+                                    <div style="font-size: 0.9rem; color: #888; text-align: center; margin-bottom: 10px; letter-spacing: 2px;">—— 增量公式 ——</div>
+                                    
+                                    <div style="font-size: 1.2rem; font-weight: 700; color: #1a1e2c; text-align: center; font-family: 'Courier New', monospace; line-height: 1.8; word-break: break-word;">
+                                        總增量 = 
+                                        <span style="color: #e74c3c;">(新白值 - 舊白值)</span>
+                                        <span style="color: #555;">×</span>
+                                        <span style="color: #2980b9;">(舊攻擊力 ÷ 舊總白值)</span>
+                                        <span style="color: #555;">+</span>
+                                        <span style="color: #27ae60;">(新總白值)</span>
+                                        <span style="color: #555;">×</span>
+                                        <span style="color: #8e44ad;">(副詞條% + 新技能%)</span>
+                                        <span style="color: #555;">-</span>
+                                        <span style="color: #e67e22;">(舊總白值 × 舊技能%)</span>
+                                    </div>
+
+                                    <!-- 彩色圖例對照 -->
+                                    <div style="display: flex; flex-wrap: wrap; gap: 12px 20px; justify-content: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ddd; font-size: 0.8rem; color: #555;">
+                                        <span><span style="color: #e74c3c; font-weight: bold;">●</span> 白值提升</span>
+                                        <span><span style="color: #2980b9; font-weight: bold;">●</span> 聖遺物放大倍率（黑盒）</span>
+                                        <span><span style="color: #27ae60; font-weight: bold;">●</span> 新白值基礎</span>
+                                        <span><span style="color: #8e44ad; font-weight: bold;">●</span> 百分比總和</span>
+                                        <span><span style="color: #e67e22; font-weight: bold;">●</span> 扣除舊技能</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 4. 最終結果 -->
+                            <div style="background: #1e1e1e; border-radius: 16px; padding: 20px 25px; color: #a9b7c6; font-family: 'Fira Code', monospace; border: 1px solid #333; box-shadow: 0 8px 20px rgba(0,0,0,0.1);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; color: #888; font-size: 0.8rem; border-bottom: 1px solid #333; padding-bottom: 8px;">
+                                    <span>📋 最終面板</span>
+                                    <span style="color: #27c93f;">// 只做加法</span>
+                                </div>
+                                <div style="font-size: 1.25rem; font-weight: 600; color: #fff; text-align: center; padding: 10px 0; letter-spacing: 1px;">
+                                    新攻擊力 = 舊攻擊力 + 總增量
+                                </div>
+                                <div style="font-size: 0.9rem; color: #888; text-align: center; margin-top: 8px; border-top: 1px solid #333; padding-top: 12px; font-family: 'Segoe UI', sans-serif;">
+                                    ⚠️ 其中「總增量」必須是正數（因為我們只做加法，不扣舊武器副詞條）
+                                </div>
+                            </div>
+
+                            <!-- 5. 實戰帶入範例（含偏差對照表） -->
+                            <div style="margin-top: 25px; background: #f0f7ff; border-radius: 16px; padding: 20px; border: 1px solid #d0e0ff;">
+                                <h4 style="color: #1a3a5c; font-size: 1rem; margin: 0 0 10px 0;">📝 實戰帶入（狼的末路範例）</h4>
+                                <div style="font-size: 0.95rem; color: #1a3a5c; font-family: 'Courier New', monospace; line-height: 1.9; background: #fff; padding: 15px; border-radius: 10px; box-shadow: inset 0 1px 4px rgba(0,0,0,0.04);">
+                                    舊攻擊力 = 2562.22<br>
+                                    舊總白值 = 907，舊武器白值 = 565，新武器白值 = 608<br>
+                                    基礎權重 = 0.3315 → 副詞條% = 0.49725 (49.7%)<br>
+                                    新技能% = 0.20 (狼末精1)，舊技能% = 0<br><br>
+                                    角色基礎 = 907 - 565 = 342<br>
+                                    新總白值 = 342 + 608 = 950<br><br>
+                                    <span style="color: #e74c3c;">白值增量</span> = (608 - 565) × (2562.22 ÷ 907) = 43 × 2.8247 = <strong>121.5</strong><br>
+                                    <span style="color: #8e44ad;">百分比增量</span> = 950 × (0.49725 + 0.20) = 950 × 0.69725 = <strong>662.4</strong><br>
+                                    總增量 = 121.5 + 662.4 = <strong>783.9</strong><br>
+                                    <span style="font-size: 1.1rem; color: #FF6B35; font-weight: 700;">計算結果 = 2562.22 + 783.9 = 3346.1</span>
+                                </div>
+
+                                <!-- 🔴 偏差對照表（醒目） -->
+                                <div style="margin-top: 18px; background: #1a1e2c; border-radius: 12px; padding: 18px 20px; border-left: 6px solid #f87171;">
+                                    <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px 15px; align-items: center; color: #fff; font-family: 'Courier New', monospace;">
+                                        <div style="text-align: right;">
+                                            <div style="font-size: 0.7rem; color: #94a3b8; letter-spacing: 1px;">公式計算結果</div>
+                                            <div style="font-size: 1.4rem; font-weight: 700; color: #facc15;">3346.1</div>
+                                        </div>
+                                        <div style="font-size: 1.8rem; color: #f87171; font-weight: 300;">≠</div>
+                                        <div style="text-align: left;">
+                                            <div style="font-size: 0.7rem; color: #94a3b8; letter-spacing: 1px;">遊戲實際數值</div>
+                                            <div style="font-size: 1.4rem; font-weight: 700; color: #4ade80;">3329</div>
+                                        </div>
+                                    </div>
+                                    <div style="text-align: center; margin-top: 12px; padding-top: 12px; border-top: 1px solid #334155; color: #f87171; font-size: 0.9rem; font-family: 'Segoe UI', sans-serif;">
+                                        ⚠️ 偏差：<strong style="color: #facc15;">+17.1</strong> 點攻擊力（誤差約 <strong style="color: #facc15;">0.5%</strong>）
+                                    </div>
+                                    <div style="text-align: center; margin-top: 8px; color: #94a3b8; font-size: 0.8rem; font-family: 'Segoe UI', sans-serif;">
+                                        偏差來源：「舊攻擊力 ÷ 舊總白值」黑盒倍率包含羽毛固定值（+311），<br>
+                                        導致白值提升部分的估算略高於實際。
+                                    </div>
+                                </div>
+                                <p style="font-size: 0.85rem; color: #666; margin-top: 12px;">
+                                    * 實際測試使用 <strong>狼的末路（精煉 1 階）</strong>，舊武器為 565 白值無技能武器。
+                                </p>
+                            </div>
+
+                        </div>
+
+
                         <div class="image-caption">▲ 攻擊力計算公式</div>
                     </div>
 
