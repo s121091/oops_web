@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCI Lecture 03 (Part 2) / Lecture 6: 文本閱讀、語義啟動與界面排版設計 全交互視覺化看板</title>
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-subtle: #f1f5f9;
+            --bg-accent-soft: #eff6ff;
+            --text-main: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-blue: #2563eb;
+            --accent-indigo: #4f46e5;
+            --accent-emerald: #059669;
+            --accent-amber: #d97706;
+            --accent-rose: #e11d48;
+            --border-light: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+            --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang HK", "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.65;
+            padding-bottom: 60px;
+        }
+        header {
+            background: linear-gradient(135deg, #ffffff 0%, #eff6ff 50%, #f0fdf4 100%);
+            border-bottom: 1px solid var(--border-light);
+            padding: 36px 24px;
+            text-align: center;
+        }
+        .badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: var(--accent-blue);
+            border: 1px solid #bfdbfe;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        h1 { font-size: 2rem; color: #0f172a; margin-bottom: 8px; letter-spacing: -0.4px; }
+        .subtitle { color: var(--text-secondary); font-size: 0.98rem; max-width: 880px; margin: 0 auto; }
+
+        /* Core Essence Banner */
+        .essence-banner {
+            max-width: 1160px;
+            margin: 22px auto 0;
+            background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+            border: 2px solid #93c5fd;
+            border-radius: 14px;
+            padding: 20px 24px;
+            box-shadow: var(--shadow-md);
+        }
+        .essence-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .essence-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 12px;
+        }
+        .essence-item {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid #bfdbfe;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .essence-item strong { color: var(--text-main); }
+        .term-pill {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #3730a3;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 4px;
+            margin-left: 4px;
+        }
+
+        /* Sticky Light Navigation */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 16px;
+            box-shadow: var(--shadow-sm);
+            margin-top: 20px;
+        }
+        .nav-btn {
+            background: var(--bg-subtle);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: #e2e8f0; color: var(--text-main); }
+        .nav-btn.active {
+            color: #ffffff;
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        }
+
+        .container { max-width: 1200px; margin: 28px auto; padding: 0 20px; }
+        .section { display: none; animation: fadeIn 0.28s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+        }
+        .card h2 {
+            font-size: 1.32rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-blue);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+        .card h3 { font-size: 1.06rem; margin: 12px 0 8px; color: var(--text-main); }
+        .tag {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: #e0e7ff;
+            color: var(--accent-indigo);
+            font-weight: 600;
+            margin-left: auto;
+        }
+        ul.clean-list { list-style: none; padding-left: 0; }
+        ul.clean-list li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.94rem;
+        }
+        ul.clean-list li::before {
+            content: "•";
+            position: absolute;
+            left: 4px;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .lab-box {
+            width: 100%;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            margin-top: 12px;
+        }
+        .info-panel {
+            margin-top: 14px;
+            padding: 15px 18px;
+            background: var(--bg-accent-soft);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.93rem;
+            color: var(--text-secondary);
+        }
+        .warn-panel {
+            margin-top: 14px;
+            padding: 15px 18px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-left: 4px solid var(--accent-amber);
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.93rem;
+            color: #92400e;
+        }
+
+        .btn-group { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; justify-content: center; }
+        .action-btn {
+            background: #ffffff;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-hover);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.88rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .action-btn:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .action-btn.active-btn {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #ffffff;
+        }
+        .action-btn.emerald-btn {
+            background: #ecfdf5;
+            border-color: #6ee7b7;
+            color: var(--accent-emerald);
+        }
+        .action-btn.rose-btn {
+            background: #fff1f2;
+            border-color: #fecdd3;
+            color: var(--accent-rose);
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.9rem; background: #fff; }
+        th, td { border: 1px solid var(--border-light); padding: 10px 12px; text-align: left; }
+        th { background: #f8fafc; color: var(--accent-blue); font-weight: 700; }
+        tr:nth-child(even) { background: #fcfcfd; }
+
+        /* Half-masking Text Experiment */
+        .mask-demo-wrap {
+            position: relative;
+            background: #ffffff;
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            padding: 28px 16px;
+            margin: 12px auto;
+            max-width: 680px;
+            overflow: hidden;
+        }
+        .mask-text {
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 1.85rem;
+            font-weight: bold;
+            color: #0f172a;
+            letter-spacing: 0.5px;
+            line-height: 1;
+            position: relative;
+            display: inline-block;
+        }
+        .mask-bar-top {
+            position: absolute;
+            left: 0; right: 0; top: 0;
+            height: 52%;
+            background: #ffffff;
+            transition: opacity 0.25s;
+            pointer-events: none;
+        }
+        .mask-bar-bottom {
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 48%;
+            background: #ffffff;
+            transition: opacity 0.25s;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="badge">Human-Computer Interaction · Johan F. HOORN · Lecture 6 (Light Theme)</div>
+    <h1>Lecture 03: Visual Perception &amp; Computer Graphics (Part 2)</h1>
+    <p class="subtitle">從「文本閱讀三階段、眼動追蹤 (Scanning / Saccades / Fixations) 與字體上半部識別實驗」、「語義啟動 (Semantic Priming) 與心智模型衝突」到「CRAP 排版四大原則與界面恥辱堂 (Hall of Shame)」全交互視覺化看板</p>
+</header>
+
+<!-- ==================== TOP ESSENCE SUMMARY BANNER ==================== -->
+<div class="essence-banner">
+    <div class="essence-title">⚡ 全篇極簡核心考點總綱（六句話通透版 — 考場秒殺錨點）</div>
+    <div class="essence-grid">
+        <div class="essence-item">
+            <strong>1. 靠上下文語境理解詞義</strong> <span class="term-pill">Context &amp; Semantic Priming</span><br>
+            人類（特別是新手）極度依賴語境來消除歧義。提供正確的啟動詞（如 <code>Cable ➔ Lock</code> 指物理鎖，<code>BIOS ➔ Lock</code> 指密碼；計算機與 Nokia 手機上的 <code>C</code>）才能引導正確操作。
+        </div>
+        <div class="essence-item">
+            <strong>2. 不同人對同一字有不同理解</strong> <span class="term-pill">Lexical Ambiguity &amp; User Groups</span><br>
+            詞義頻率因人而異：<code>POST</code> 對新手是郵件 (Mail)，對專家是開機自檢；<code>Scenario Manager</code> 在金融師、UX 設計師和香港導演眼裡完全是三碼事！
+        </div>
+        <div class="essence-item">
+            <strong>3. 文字解釋抽象，圖案展示空間</strong> <span class="term-pill">Text vs. Image / Icons</span><br>
+            圖標（Icons）不總是最佳選擇（如難懂的餐飲圖標、GroupWise 無標籤圖標）。文字比圖像精確得多，適合解釋抽象概念；圖案則適合空間定位，且<strong>圖標必須配文字標籤 / Tooltips</strong>！
+        </div>
+        <div class="essence-item">
+            <strong>4. 文字不要含糊，別說同義反覆的廢話</strong> <span class="term-pill">No Full Circle / No Synonyms</span><br>
+            避免同義詞混用（<code>Properties</code> vs <code>Options</code>），也別寫「廢話文學」式的懸停提示（如 <code>Properties = Show the properties</code>、<code>Quick Steps = Manage quick steps</code>，邏輯正確但毫無解釋力）。
+        </div>
+        <div class="essence-item">
+            <strong>5. 絕對不要多重否定</strong> <span class="term-pill">Avoid Multiple Negations</span><br>
+            反例：刪除精靈時彈出 <em>"Not enough memory to allow undo... Continue without undo?"</em>（五重否定逼用戶點 No 才能保留 Undo）。<strong>鐵律：陳述句必須用肯定句 (Affirmative)，把否定留給用戶按鈕！</strong>
+        </div>
+        <div class="essence-item">
+            <strong>6. 不要「左右腦互搏」（避免自相矛盾與心智衝突）</strong> <span class="term-pill">Mental Model Clash &amp; Contradiction</span><br>
+            反例：點 <code>[Start 開始]</code> 去關機、點 <code>View &gt; Non-Visual Objects</code>、<code>Failed! (Operation succeeded)</code>、正在 <code>Cancelling...</code> 還讓人點 <code>[Cancel]</code>、以及 CMHK 短信剛說付完款又叫人 <code>pay the bill</code>！
+        </div>
+    </div>
+</div>
+
+<nav class="nav-bar">
+    <button class="nav-btn active" onclick="switchTab('tab-read', this)">📖 1. 閱讀三階段、眼動與字體遮罩實驗</button>
+    <button class="nav-btn" onclick="switchTab('tab-prime', this)">🧠 2. 詞彙歧義與語義啟動 (POST / Lock / C)</button>
+    <button class="nav-btn" onclick="switchTab('tab-mental', this)">💥 3. 心智模型衝突與菜單歧義仿真</button>
+    <button class="nav-btn" onclick="switchTab('tab-crap', this)">🎨 4. Typography 與 CRAP 排版重構器</button>
+    <button class="nav-btn" onclick="switchTab('tab-shame', this)">🚫 5. 界面恥辱堂、多重否定與真題自測</button>
+</nav>
+
+<div class="container">
+
+    <!-- ==================== TAB 1: READING TEXT, EYE MOVEMENT & FONT MASKING ==================== -->
+    <section id="tab-read" class="section active">
+        <div class="card">
+            <h2><span>📖</span> Reading Text (= Visual Pattern Recognition) 閱讀三階段與語言三層次 <span class="tag">Slides 3 - 7</span></h2>
+            <p style="color:var(--text-secondary); margin-bottom:14px;">
+                <strong>核心定義 (Slide 4)</strong>：<em>"Text is an image with coded meaning."</em>（文字本質上是一種帶有編碼意義的圖像！）而且<strong>圖標 (Icons) 並不總是最佳選擇</strong>，有時候文字描述比抽象圖標清晰得多（如 Slide 4-5 中讓人一頭霧水的 4 個餐飲圖標：<code>Bar / Restaurant / Self Service / Snacks</code>）。
+            </p>
+
+            <div class="grid-2">
+                <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border-top:3px solid var(--accent-blue);">
+                    <h3>1️⃣ 閱讀的三個認知階段 (Three Stages of Reading, Slide 4)</h3>
+                    <ul class="clean-list">
+                        <li><strong>Stage 1: Visual pattern perceived (感知視覺模式)</strong> — 眼睛接收文字的幾何筆畫特徵（如古埃及聖書體、漢字「慧」、字母 <code>i</code>）。</li>
+                        <li><strong>Stage 2: Decoded using internal representation of language (內部語言表徵解碼)</strong> — 將視覺符號映射為腦海中的詞彙表徵。</li>
+                        <li><strong>Stage 3: Interpreted using knowledge of syntax, semantics, and pragmatics (結合句法、語義與語用知識解讀)</strong>。</li>
+                    </ul>
+                </div>
+
+                <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border-top:3px solid var(--accent-indigo);">
+                    <h3>2️⃣ 語言解讀的三個維度 (Syntactic / Semantic / Pragmatic, Slides 6-7)</h3>
+                    <ul class="clean-list">
+                        <li><strong>Syntactic (句法層)</strong>：語言結構與語法規則，例如 <code>Sentence = Noun_Phrase + Verb_Phrase</code> 或代碼 <code>Debug.Print text</code>。</li>
+                        <li><strong>Semantic (語義層)</strong>：脫離語境的字面/非字面詞義，例如廣東話 <em>"Sihk jó faahn meih a?"</em> 字面意思是 <em>"Have you eaten yet? (食咗飯未呀？)"</em>。</li>
+                        <li><strong>Pragmatic (語用層)</strong>：結合對話參與者與<strong>具體情境 (Context)</strong> 的真實意圖——<em>"食咗飯未呀？"</em> 在社交偶遇時語用意思是 <strong>"How do you do? (打招呼)"</strong>，在家裡開飯時則是 <strong>"Sit and eat (坐低食飯)"</strong>！<br>
+                        <span style="color:var(--accent-rose); font-size:0.86rem;">💡 <strong>代碼腐化案例 (Slide 7)</strong>：<em>Semantics change due to Pragmatics</em> — 隨時間推移，程序員複製舊註釋並修改底層 Scratch 代碼，導致代碼的實際語義因使用情境改變而偏離原意！</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2><span>👁️</span> 眼動追蹤三機制 (Scanning / Saccades / Fixations) 與字體設計實驗 <span class="tag">Slides 8 - 13</span></h2>
+            <div class="grid-3">
+                <div style="background:var(--bg-subtle); padding:15px; border-radius:10px;">
+                    <h3 style="color:var(--accent-blue);">🔍 1. Scanning (全局掃視, Slides 8-9)</h3>
+                    <p style="font-size:0.9rem; color:var(--text-secondary);">
+                        對文本及其結構進行<strong>全局探索 (Global exploration)</strong>，評估所需付出的精力 (Effort estimate：文字多不多？單詞長不長？)。若界面像 Monticello Browser (Slide 9) 那樣密密麻麻，Scanning 階段就會讓用戶崩潰。
+                    </p>
+                </div>
+                <div style="background:var(--bg-subtle); padding:15px; border-radius:10px;">
+                    <h3 style="color:var(--accent-indigo);">⚡ 2. Saccades (眼跳, Slides 8, 10-12)</h3>
+                    <p style="font-size:0.9rem; color:var(--text-secondary);">
+                        眼球快速跳躍——<strong>不僅順著閱讀方向跳，還會前後回跳 (Regression) 甚至上下跳動</strong>！此時<strong>單詞輪廓 (Word shape) 與字體 (Fonts)</strong> 對識別至關重要（如微軟 ClearType 抗鋸齒技術）。
+                    </p>
+                </div>
+                <div style="background:var(--bg-subtle); padding:15px; border-radius:10px;">
+                    <h3 style="color:var(--accent-emerald);">🎯 3. Fixations (注視停頓, Slides 8, 13)</h3>
+                    <p style="font-size:0.9rem; color:var(--text-secondary);">
+                        <strong>感知與理解「僅僅發生在注視停頓 (Fixations) 期間」</strong>（眼跳之間處於大腦空閒狀態 Idle state）！<br>
+                        <strong>工程啟示 (Slide 13)</strong>：透過編寫簡潔的模組化代碼 (Write code concisely)，可以顯著<strong>減少程序員閱讀代碼時的 Fixations 次數</strong>！
+                    </p>
+                </div>
+            </div>
+
+            <!-- Interactive Lab 1A & 1B -->
+            <div class="grid-2">
+                <div class="lab-box">
+                    <h3 style="color:var(--accent-blue); margin-bottom:8px;">🧪 交互實驗 1A：單詞上半部 vs 下半部遮罩實驗 (Perea et al., 2012 — Slide 12)</h3>
+                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:10px;">
+                        點擊按鈕分別遮擋英文字母的<strong>上半部</strong>或<strong>下半部</strong>，親眼驗證哪一部分對單詞識別更重要：
+                    </p>
+                    <div class="btn-group">
+                        <button id="mask-btn-top" class="action-btn active-btn" onclick="setWordMask('top')">🚫 遮擋上半部 (Upper part invisible — 極難認！)</button>
+                        <button id="mask-btn-bot" class="action-btn" onclick="setWordMask('bottom')">✅ 遮擋下半部 (Lower part invisible — 一眼秒認！)</button>
+                        <button id="mask-btn-none" class="action-btn" onclick="setWordMask('none')">👁️ 顯示完整文字</button>
+                    </div>
+                    <div class="mask-demo-wrap">
+                        <div class="mask-text">
+                            These are letters with part made invisible
+                            <div id="bar-top" class="mask-bar-top" style="opacity:1;"></div>
+                            <div id="bar-bot" class="mask-bar-bottom" style="opacity:0;"></div>
+                        </div>
+                    </div>
+                    <div class="info-panel" style="font-size:0.86rem;">
+                        📌 <strong>必考結論與兩個限制條件 (Slide 12)</strong>：<br>
+                        <strong>字母的上半部 (Upper part) 比下半部對單詞識別更重要！</strong>（所以遮住下半部依然能輕鬆讀出，遮住上半部就完全看不懂）。<br>
+                        ⚠️ <strong>兩大限制條件</strong>：① 僅適用於<strong>小寫字母 (lowercase text)</strong>，不適用於全大寫 (UPPERCASE) 或假詞 (pseudo-words)；② 僅適用於<strong>羅馬字母 (Roman alphabet)</strong>，不適用於希伯來文等其他文字！
+                    </div>
+                </div>
+
+                <div class="lab-box">
+                    <h3 style="color:var(--accent-indigo); margin-bottom:8px;">🔤 交互實驗 1B：閱讀障礙字體 (Dyslexie Font by Christian Boer, 2008 — Slide 11)</h3>
+                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:10px;">
+                        並非總是「平滑工整」才好讀——對於閱讀障礙者 (Dyslexia，常把字母在腦中鏡像翻轉或顛倒)，<strong>故意扭曲 (Warped) 的字體反而能提升易讀性 (Legibility)</strong>！點擊對比：
+                    </p>
+                    <div class="btn-group">
+                        <button id="dys-btn-norm" class="action-btn" onclick="setDyslexieMode('normal')">普通對稱字體 (b d p q 極易混淆)</button>
+                        <button id="dys-btn-fix" class="action-btn active-btn" onclick="setDyslexieMode('dyslexie')">✨ Dyslexie 專用字體 (加重底部 + 放大開口)</button>
+                    </div>
+                    <svg id="dys-svg" viewBox="0 0 420 145" width="100%" height="145" style="background:#ffffff; border-radius:8px; border:1px solid var(--border-light);">
+                        <!-- Populated by JS -->
+                    </svg>
+                    <div class="info-panel" style="font-size:0.86rem;">
+                        📌 <strong>Christian Boer 的三大改造特徵 (Slide 11)</strong>：<br>
+                        1. <strong>Heavier bottoms (加重字母底部重心)</strong>：防止字母在腦中上下顛倒；<br>
+                        2. <strong>Distinct letter shapes &amp; slanted tails (差異化字形與斜體微調)</strong>：打破 <code>b, d, p, q</code> 的鏡像對稱；<br>
+                        3. <strong>Wider openings &amp; longer ascenders/descenders (放大開口並拉長上下延伸筆畫)</strong>。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 2: LEXICAL AMBIGUITY & SEMANTIC PRIMING ==================== -->
+    <section id="tab-prime" class="section">
+        <div class="card">
+            <h2><span>🧠</span> 詞彙歧義 (Lexical Ambiguity) 與語義啟動網絡 (Semantic Priming) <span class="tag">Slides 14 - 35, 44 - 50</span></h2>
+            <p style="color:var(--text-secondary); margin-bottom:14px;">
+                <strong>核心定律 (Slide 28)</strong>：<em>"The less you know as a user (novice), the more you rely on context. If no context is provided, the dictionary meanings become active. Semantic priming is the solution."</em>（新手懂的專業知識越少，就越依賴上下文 Context；若無上下文，大腦會默認激活日常字典裡的高頻含義！）
+            </p>
+
+            <!-- Interactive Lab 2A: POST Expert vs Novice -->
+            <div class="grid-2">
+                <div class="lab-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-blue); margin-bottom:8px;">📬 交互實驗 2A：ASUS 手冊中的 "POST" 詞頻反轉 (Slides 15 - 27)</h3>
+                    <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:10px;">
+                        華碩筆電說明書寫道：<em>"When you turn on your computer, it will first run through the POST..."</em> 點擊切換<strong>新手用戶</strong>與<strong>領域專家</strong>腦中的詞義激活頻率：
+                    </p>
+                    <div class="btn-group">
+                        <button id="post-btn-nov" class="action-btn active-btn" onclick="setPostGroup('novice')">👶 Non-expert Users (新手用戶詞頻)</button>
+                        <button id="post-btn-exp" class="action-btn" onclick="setPostGroup('expert')">👨‍💻 Domain-expert Users (電腦專家詞頻)</button>
+                    </div>
+                    <svg id="post-svg" viewBox="0 0 420 190" width="100%" height="190" style="background:#ffffff; border-radius:8px; border:1px solid var(--border-light);">
+                        <!-- Rendered via JS -->
+                    </svg>
+                </div>
+
+                <!-- Interactive Lab 2B: Semantic Priming of "LOCK" -->
+                <div class="lab-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-indigo); margin-bottom:8px;">🔒 交互實驗 2B：用啟動詞 (Prime) 消除 "Lock" 的歧義 (Slides 28 - 34)</h3>
+                    <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:10px;">
+                        單看 <code>Lock</code> 會有「保持不變 (Keep constant)」與「安全 (Security)」兩大分支歧義。點擊下方 <strong>5 個不同的啟動詞 (Prime)</strong>，觀察大腦如何精確路由到唯一含義：
+                    </p>
+                    <div class="btn-group">
+                        <button id="lk-btn-1" class="action-btn active-btn" onclick="setLockPrime('cable')">Prime 1: Cable</button>
+                        <button id="lk-btn-2" class="action-btn" onclick="setLockPrime('bios')">Prime 2: BIOS Setup</button>
+                        <button id="lk-btn-3" class="action-btn" onclick="setLockPrime('case')">Prime 3: Case sensitive</button>
+                        <button id="lk-btn-4" class="action-btn" onclick="setLockPrime('browse')">Prime 4: Browse</button>
+                        <button id="lk-btn-5" class="action-btn" onclick="setLockPrime('calc')">Prime 5: Calculator</button>
+                    </div>
+                    <svg id="lock-svg" viewBox="0 0 440 190" width="100%" height="190" style="background:#ffffff; border-radius:8px; border:1px solid var(--border-light);">
+                        <!-- Rendered via JS -->
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Interactive Lab 2C: What does C mean? & LLM Causal Masking -->
+            <div class="grid-2" style="margin-top:18px;">
+                <div class="lab-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-emerald); margin-bottom:8px;">📱 交互實驗 2C：What does this "C" mean? (Nokia 經典災難 — Slides 44 - 49)</h3>
+                    <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:10px;">
+                        一個孤零零的字母 <code>C</code> 到底是什麼意思？點擊切換不同上下文 (Context)：
+                    </p>
+                    <div class="btn-group">
+                        <button id="c-btn-calc" class="action-btn" onclick="setCContext('calc')">🧮 計算機界面上的 C</button>
+                        <button id="c-btn-des" class="action-btn" onclick="setCContext('designer')">📐 Nokia 設計師原本想的 C</button>
+                        <button id="c-btn-user" class="action-btn active-btn" onclick="setCContext('user')">😱 Nokia 真實用戶看到的 C (災難！)</button>
+                        <button id="c-btn-ans" class="action-btn emerald-btn" onclick="setCContext('context')">💡 終極答案：C 代表什麼？</button>
+                    </div>
+                    <div id="c-display" style="background:#ffffff; border:1px solid var(--border-light); border-radius:8px; padding:16px; min-height:115px; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <div style="background:var(--bg-subtle); padding:18px; border-radius:12px; border:1px solid var(--border-light);">
+                    <h3 style="color:var(--accent-indigo); margin-top:0;">🤖 延伸考點：大語言模型 (LLM) 與 NLP 的語境缺陷 (Slides 35, 50)</h3>
+                    <ul class="clean-list">
+                        <li><strong>Causal LM (因果語言模型 / Left Context Only, Slide 35)</strong>：<br>
+                            現代 LLM 的 <strong>Causal masking / Causal self-attention</strong> 靈感正源於心理語言學家 <strong>Meyer &amp; Schvaneveldt (1971) 的語義啟動實驗 (Semantic priming experiments)</strong>！<br>
+                            例如：<em>"Charlotte eats her noodles with _____"</em> → 前文語境 <code>eats noodles</code> 啟動了食物關聯，讓你選出 <code>spicy oil / garlic oil</code>，而排除掉機械用的 <code>motor oil (機油)</code>！</li>
+                        <li><strong>Azure Machine Learning 的尷尬翻車 (Slide 50)</strong>：<br>
+                            學生發郵件給 Hoorn 教授說：<em>"我成了密切接觸者，上週五和確診的博士生吃過飯，這一週不能見人了。"</em><br>
+                            結果 Outlook 的 AI 自動回覆建議居然彈出：<strong><code>[Congratulations!]</code> <code>[Good to hear!]</code> <code>[Great news!]</code></strong> — 因為低階 NLP 只抓到了局部詞彙 <code>tested negative and doing well</code>，卻對整體語境毫無概念 (No clue about context)！</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 3: MENTAL MODELS & MENU AMBIGUITY ==================== -->
+    <section id="tab-mental" class="section">
+        <div class="card">
+            <h2><span>💥</span> 線性菜單歧義、同義詞混亂與「心智模型衝突 (Mental Models Clash)」 <span class="tag">Slides 36 - 43, 51 - 68</span></h2>
+
+            <div class="grid-2">
+                <!-- Lab 3A: Excel Menu Semantic Priming Failure -->
+                <div class="lab-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-blue); margin-bottom:8px;">📂 交互實驗 3A：Excel 菜單啟動失敗鏈 (Tools &gt; Macro &gt; VB Editor — Slides 36 - 43)</h3>
+                    <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:10px;">
+                        為什麼新手在 Excel 裡根本找不到寫代碼的地方？點擊各級菜單查看新手腦中的「第一高頻聯想」是如何一步步跑偏的：
+                    </p>
+                    <div class="btn-group">
+                        <button id="mn-btn-1" class="action-btn active-btn" onclick="setMenuStep(1)">1. 點擊 [Tools]</button>
+                        <button id="mn-btn-2" class="action-btn" onclick="setMenuStep(2)">2. 點擊 [Macro]</button>
+                        <button id="mn-btn-3" class="action-btn" onclick="setMenuStep(3)">3. 點擊 [Visual Basic Editor]</button>
+                        <button id="mn-btn-4" class="action-btn rose-btn" onclick="setMenuStep(4)">4. 快捷鍵 [Alt + F11]？</button>
+                    </div>
+                    <div id="menu-sim-box" style="background:#ffffff; border:1px solid var(--border-light); border-radius:8px; padding:16px; text-align:left; min-height:125px;">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Lab 3B: Scenario Manager Multi-Persona -->
+                <div class="lab-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-indigo); margin-bottom:8px;">🎭 交互實驗 3B："Words mean different things" — Scenario Manager (Slides 54 - 57)</h3>
+                    <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:10px;">
+                        Excel 裡的 <code>Data &gt; What-If Analysis &gt; Scenario Manager</code>，在三種不同職業的人眼裡意思完全不同（<strong>Ambiguity：一詞多義</strong>）：
+                    </p>
+                    <div class="btn-group">
+                        <button id="sc-btn-1" class="action-btn active-btn" onclick="setScenarioRole(1)">💼 金融分析師 (Financial Modeling)</button>
+                        <button id="sc-btn-2" class="action-btn" onclick="setScenarioRole(2)">🎨 UX 設計師 (UX Design)</button>
+                        <button id="sc-btn-3" class="action-btn" onclick="setScenarioRole(3)">🎬 香港動作片導演 (HK Movie Director)</button>
+                    </div>
+                    <div id="scenario-box" style="background:#ffffff; border:1px solid var(--border-light); border-radius:8px; padding:16px; text-align:left; min-height:125px;">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alan Cooper Mental Model & Windows XP Start -> Shut Down -->
+            <div class="grid-2" style="margin-top:18px;">
+                <div style="background:var(--bg-subtle); padding:18px; border-radius:12px; border:1px solid var(--border-light);">
+                    <h3 style="color:var(--accent-blue); margin-top:0;">⚙️ Alan Cooper 三大模型衝突 (About Face 2.0 — Slides 61 - 65)</h3>
+                    <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:10px;">
+                        <code>Implementation Model (底層實現模型：機器實際如何運轉)</code> ◄─── <code>Represented Model (設計師呈現的界面模型)</code> ───► <code>Mental Model (用戶心智模型：用戶以為它如何運轉)</code>。<br>
+                        <strong>越靠近用戶的 Mental Model，系統就越容易理解 (Easier, more desirable)！</strong>
+                    </p>
+                    <div class="warn-panel" style="margin-top:8px;">
+                        🔥 <strong>經典反例：Windows XP 的關機悖論 (Slides 63-65, 68, 87)</strong><br>
+                        用戶想讓電腦「待機休息 (Stand by)」或「關機 (Shut down)」，竟然必須先點擊左下角的 <strong><code>[Start (開始)]</code> → 再點 <code>[Shut Down... (關機)]</code> → 再在下拉選單裡把 Shut down 改成 <code>[Stand by (待機)]</code> → 最後點 <code>[OK]</code></strong>！<br>
+                        <em>"Pressing 'start' to stop a process is priming the wrong semantic associations!"</em>（按「開始」去停止一個進程，完全啟動了錯誤的語義聯想！）
+                    </div>
+                </div>
+
+                <div style="background:var(--bg-subtle); padding:18px; border-radius:12px; border:1px solid var(--border-light);">
+                    <h3 style="color:var(--accent-rose); margin-top:0;">🔍 界面文字歧義與同義詞災難匯總 (Slides 51 - 68)</h3>
+                    <ul class="clean-list">
+                        <li><strong>自相矛盾的魔法 (Slide 51)</strong>：<code>View &gt; Non-Visual Objects</code>（去「查看」那些「非視覺物體」？！）</li>
+                        <li><strong>畫圖還是寫字？(Slide 52)</strong>：在舊版 PowerPoint 中，你想插入文本框寫字 (Write)，卻必須去勾選 <code>View &gt; Toolbars &gt; Drawing (繪圖)</code>。</li>
+                        <li><strong>截斷導致無法區分 (Slide 53)</strong>：檔案路徑太長全被截斷成一模一樣的 <code>C:\GRAPHICS\GIFCON\VFORM\base9</code>，讓用戶怎麼選？</li>
+                        <li><strong>Ambiguity (一詞多義) vs. Synonyms (多詞同義, Slide 57)</strong>：<br>
+                            • <strong>Ambiguity</strong>：1 個詞指向多個不同意思（如 <code>Scenario Manager</code>）。<br>
+                            • <strong>Synonyms</strong>：多個不同詞卻指向同一個意思/同一個視窗（例如桌面上叫 <code>Properties</code>，右下角托盤卻叫 <code>Options</code>，點開居然是同一個視窗！或者 <code>Trash / Bin / Recycle / Deleted items</code> 混用）。<strong>切記：界面中絕對不要混用同義詞 (Don't use synonyms, Slide 68)！</strong></li>
+                        <li><strong>Blackboard 的 Open 陷阱與接近性違規 (Slides 66-67)</strong>：選單裡寫著 <code>Open</code>，點了卻是下載文件；而且勾選框在最左下角，下載按鈕卻在十萬八千里外的最右上角！</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 4: TYPOGRAPHY & CRAP INTERACTIVE REBUILDER ==================== -->
+    <section id="tab-crap" class="section">
+        <div class="card">
+            <h2><span>🎨</span> Typography 字體排印黃金法則與 CRAP 視覺設計四原則 <span class="tag">Slides 69 - 75</span></h2>
+
+            <div class="grid-2">
+                <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border-left:4px solid var(--accent-blue);">
+                    <h3>✒️ 1. SD Communication Design 字體排印規範 (Typography, Slide 69 · 必考數字！)</h3>
+                    <ul class="clean-list">
+                        <li><strong>襯線 vs 無襯線</strong>：<strong>Serif (襯線體)</strong> 在<strong>紙質印刷品 (in print)</strong> 中更易讀；<strong>Sans-serif (無襯線體)</strong> 在<strong>電腦螢幕 (on screen)</strong> 上更易讀且更休閒。</li>
+                        <li><strong>比例字體與大小寫</strong>：<strong>Proportional fonts (比例字體)</strong> 比等寬字體更省空間且更易讀；<strong>Mixed-case (大小寫混合)</strong> 比全大寫更緊湊易讀。</li>
+                        <li><strong>每行字數上限</strong>：印刷品每行<strong>最多 60 個字符 (at most 60 characters long)</strong>。</li>
+                        <li><strong>🔥 嚴格數量限制 (1-2-2-4 法則)</strong>：最多 <strong>1~2 種字體 (上限 3 種)</strong>、<strong>2 種傾斜度</strong> (normal, italic)、<strong>2 種粗細權重</strong> (normal, bold)、<strong>4 種字號大小</strong> (title, subtitle, text, footnote)。</li>
+                        <li><strong>最小字號差</strong>：不同層級字號之間至少要相差 <strong>2 pt (at least 2 pt)</strong> 肉眼才能區分！</li>
+                        <li><strong>色彩與背景</strong>：慎用藍色文字（藍光閱讀敏銳度最低）；背景應使用<strong>中性色 (黑、白、灰)</strong>。切勿使用垂直旋轉 90° 的文字排版！</li>
+                    </ul>
+                </div>
+
+                <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border-left:4px solid var(--accent-emerald);">
+                    <h3>📐 2. CRAP 界面排版四大原則與 Grids 網格系統 (Slides 70 - 75)</h3>
+                    <ul class="clean-list">
+                        <li><strong>C — Contrast (對比)</strong>：<em>Make different things different!</em> 突出主導元素 (Dominant elements)，弱化次要元素。<br>
+                        <span style="color:var(--accent-rose); font-size:0.86rem;">⚠️ <strong>恒生銀行反例 (Slide 71)</strong>：用戶只想找右上角小小的 <code>Logon</code> 登入，結果視覺焦點全被中間巨大的紅底 <code>Apply now</code> 和 <code>1.78%</code> 貸款廣告搶走了！</span></li>
+                        <li><strong>R — Repetition (重複與一致性 Consistency)</strong>：在整個界面中重複一致的位置、格式與組件風格。</li>
+                        <li><strong>A — Alignment / Create Unity (對齊與統一性)</strong>：透過水平與垂直網格線 (Grids, Slides 72-73) 對齊相關組件，創造視覺流 (Visual flow)。</li>
+                        <li><strong>P — Proximity (接近性)</strong>：將相關元素靠近分組 (Group related elements)，用留白 (White space) 隔開無關元素。</li>
+                        <li><strong>圖標設計黃金法則 (Icons, Slide 75)</strong>：除極少數最熟悉的圖標外，<strong>永遠要給圖標加上文字標籤 (Always label your icons)</strong>！把圖標歸入「家族 (Icon families)」；<strong>圖標的剪影輪廓 (Silhouette) 傳遞最多信息</strong>；遵循<strong>識別優於回憶 (Recognition over recall)</strong>；<strong>先用黑白設計，最後再上色 (Design first in b/w, add colour later)</strong>！</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interactive Lab 4: Bad Webform vs Good CRAP Grid Form -->
+            <div class="lab-box" style="margin-top:16px;">
+                <h3 style="color:var(--accent-blue); margin-bottom:8px;">🛠️ 交互實驗 4：拯救災難級表單 — 親手用 CRAP 與 Grids 重構界面 (Slides 73 - 74)</h3>
+                <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:12px;">
+                    點擊下方按鈕，一鍵對比 Slide 74 的「災難級反面教材 Webform」與 Slide 73 遵循「CRAP + 二級縮進網格 (Two-level Hierarchy &amp; Grids)」的標準表單：
+                </p>
+                <div class="btn-group">
+                    <button id="form-btn-bad" class="action-btn rose-btn" onclick="setFormDemo('bad')">❌ 反面教材：What NOT to do (Slide 74 混亂表單)</button>
+                    <button id="form-btn-good" class="action-btn active-btn" onclick="setFormDemo('good')">✅ 正確示範：CRAP + Grid 兩級層次表單 (Slide 73 Note Sender)</button>
+                </div>
+
+                <div id="form-demo-container" style="max-width:660px; margin:0 auto; text-align:left;">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 5: HALL OF SHAME, DOUBLE NEGATIVES & EXAM ==================== -->
+    <section id="tab-shame" class="section">
+        <div class="card">
+            <h2><span>🚫</span> Interface Hall of Shame (界面恥辱堂)、多重否定邏輯解碼與期末真題 <span class="tag">Slides 76 - 93</span></h2>
+
+            <div class="grid-2">
+                <!-- Lab 5A: 5 Negatives Logic Decoder -->
+                <div class="lab-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-rose); margin-bottom:8px;">🤯 交互實驗 5A：Microsoft Image Composer 的「五重否定」崩潰彈窗 (Slide 85)</h3>
+                    <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:10px;">
+                        當你正在刪除一個圖形精靈 (<code>erasing a sprite</code> = 第1重否定：抹除存在) 時，系統彈出以下警告：
+                    </p>
+                    <div style="background:#e2e8f0; border:2px outset #cbd5e1; padding:14px; border-radius:4px; max-width:380px; margin:0 auto 12px; color:#0f172a; font-family:Tahoma, sans-serif; font-size:0.88rem;">
+                        <div style="background:#1e3a8a; color:#fff; padding:4px 8px; font-weight:bold; margin:-14px -14px 10px -14px;">Microsoft Image Composer</div>
+                        <p style="margin-bottom:12px;">❓ <strong>Not enough</strong> memory to allow <strong>undo</strong> on this operation. Continue <strong>without undo</strong>?</p>
+                        <div style="display:flex; justify-content:center; gap:12px;">
+                            <button class="action-btn" style="padding:4px 20px;" onclick="decodeNegation('yes')">Yes</button>
+                            <button class="action-btn" style="padding:4px 20px;" onclick="decodeNegation('no')">No</button>
+                        </div>
+                    </div>
+                    <div id="neg-result" class="info-panel" style="font-size:0.86rem;">
+                        👆 <strong>假如你想「保留 Undo 功能（也就是不繼續刪除）」，你該點 Yes 還是 No？點擊上方按鈕試試看！</strong><br>
+                        • <strong>五重否定拆解</strong>：<code>not enough</code> (1) + <code>undo</code> (2) + <code>without</code> (3) + <code>undo</code> (4) + <code>No</code> (5)，外加刪除精靈本身 <code>not sprite</code> = <code>Not(undo(not sprite))</code>！<br>
+                        • <strong>設計鐵律</strong>：永遠保持陳述句為<strong>肯定句 (Affirmative)</strong>，讓用戶的按鈕來提供否定（No / Cancel / Quit）！
+                    </div>
+                </div>
+
+                <!-- Hall of Shame Gallery -->
+                <div style="background:var(--bg-subtle); padding:16px; border-radius:12px; border:1px solid var(--border-light);">
+                    <h3 style="color:var(--accent-blue); margin-top:0;">🏛️ 界面恥辱堂經典案例速覽 (Slides 76 - 93)</h3>
+                    <ul class="clean-list" style="font-size:0.88rem;">
+                        <li><strong>假選擇與死循環 (Slides 76-79)</strong>：① <em>"You are about to overwrite the original file. Go ahead?"</em> 卻只給一個 <code>[OK]</code> 按鈕（毫無選擇權！）；② 正在 <code>Cancelling...</code> 的進度條旁邊放一個 <code>[Cancel]</code> 按鈕（取消一個正在取消的操作會怎樣？）；③ <em>"Failed to check out file. The error was: No error occurred."</em> 或 <em>"NetInfo read failed! (Operation succeeded)"</em>（自相矛盾！）。</li>
+                        <li><strong>中國移動香港 CMHK 短信災難 (Slide 80)</strong>：<br>
+                            • <strong>違背接近性偏見 (Violation of proximity bias)</strong>：把 3~4 條獨立信息不加空行黏成一整段；<br>
+                            • <strong>誤用定冠詞 "the" (Misuse of the article 'the')</strong>：剛說完「您 HK$206 的付款已收到」，緊接著同一段寫 <em>"You can view the bill details and pay <strong>the bill</strong>"</em>！在同段中 <code>the</code> 是指向性詞 (Deictic element)，指代剛才那張已付過的特定帳單，導致用戶困惑「我不是剛付完嗎？！」（應區分特定 Specific 與泛指 Generic）。</li>
+                        <li><strong>Ryanair 瑞安航空暗黑模式 (Dark Pattern, Slide 82)</strong>：買機票時問需不需要旅遊保險，竟然把 <strong><code>[Don't Insure Me (不投保)]</code> 藏在「選擇居住國家 (Select a country)」下拉選單的 Denmark (丹麥) 和 Finland (芬蘭) 之間</strong>！</li>
+                        <li><strong>漢堡點餐與 City Super 購物車 (Slides 83-84)</strong>：漢堡預設不加配料卻逼人勾選「No toppings」，底部又有個全加的「All the Way」；City Super 購物車有 80 件商品，彈窗只寫 <em>"Your desired quantity is unavailable [Ok]"</em> 卻<strong>不告訴你是哪一件商品缺貨 (WHICH ITEM?!?!)</strong>！</li>
+                        <li><strong>同義反覆的廢話 Tooltips (Full Circle, Slides 92-93)</strong>：滑鼠懸停在 <code>Properties</code> 上顯示 <em>"Show the properties..."</em>；懸停在 <code>Manage Quick Steps...</code> 上顯示 <em>"Create, edit, delete, and rearrange quick steps"</em> — 邏輯上沒錯，但用戶依然不知道什麼叫 Quick steps！</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Official Exam Sample Item -->
+            <div class="card" style="margin-top:20px; border:2px solid #bfdbfe; background:#eff6ff;">
+                <h2 style="border-bottom-color:#dbeafe;"><span>🎓</span> 官方期末真題演練 (Exam Sample Item — Category "Application") <span class="tag">Slides 89 - 91</span></h2>
+                <p style="font-size:1rem; color:var(--text-main); margin-bottom:12px;">
+                    <strong>Question:</strong> In <em>Novell GroupWise 5.1</em> (shown with 6 mysterious top icon tabs: a globe, 1-2-3 steps, a book, gears, handshake, folder), <strong>point out the problem with the images</strong> and identify the tab that has a glossary explaining these images:
+                </p>
+                <div class="btn-group" style="flex-direction:column; align-items:stretch;">
+                    <button class="action-btn" style="text-align:left;" onclick="checkExam6('A')">A. What do these images mean? There are no tooltips (And the 3rd tab with the book icon is a guess for the glossary)</button>
+                    <button class="action-btn" style="text-align:left;" onclick="checkExam6('B')">B. No element groupings by proximity</button>
+                    <button class="action-btn" style="text-align:left;" onclick="checkExam6('C')">C. Items that are similar tend to be interpreted together</button>
+                    <button class="action-btn" style="text-align:left;" onclick="checkExam6('D')">D. The images represent ambiguous synonyms</button>
+                </div>
+                <div id="exam6-feedback" style="display:none; margin-top:12px; padding:14px; border-radius:8px;"></div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    // 1A: Word Upper/Lower Masking
+    function setWordMask(mode) {
+        document.getElementById('mask-btn-top').className = mode === 'top' ? 'action-btn active-btn' : 'action-btn';
+        document.getElementById('mask-btn-bot').className = mode === 'bottom' ? 'action-btn active-btn' : 'action-btn';
+        document.getElementById('mask-btn-none').className = mode === 'none' ? 'action-btn active-btn' : 'action-btn';
+
+        document.getElementById('bar-top').style.opacity = (mode === 'top') ? '1' : '0';
+        document.getElementById('bar-bot').style.opacity = (mode === 'bottom') ? '1' : '0';
+    }
+
+    // 1B: Dyslexie Font Demo
+    function setDyslexieMode(mode) {
+        document.getElementById('dys-btn-norm').className = mode === 'normal' ? 'action-btn active-btn' : 'action-btn';
+        document.getElementById('dys-btn-fix').className = mode === 'dyslexie' ? 'action-btn active-btn' : 'action-btn';
+        const svg = document.getElementById('dys-svg');
+        if (mode === 'normal') {
+            svg.innerHTML = `
+                <text x="210" y="75" fill="#0f172a" font-family="Arial, sans-serif" font-size="56" letter-spacing="18" text-anchor="middle">b d p q</text>
+                <text x="210" y="122" fill="#e11d48" font-size="13" font-weight="bold" text-anchor="middle">⚠️ 傳統字體：b, d, p, q 完全是同一個形狀的鏡像與翻轉，極易混淆！</text>
+            `;
+        } else {
+            svg.innerHTML = `
+                <!-- Simulated Dyslexie characteristics: heavy base, slanted stems, distinct openings -->
+                <g transform="translate(65, 20)">
+                    <text x="35" y="65" fill="#1d4ed8" font-family="Georgia, serif" font-size="60" font-weight="bold">b</text>
+                    <rect x="36" y="58" width="26" height="9" rx="3" fill="#1d4ed8"/>
+                    <text x="115" y="65" fill="#059669" font-family="Trebuchet MS, sans-serif" font-size="58" font-style="italic">d</text>
+                    <rect x="114" y="58" width="26" height="9" rx="3" fill="#059669"/>
+                    <text x="195" y="65" fill="#7c3aed" font-family="Verdana, sans-serif" font-size="56">p</text>
+                    <text x="265" y="65" fill="#d97706" font-family="Georgia, serif" font-size="58" font-style="italic">q</text>
+                </g>
+                <text x="210" y="125" fill="#059669" font-size="12.5" font-weight="bold" text-anchor="middle">✨ Dyslexie 字體：加重底部重心 + 差異化傾角與開口 + 拉長上下筆畫！</text>
+            `;
+        }
+    }
+    setDyslexieMode('dyslexie');
+
+    // 2A: POST Novice vs Expert Frequency
+    function setPostGroup(grp) {
+        document.getElementById('post-btn-nov').className = grp === 'novice' ? 'action-btn active-btn' : 'action-btn';
+        document.getElementById('post-btn-exp').className = grp === 'expert' ? 'action-btn active-btn' : 'action-btn';
+        const svg = document.getElementById('post-svg');
+        const isNov = (grp === 'novice');
+        svg.innerHTML = `
+            <rect x="165" y="12" width="90" height="32" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+            <text x="210" y="33" fill="#1e40af" font-size="15" font-weight="bold" text-anchor="middle">POST</text>
+
+            <!-- Arrows -->
+            <line x1="180" y1="44" x2="75" y2="85" stroke="#e11d48" stroke-width="${isNov ? 3.5 : 2}"/>
+            <line x1="210" y1="44" x2="210" y2="85" stroke="#e11d48" stroke-width="2"/>
+            <line x1="240" y1="44" x2="345" y2="85" stroke="#e11d48" stroke-width="${isNov ? 2 : 3.5}" stroke-dasharray="${isNov ? '5,5' : 'none'}"/>
+
+            <!-- Meanings -->
+            <text x="75" y="105" fill="#0f172a" font-size="13" font-weight="bold" text-anchor="middle">✉️ Mail (郵件)</text>
+            <text x="210" y="105" fill="#0f172a" font-size="13" font-weight="bold" text-anchor="middle">🏮 Lamp post (燈柱)</text>
+            <text x="345" y="105" fill="#0f172a" font-size="13" font-weight="bold" text-anchor="middle">💻 Power On Self Test</text>
+
+            <!-- Frequency Badges -->
+            <rect x="18" y="125" width="114" height="44" rx="6" fill="${isNov ? '#fef2f2' : '#f8fafc'}" stroke="${isNov ? '#e11d48' : '#cbd5e1'}" stroke-width="1.5"/>
+            <text x="75" y="145" fill="${isNov ? '#be123c' : '#475569'}" font-size="11.5" font-weight="bold" text-anchor="middle">${isNov ? '🔥 High-frequency' : 'Medium-frequency'}</text>
+            <text x="75" y="161" fill="#64748b" font-size="10.5" text-anchor="middle">meaning</text>
+
+            <rect x="153" y="125" width="114" height="44" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="210" y="145" fill="#475569" font-size="11.5" font-weight="bold" text-anchor="middle">${isNov ? 'Medium-frequency' : 'Low-frequency'}</text>
+            <text x="210" y="161" fill="#64748b" font-size="10.5" text-anchor="middle">meaning</text>
+
+            <rect x="288" y="125" width="118" height="44" rx="6" fill="${!isNov ? '#ecfdf5' : '#f8fafc'}" stroke="${!isNov ? '#059669' : '#cbd5e1'}" stroke-width="1.5"/>
+            <text x="347" y="145" fill="${!isNov ? '#047857' : '#475569'}" font-size="11.5" font-weight="bold" text-anchor="middle">${isNov ? '❄️ Low-frequency' : '🔥 High-frequency'}</text>
+            <text x="347" y="161" fill="#64748b" font-size="10.5" text-anchor="middle">meaning</text>
+        `;
+    }
+    setPostGroup('novice');
+
+    // 2B: Semantic Priming of Lock
+    const lockPrimes = {
+        cable: { btn: 1, prime: 'Cable (線纜)', branch: 'security', target: '🔒 Physical lock (物理防盜鎖)', slide: 'Slide 29-30' },
+        bios:  { btn: 2, prime: 'BIOS Setup', branch: 'security', target: '🔑 Password (開機密碼鎖)', slide: 'Slide 31' },
+        case:  { btn: 3, prime: 'Case sensitive', branch: 'keep', target: '🅰️ Caps lock (大寫鎖定鍵)', slide: 'Slide 32' },
+        browse:{ btn: 4, prime: 'Browse (瀏覽)', branch: 'keep', target: '📜 Scroll lock (滾動鎖定鍵)', slide: 'Slide 33' },
+        calc:  { btn: 5, prime: 'Calculator', branch: 'keep', target: '🔢 Num lock (數字小鍵盤鎖)', slide: 'Slide 34' }
+    };
+    function setLockPrime(key) {
+        const d = lockPrimes[key];
+        [1,2,3,4,5].forEach(i => document.getElementById('lk-btn-' + i).className = (i === d.btn) ? 'action-btn active-btn' : 'action-btn');
+        const isKeep = (d.branch === 'keep');
+        document.getElementById('lock-svg').innerHTML = `
+            <!-- Prime Box -->
+            <rect x="12" y="75" width="105" height="38" rx="6" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+            <text x="64" y="90" fill="#64748b" font-size="9.5" text-anchor="middle">Prime (啟動詞):</text>
+            <text x="64" y="105" fill="#1e40af" font-size="11.5" font-weight="bold" text-anchor="middle">${d.prime}</text>
+
+            <line x1="117" y1="94" x2="148" y2="94" stroke="#e11d48" stroke-width="2.5"/>
+
+            <!-- Lock Node -->
+            <rect x="148" y="78" width="56" height="32" rx="6" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+            <text x="176" y="99" fill="#0f172a" font-size="13" font-weight="bold" text-anchor="middle">Lock</text>
+
+            <!-- Two Branches -->
+            <line x1="204" y1="90" x2="245" y2="52" stroke="${isKeep ? '#e11d48' : '#cbd5e1'}" stroke-width="${isKeep ? 3 : 1.5}"/>
+            <line x1="204" y1="98" x2="245" y2="138" stroke="${!isKeep ? '#e11d48' : '#cbd5e1'}" stroke-width="${!isKeep ? 3 : 1.5}"/>
+
+            <text x="285" y="48" fill="${isKeep ? '#0f172a' : '#94a3b8'}" font-size="12" font-weight="bold" text-anchor="middle">Keep constant</text>
+            <text x="285" y="145" fill="${!isKeep ? '#0f172a' : '#94a3b8'}" font-size="12" font-weight="bold" text-anchor="middle">Security</text>
+
+            <!-- Final Target -->
+            <line x1="330" y1="${isKeep ? 45 : 142}" x2="355" y2="94" stroke="#e11d48" stroke-width="2.5"/>
+            <rect x="290" y="75" width="140" height="38" rx="6" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+            <text x="360" y="99" fill="#047857" font-size="11.5" font-weight="bold" text-anchor="middle">${d.target}</text>
+            <text x="220" y="180" fill="#64748b" font-size="11" text-anchor="middle">對應講義：${d.slide} — 語義啟動消除了詞彙歧義！</text>
+        `;
+    }
+    setLockPrime('cable');
+
+    // 2C: What does C mean?
+    function setCContext(mode) {
+        ['calc','designer','user','context'].forEach(m => {
+            const id = m === 'calc' ? 'c-btn-calc' : (m === 'designer' ? 'c-btn-des' : (m === 'user' ? 'c-btn-user' : 'c-btn-ans'));
+            document.getElementById(id).className = (m === mode) ? 'action-btn active-btn' : (m === 'context' ? 'action-btn emerald-btn' : 'action-btn');
+        });
+        const box = document.getElementById('c-display');
+        if (mode === 'calc') {
+            box.innerHTML = `<div style="font-size:1.5rem; font-weight:bold; color:var(--accent-blue); margin-bottom:6px;">[Backspace]  [CE]  [ C ] ➔ Clear (清除)</div>
+                             <p style="font-size:0.88rem; color:var(--text-secondary);">在計算機 (Calculator, Slide 45) 上，旁邊有 Backspace 和 CE 作為語境啟動，所有人都知道 <strong>C = Clear</strong>。</p>`;
+        } else if (mode === 'designer') {
+            box.innerHTML = `<div style="font-size:1.5rem; font-weight:bold; color:var(--accent-amber); margin-bottom:6px;">Nokia 設計師原意：C ➔ Clear (清除退格)</div>
+                             <p style="font-size:0.88rem; color:var(--text-secondary);">設計師把計算機上的習慣直接搬到了 Nokia 手機按鍵上，以為用戶會把左下角的 <code>[C]</code> 當成 Clear (Slide 46)。</p>`;
+        } else if (mode === 'user') {
+            box.innerHTML = `<div style="font-size:1.45rem; font-weight:bold; color:var(--accent-rose); margin-bottom:6px;">📱 螢幕顯示 "Call" + 按鍵 [C] ➔ 用戶以為 C = Call (撥號)！</div>
+                             <p style="font-size:0.88rem; color:var(--text-secondary);"><strong>災難發生 (Slide 47)</strong>：因為這是一部電話，且螢幕中央正顯示大大的 <code>Call</code>，強烈啟動了用戶把 <code>[C]</code> 當作「撥出電話 (Call)」的聯想，結果一按把剛輸入的號碼全清空了！</p>`;
+        } else {
+            box.innerHTML = `<div style="font-size:2rem; font-weight:900; color:var(--accent-emerald); letter-spacing:1px;">Context! (上下文語境！)</div>
+                             <p style="font-size:0.9rem; color:var(--text-secondary); margin-top:4px;"><strong>Slide 49 金句</strong>：<em>"Context is responsible for the proper semantic prime."</em>（語境負責提供正確的語義啟動！）</p>`;
+        }
+    }
+    setCContext('user');
+
+    // 3A: Menu Step Simulator
+    function setMenuStep(step) {
+        [1,2,3,4].forEach(i => document.getElementById('mn-btn-' + i).className = (i === step) ? 'action-btn active-btn' : (i === 4 ? 'action-btn rose-btn' : 'action-btn'));
+        const box = document.getElementById('menu-sim-box');
+        const steps = {
+            1: `<strong>Step 1: 點擊頂部選單 <code>[Tools (工具)]</code> — Slides 37-38</strong><br>
+                • <strong>新手的第一高頻聯想</strong>：看到 <code>Tools</code>，腦中浮現的是「修車工的扳手與榔頭 (Car mechanic 🛠️?)」。<br>
+                • <strong>問題</strong>：頂層標籤根本沒有啟動與「編寫程序代碼」相關的高頻語義！`,
+            2: `<strong>Step 2: 展開子選單 <code>[Macro (巨集/宏)]</code> — Slides 39-40</strong><br>
+                • <strong>新手的第一高頻聯想</strong>：<code>Macro</code> 在日常英語裡是「巨大、宏觀」的意思 → 新手一頭霧水：<em>"What is big? (什麼東西很大？)"</em>`,
+            3: `<strong>Step 3: 點擊 <code>[Visual Basic Editor]</code> — Slides 41-43</strong><br>
+                • <strong>新手的語義衝突</strong>：前面叫 <code>Visual (視覺化的)</code>，後面又叫 <code>Editor (文本編輯器)</code> → <em>"Editor is text, not visual?!"</em><br>
+                • <strong>核心考點 (Slide 43)</strong>：① <strong>Labels do not prime high-frequency meanings</strong> (標籤未能啟動高頻詞義)；② <strong>Prime does not resolve ambiguity of name</strong> (前序菜單未能消除名稱歧義)！`,
+            4: `<strong>Step 4: 那直接用快捷鍵 <code>[Alt + F11]</code> 呢？ — Slide 43</strong><br>
+                • 對於專家來說 <code>Alt + F11</code> 很快（繞過了整個歧義菜單樹），但對於新手來說，毫無語義線索的任意組合鍵屬於純死記硬背（違背 Recognition over recall）！`
+        };
+        box.innerHTML = steps[step];
+    }
+    setMenuStep(1);
+
+    // 3B: Scenario Manager Roles
+    function setScenarioRole(role) {
+        [1,2,3].forEach(i => document.getElementById('sc-btn-' + i).className = (i === role) ? 'action-btn active-btn' : 'action-btn');
+        const box = document.getElementById('scenario-box');
+        const roles = {
+            1: `<strong>💼 金融分析師眼中的 Scenario (Slide 54 — Excel 本意)</strong><br>
+                <em>"In financial modeling, scenario analysis evaluates possible market events and their outcomes for changes in the value of my business or cash flow."</em><br>
+                • 在金融建模中，Scenario 指的是「市場假設情境與現金流估值變化（What-If 敏感度分析）」。`,
+            2: `<strong>🎨 UX 設計師眼中的 Scenario (Slide 55)</strong><br>
+                <em>"I use excel sheets for my UX design. Scenarios are tasks, questions, and stories with personas to test the usability of my application against the goals of my users."</em><br>
+                • UX 設計師也天天用 Excel，但看到 <code>Scenario Manager</code> 會以為是管理「用戶畫像 (Personas) 與可用性測試故事腳本」的工具！`,
+            3: `<strong>🎬 香港武打片導演眼中的 Scenario (Slide 56)</strong><br>
+                <em>"I am a HK movie director. In martial arts, one must choreograph the action very precisely. Otherwise, accidents will happen."</em><br>
+                • 電影導演用 Excel 排通告表時，<code>Scenario</code> 指的是「電影分鏡劇本與武術動作編排場次」！`
+        };
+        box.innerHTML = roles[role];
+    }
+    setScenarioRole(1);
+
+    // 4: Bad Form vs Good CRAP Form
+    function setFormDemo(mode) {
+        document.getElementById('form-btn-bad').className = mode === 'bad' ? 'action-btn active-btn' : 'action-btn rose-btn';
+        document.getElementById('form-btn-good').className = mode === 'good' ? 'action-btn active-btn' : 'action-btn';
+        const container = document.getElementById('form-demo-container');
+
+        if (mode === 'bad') {
+            container.innerHTML = `
+                <div style="background:#d4d0c8; border:2px solid #404040; padding:8px; font-family:Tahoma, sans-serif; font-size:12px; color:#000;">
+                    <div style="border:1px solid #808080; padding:4px; text-align:center; background:#e4e0d8;">Form Title -- (appears above URL in most browsers and is used by WWW search</div>
+                    <div style="background:#fff; border:1px inset #808080; padding:3px; color:#555;">Q&amp;D Software Development Order Desk</div>
+                    <div style="display:flex; margin-top:4px;">
+                        <div style="flex:2; border:1px solid #808080; padding:3px; text-align:center;">E-Mail respones to (will not appear on<br><span style="background:#fff; display:block; text-align:left; border:1px inset #888;">dversch@q-d.com</span></div>
+                        <div style="flex:2; border:1px solid #808080; padding:3px; text-align:center;">Alternate (for mailto forms only)<br><span style="background:#fff; display:block; height:18px; border:1px inset #888;"></span></div>
+                        <div style="flex:1; border:1px solid #808080; padding:3px;">Background Color:<br><span style="background:#fff; display:block;">FFFFBF0</span></div>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-top:6px;">
+                        <span style="border:2px outset #fff; padding:2px 8px; background:#ccc;">&lt;&lt; Prev Tab</span>
+                        <span style="border:2px outset #fff; padding:2px 8px; background:#ccc;">Next Tab &gt;&gt;</span>
+                    </div>
+                </div>
+                <div class="warn-panel" style="margin-top:10px;">
+                    ❌ <strong>Slide 74 八大罪狀 (Example of what NOT to do)</strong>：<br>
+                    1. Terrible alignment (毫無對齊)；2. No flow (無視覺流)；3. Poor contrast (對比度差)；4. 無法區分彩色標籤與可編輯輸入框；5. Poor repetition (無重複一致性)；6. <strong>Buttons don't look like buttons (按鈕長得不像按鈕，反而像表頭)</strong>；7. 缺乏明確結構；8. 區塊邊框與對齊線互相打架！
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <div style="background:#e2e8f0; border:2px solid #475569; border-radius:6px; padding:16px; font-family:Segoe UI, sans-serif; color:#0f172a;">
+                    <div style="background:#1e3a8a; color:#fff; padding:6px 12px; font-weight:bold; border-radius:4px; margin-bottom:14px;">✉️ Note Sender (Grids + CRAP 兩級層次結構)</div>
+                    <div style="font-weight:800; font-size:14px; margin-bottom:10px; color:#1e293b;">Send to</div>
+                    <div style="display:grid; grid-template-columns: 90px 1fr; gap:10px; align-items:center; padding-left:16px; margin-bottom:16px;">
+                        <label style="font-weight:600; font-size:13px; text-align:right;">Name:</label>
+                        <input type="text" value="Saul Greenberg" readonly style="padding:5px 8px; border:1px solid #94a3b8; border-radius:4px; background:#fff;">
+                        <label style="font-weight:600; font-size:13px; text-align:right;">Email:</label>
+                        <input type="text" value="saul@cpsc.ucalgary.ca" readonly style="padding:5px 8px; border:1px solid #94a3b8; border-radius:4px; background:#fff;">
+                        <label style="font-weight:600; font-size:13px; text-align:right; align-self:start;">Message:</label>
+                        <textarea rows="2" readonly style="padding:5px 8px; border:1px solid #94a3b8; border-radius:4px; background:#fff; font-family:inherit;">Hi Saul, Let's get together for lunch.</textarea>
+                    </div>
+                    <div style="font-weight:800; font-size:14px; margin-bottom:10px; color:#1e293b;">Instructions</div>
+                    <div style="display:grid; grid-template-columns: 90px 1fr; gap:10px; align-items:center; padding-left:16px;">
+                        <label style="font-weight:600; font-size:13px; text-align:right;">Type:</label>
+                        <select style="padding:5px; border:1px solid #94a3b8; border-radius:4px; background:#fff; max-width:200px;"><option>Normal mail</option></select>
+                        <div></div>
+                        <div style="font-size:12.5px;"><input type="checkbox" checked> Include attachments &nbsp; <input type="checkbox"> Carbon copy</div>
+                    </div>
+                    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:16px; border-top:1px solid #cbd5e1; padding-top:12px;">
+                        <button class="action-btn active-btn" style="padding:6px 18px;">Apply</button>
+                        <button class="action-btn" style="padding:6px 18px;">Cancel</button>
+                    </div>
+                </div>
+                <div class="info-panel" style="margin-top:10px;">
+                    ✅ <strong>Slide 73 四大優點</strong>：① <strong>Two-level Hierarchy (兩級層次)</strong>：透過縮進 (Indentation) 與粗體對比 (Contrast) 區分大標題 <code>Send to</code> 與子欄位；② <strong>Alignment (垂直對齊線)</strong>：所有輸入框左邊緣嚴格垂直對齊，引導視線順序流動；③ <strong>Grouping by white space (留白分組)</strong>：用空白隔開不同功能區，無需雜亂黑框！
+                </div>
+            `;
+        }
+    }
+    setFormDemo('good');
+
+    // 5A: Decode 5 Negatives
+    function decodeNegation(choice) {
+        const res = document.getElementById('neg-result');
+        if (choice === 'yes') {
+            res.innerHTML = `💥 <strong>你點了 [Yes] — 結果你的 Undo 歷史被徹底清空了！</strong><br>
+                             因為問題問的是 <em>"Continue without undo?"</em>，點 Yes 代表「是的，我同意在【沒有撤銷功能】的情況下繼續刪除」！`;
+        } else {
+            res.innerHTML = `✅ <strong>你點了 [No] — 成功保住了 Undo！（Slide 85 標準答案）</strong><br>
+                             教授原話：<em>"Yes to not undo not sprite? <strong>No, because I want to continue WITH undo!</strong>"</em> 為了表達「我想保留撤銷功能」，用戶被迫在包含 5 個否定詞的句子裡選 No，這就是典型的多重否定反人類設計！`;
+        }
+    }
+
+    // 5B: Official Exam Sample Check
+    function checkExam6(choice) {
+        const fb = document.getElementById('exam6-feedback');
+        fb.style.display = 'block';
+        if (choice === 'A') {
+            fb.style.background = '#dcfce7';
+            fb.style.border = '1px solid #22c55e';
+            fb.style.color = '#166534';
+            fb.innerHTML = '✅ <strong>完全正確 (標準答案 A，對應 Slides 89-91)！</strong><br>• <strong>問題所在</strong>：<em>"What do these images mean? There are no tooltips!"</em>（正如 Slide 75 所強調：除最熟悉的圖標外，必須為圖標提供文字標籤或懸停提示 Tooltips）。<br>• <strong>哪個是詞彙表 (Glossary)？</strong> 只能靠猜 (I guess) 是<strong>第 3 個「書本圖標」Tab</strong>！';
+        } else {
+            fb.style.background = '#ffe4e6';
+            fb.style.border = '1px solid #f43f5e';
+            fb.style.color = '#9f1239';
+            fb.innerHTML = '❌ <strong>再想一下喔！</strong> 這些頂部圖標排列得很整齊（並非 Proximity 問題），但用戶把滑鼠移上去時完全不知道「地球、123、書本、齒輪、握手」代表什麼意思，因為缺少了什麼？請看選項 A！';
+        }
+    }
+</script>
+
+</body>
+</html>

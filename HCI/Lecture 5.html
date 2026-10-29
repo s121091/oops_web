@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCI Lecture 03 (Part 1) / Lecture 5: 視覺感知與計算機圖形學 全交互式視覺化實驗室</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #22c55e;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --border-color: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang HK", "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+        header {
+            background: linear-gradient(135deg, #090d16 0%, #1e1b4b 50%, #0f172a 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 32px 24px;
+            text-align: center;
+        }
+        .badge {
+            display: inline-block;
+            background: rgba(34, 197, 94, 0.15);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.35);
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        h1 { font-size: 2rem; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .subtitle { color: var(--text-muted); font-size: 0.98rem; max-width: 880px; margin: 0 auto; }
+
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.94);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 16px;
+        }
+        .nav-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid transparent;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { color: var(--text-main); background: rgba(255,255,255,0.05); }
+        .nav-btn.active {
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.14);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        .container { max-width: 1220px; margin: 26px auto; padding: 0 20px; }
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+        .card h2 {
+            font-size: 1.32rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-blue);
+        }
+        .card h3 { font-size: 1.08rem; margin: 12px 0 8px; color: #e2e8f0; }
+        .tag {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(56, 189, 248, 0.15);
+            color: #7dd3fc;
+            font-weight: normal;
+        }
+        ul.clean-list { list-style: none; padding-left: 0; }
+        ul.clean-list li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 0.94rem;
+        }
+        ul.clean-list li::before {
+            content: "•";
+            position: absolute;
+            left: 4px;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .svg-box {
+            width: 100%;
+            background: #0b1120;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            overflow-x: auto;
+            margin-top: 12px;
+        }
+        .info-panel {
+            margin-top: 14px;
+            padding: 16px;
+            background: rgba(56, 189, 248, 0.08);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.94rem;
+        }
+        .btn-group { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; justify-content: center; }
+        .action-btn {
+            background: #334155;
+            color: white;
+            border: 1px solid #475569;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.88rem;
+        }
+        .action-btn:hover { background: #475569; }
+        .action-btn.active-btn { background: rgba(56, 189, 248, 0.25); border-color: var(--accent-blue); color: #7dd3fc; }
+        .action-btn.rose-btn { background: rgba(244, 63, 94, 0.22); border-color: var(--accent-rose); color: #fda4af; }
+        .action-btn.green-btn { background: rgba(34, 197, 94, 0.22); border-color: var(--accent-green); color: #86efac; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.9rem; }
+        th, td { border: 1px solid var(--border-color); padding: 10px 12px; text-align: left; }
+        th { background: rgba(255,255,255,0.05); color: var(--accent-blue); }
+        tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+        .slider-row {
+            display: grid;
+            grid-template-columns: 165px 1fr 95px;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        input[type="range"] { width: 100%; accent-color: var(--accent-blue); cursor: pointer; }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .metric-box {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .metric-val { font-size: 1.4rem; font-weight: 800; color: var(--accent-green); }
+        .metric-lbl { font-size: 0.78rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="badge">Human-Computer Interaction · Johan F. HOORN · Lecture 5 (全模組交互視覺化完整版)</div>
+    <h1>Visual Perception &amp; Computer Graphics (Part 1)</h1>
+    <p class="subtitle">包含「赫曼方格與青色殘像實驗室」、「視交叉與偽 3D 立方體拆解器 + 光流粒子動畫 + 運動視差仿真」、「格式塔 7 大原則動態 SVG 畫布」與「心電圖偏見/樂透概率仿真器」</p>
+</header>
+
+<nav class="nav-bar">
+    <button class="nav-btn active" onclick="switchTab('tab-eye', this)">👁️ 1. 視角定律、赫曼方格與殘像實驗</button>
+    <button class="nav-btn" onclick="switchTab('tab-3d', this)">🕶️ 2. 3D 視交叉、立方體拆解、光流與視差</button>
+    <button class="nav-btn" onclick="switchTab('tab-gestalt', this)">🧩 3. 格式塔 (Gestalt) 7大原則互動畫布</button>
+    <button class="nav-btn" onclick="switchTab('tab-bias', this)">📈 4. 數據插補、樂透膠水與心電圖偏見仿真</button>
+    <button class="nav-btn" onclick="switchTab('tab-summary', this)">📋 5. DATA → INFORMATION 11步總結與自測</button>
+</nav>
+
+<div class="container">
+
+    <!-- ==================== TAB 1: EYE, HERMANN GRID & AFTER-IMAGE ==================== -->
+    <section id="tab-eye" class="section active">
+        <div class="card">
+            <h2><span>👁️</span> 視覺物理接收與視角定律 (Law of Visual Angle) <span class="tag">Slides 5 - 14</span></h2>
+            <div class="grid-3">
+                <div style="background:#0f172a; padding:15px; border-radius:10px; border-top:3px solid var(--accent-blue);">
+                    <h3>🔬 視網膜三大細胞 (Slides 7-8)</h3>
+                    <ul class="clean-list">
+                        <li><strong>Rods (視桿細胞)</strong>：負責低光暗視覺 (Low-light vision)。</li>
+                        <li><strong>Cones (視錐細胞)</strong>：對波長敏感，負責彩色視覺 (Colour vision)。</li>
+                        <li><strong>Ganglion cells (神經節細胞)</strong>：充當<strong>模式濾波器 (Pattern filters)</strong>，<strong>優先放行中頻信號 (Middle frequencies)</strong>，並具<strong>相互抑制 (Mutual suppression)</strong> 群體降噪機制。</li>
+                    </ul>
+                </div>
+                <div style="background:#0f172a; padding:15px; border-radius:10px; border-top:3px solid var(--accent-purple);">
+                    <h3>💡 亮度 (Brightness, Slide 8)</h3>
+                    <ul class="clean-list">
+                        <li>對光強的主觀反應 (Subjective reaction)，受物體 Luminance 影響。</li>
+                        <li>以 <strong>最小可覺差 (JND)</strong> 度量。</li>
+                        <li>視覺敏銳度 (Visual acuity) 與閃爍感 (Flashing) 隨亮度增加而提高。</li>
+                    </ul>
+                </div>
+                <div style="background:#0f172a; padding:15px; border-radius:10px; border-top:3px solid var(--accent-green);">
+                    <h3>🌈 色彩三要素與限制 (Slides 10-14)</h3>
+                    <ul class="clean-list">
+                        <li><strong>Hue (色相/波長)</strong>、<strong>Intensity (明度)</strong>、<strong>Saturation (飽和度)</strong>。</li>
+                        <li><strong>顏色不是光的物理屬性</strong>，而是人腦對不同能量頻率撞擊細胞的主觀解讀！</li>
+                        <li><strong>藍光敏銳度最低</strong>；<strong>8% 男性與 1% 女性</strong>色盲。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interactive Law of Visual Angle -->
+            <div class="svg-box">
+                <h3 style="color:var(--accent-blue); margin-bottom:10px;">📐 交互實驗 1A：視角定律 (Law of Visual Angle — Slide 7)</h3>
+                <div class="slider-row">
+                    <span>📏 物體大小 s (Size):</span>
+                    <input type="range" id="va-s" min="10" max="120" value="50" oninput="updateVisualAngle()">
+                    <span id="val-va-s" style="color:var(--accent-blue); font-weight:bold;">50 cm</span>
+                </div>
+                <div class="slider-row">
+                    <span>🔭 距離眼睛 d (Distance):</span>
+                    <input type="range" id="va-d" min="30" max="300" value="100" oninput="updateVisualAngle()">
+                    <span id="val-va-d" style="color:var(--accent-purple); font-weight:bold;">100 cm</span>
+                </div>
+                <svg viewBox="0 0 650 140" width="100%" height="140" style="background:#0f172a; border-radius:8px; border:1px solid #334155;">
+                    <line id="va-obj" x1="100" y1="35" x2="100" y2="105" stroke="#22c55e" stroke-width="5"/>
+                    <text x="85" y="75" fill="#86efac" font-size="14" font-weight="bold" text-anchor="end">s</text>
+                    <line id="va-dline" x1="100" y1="70" x2="420" y2="70" stroke="#64748b" stroke-dasharray="4,4" stroke-width="1.5"/>
+                    <text id="va-dtxt" x="260" y="62" fill="#cbd5e1" font-size="12" text-anchor="middle">d = 100 cm</text>
+                    <line id="va-ray1" x1="100" y1="35" x2="490" y2="98" stroke="#f43f5e" stroke-width="2"/>
+                    <line id="va-ray2" x1="100" y1="105" x2="490" y2="42" stroke="#f43f5e" stroke-width="2"/>
+                    <circle cx="455" cy="70" r="36" fill="none" stroke="#38bdf8" stroke-width="2.5"/>
+                    <ellipse cx="422" cy="70" rx="5" ry="16" fill="rgba(56,189,248,0.3)" stroke="#38bdf8" stroke-width="1.5"/>
+                    <line id="va-ret" x1="488" y1="45" x2="488" y2="95" stroke="#fbbf24" stroke-width="3"/>
+                    <text x="550" y="74" fill="#fbbf24" font-size="12" font-weight="bold">顛倒縮小的 2D 像</text>
+                </svg>
+                <div class="metric-grid">
+                    <div class="metric-box"><div id="out-theta-deg" class="metric-val">28.07°</div><div class="metric-lbl">視角 θ = 2·arctan(s/2d)</div></div>
+                    <div class="metric-box"><div id="out-tan" class="metric-val" style="color:var(--accent-blue);">0.250</div><div class="metric-lbl">tan(θ/2) = s / 2d</div></div>
+                </div>
+            </div>
+
+            <!-- Interactive Hermann Grid & After-image Lab -->
+            <div class="grid-2" style="margin-top:20px;">
+                <div class="svg-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-purple); margin-bottom:8px;">⬛ 交互實驗 1B：Hermann Grid 赫曼方格 (Slide 9)</h3>
+                    <p style="color:#cbd5e1; font-size:0.86rem; margin-bottom:10px;">
+                        盯著中心紅點看，十字路口會閃現<strong>中頻灰點 (Visual Output)</strong>！下方為 Slide 9 四大問題標準答案：
+                    </p>
+                    <svg viewBox="0 0 260 220" width="240" height="200" style="background:#fff; border-radius:6px; padding:10px;">
+                        <g fill="#000">
+                            <rect x="10" y="10" width="50" height="42"/><rect x="72" y="10" width="50" height="42"/><rect x="134" y="10" width="50" height="42"/><rect x="196" y="10" width="50" height="42"/>
+                            <rect x="10" y="62" width="50" height="42"/><rect x="72" y="62" width="50" height="42"/><rect x="134" y="62" width="50" height="42"/><rect x="196" y="62" width="50" height="42"/>
+                            <rect x="10" y="114" width="50" height="42"/><rect x="72" y="114" width="50" height="42"/><rect x="134" y="114" width="50" height="42"/><rect x="196" y="114" width="50" height="42"/>
+                            <rect x="10" y="166" width="50" height="42"/><rect x="72" y="166" width="50" height="42"/><rect x="134" y="166" width="50" height="42"/><rect x="196" y="166" width="50" height="42"/>
+                        </g>
+                        <circle cx="128" cy="109" r="4.5" fill="#f43f5e"/>
+                    </svg>
+                    <div style="margin-top:10px; text-align:left; font-size:0.85rem; color:#cbd5e1; background:#1e293b; padding:10px; border-radius:6px;">
+                        • <strong>Input or Output?</strong> → <strong>Visual Output</strong> (物理上只有純黑白)。<br>
+                        • <strong>Higher / Lower / Middle freq?</strong> → 白=高頻，黑=低頻，<strong>灰點=中頻 (神經節細胞優先放行中頻)</strong>。<br>
+                        • <strong>Completely data-driven?</strong> → <strong>No!</strong> (受相互抑制 Mutual suppression 影響)。
+                    </div>
+                </div>
+
+                <div class="svg-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-rose); margin-bottom:8px;">🟥 交互實驗 1C：視錐細胞疲勞與青色殘像 (Slides 10-13)</h3>
+                    <p style="color:#cbd5e1; font-size:0.86rem; margin-bottom:10px;">
+                        點擊「開始 10 秒凝視實驗」盯著紅方塊中心黑點，倒計時結束後它會瞬間變白框，親眼體驗<strong>青色殘像 (Cyan After-image)</strong>！
+                    </p>
+                    <div class="btn-group">
+                        <button id="btn-afterimage" class="action-btn rose-btn" onclick="startAfterImageTimer()">⏱️ 開始 10 秒紅方塊殘像實驗</button>
+                        <button class="action-btn" onclick="resetAfterImage()">🔄 重置</button>
+                    </div>
+                    <svg viewBox="0 0 260 155" width="260" height="155" style="background:#fff; border-radius:6px;">
+                        <rect id="ai-box" x="65" y="15" width="130" height="125" fill="#ff0000" stroke="#000" stroke-width="2"/>
+                        <circle cx="130" cy="77" r="3.5" fill="#000"/>
+                        <text id="ai-timer" x="130" y="148" fill="#0f172a" font-size="11" font-weight="bold" text-anchor="middle">請盯住黑點</text>
+                    </svg>
+                    <div style="margin-top:10px; text-align:left; font-size:0.85rem; color:#cbd5e1; background:#1e293b; padding:10px; border-radius:6px;">
+                        • <strong>為什麼看到青色 (Cyan)？</strong> 因為<strong>紅色視錐細胞疲勞耗盡 (Cones for red wear out)</strong>，相互抑制解除後，互補色<strong>青色視錐細胞持續放電 (Cones for cyan remain firing)</strong>！
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 2: 3D VISION, OPTIC FLOW & MOTION PARALLAX ==================== -->
+    <section id="tab-3d" class="section">
+        <div class="card">
+            <h2><span>🕶️</span> 3D 視覺四大交互實驗室：視交叉、偽 3D 拆解、光流動畫與運動視差 <span class="tag">Slides 15 - 40</span></h2>
+            <p style="color:#cbd5e1; margin-bottom:14px;">
+                <strong>核心鐵律 (Slide 23, 34)</strong>：<strong>3D 視覺絕對不是視網膜 2D 圖像的屬性！</strong> 下面將講義第 15 至 40 頁的 4 個核心機制全部做成可交互的動態視覺化：
+            </p>
+
+            <div class="grid-2">
+                <!-- 2A: Optic Chiasm & 10-step 3D Pipeline -->
+                <div class="svg-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-blue); margin-bottom:8px;">🧠 交互實驗 2A：視交叉 (Optic Chiasm) 與皮層翻轉 (Slides 16-23)</h3>
+                    <p style="color:#cbd5e1; font-size:0.85rem; margin-bottom:10px;">
+                        點擊按鈕切換大腦 3D 重建階段：觀察雙眼顛倒縮小的像如何交叉並還原！
+                    </p>
+                    <div class="btn-group">
+                        <button id="oc-btn-1" class="action-btn active-btn" onclick="setOpticStage(1)">① 視網膜：顛倒縮小</button>
+                        <button id="oc-btn-2" class="action-btn" onclick="setOpticStage(2)">② 視交叉：左右拆分互換</button>
+                        <button id="oc-btn-3" class="action-btn" onclick="setOpticStage(3)">③ 皮層：Flip + Rotate + Resize</button>
+                    </div>
+                    <svg viewBox="0 0 360 210" width="100%" height="200" style="background:#0f172a; border-radius:8px; border:1px solid #334155;">
+                        <circle cx="115" cy="45" r="24" fill="#1e293b" stroke="#ec4899" stroke-width="2.5"/>
+                        <text x="115" y="15" fill="#f472b6" font-size="11" font-weight="bold" text-anchor="middle">Left Eye (顛倒小像)</text>
+                        <text x="115" y="50" fill="#fff" font-size="14" text-anchor="middle" transform="rotate(180 115 45)">🧑</text>
+
+                        <circle cx="245" cy="45" r="24" fill="#1e293b" stroke="#94a3b8" stroke-width="2.5"/>
+                        <text x="245" y="15" fill="#cbd5e1" font-size="11" font-weight="bold" text-anchor="middle">Right Eye (顛倒小像)</text>
+                        <text x="245" y="50" fill="#fff" font-size="14" text-anchor="middle" transform="rotate(180 245 45)">🧑</text>
+
+                        <path id="oc-path-l" d="M 115,69 L 220,135 L 185,175" stroke="#ec4899" stroke-width="3.5" fill="none"/>
+                        <path id="oc-path-r" d="M 245,69 L 140,135 L 175,175" stroke="#94a3b8" stroke-width="3.5" fill="none"/>
+                        <ellipse cx="180" cy="102" rx="22" ry="12" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="3,3"/>
+                        <text x="260" y="106" fill="#f87171" font-size="11" font-weight="bold">Optic Chiasm (視交叉)</text>
+
+                        <circle cx="180" cy="175" r="26" fill="#1e293b" stroke="#22c55e" stroke-width="2.5"/>
+                        <text id="oc-out-icon" x="180" y="183" fill="#fff" font-size="24" text-anchor="middle">🧑</text>
+                    </svg>
+                    <div id="oc-desc" style="margin-top:10px; text-align:left; font-size:0.85rem; color:#cbd5e1; background:#1e293b; padding:10px; border-radius:6px;">
+                        📌 <strong>Stage 1 (Retina)</strong>：因為眼球是球體，視網膜上的圖像是<strong>上下顛倒 (Upside-down) 且縮小的 (Shrank)</strong>；眼動注視 (Fixations) 像 CT 一樣切片，缺失數據由記憶補全 (Imputing missing data from memory)。
+                    </div>
+                </div>
+
+                <!-- 2B: It's Not A Cube Deconstructor -->
+                <div class="svg-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-amber); margin-bottom:8px;">🧊 交互實驗 2B："It's NOT a Cube!" 偽 3D 拆解器 (Slides 35-37)</h3>
+                    <p style="color:#cbd5e1; font-size:0.85rem; margin-bottom:10px;">
+                        你以為看到了一個 3D 透明立方體？點擊按鈕拆開看看設計師到底畫了什麼！
+                    </p>
+                    <div class="btn-group">
+                        <button id="cube-btn-1" class="action-btn active-btn" onclick="setCubeMode(1)">① 大腦感知的 3D 立方體</button>
+                        <button id="cube-btn-2" class="action-btn" onclick="setCubeMode(2)">② 平面幾何拆解 (三角形+梯形)</button>
+                        <button id="cube-btn-3" class="action-btn green-btn" onclick="setCubeMode(3)">③ 真相：2 個正方形 + 4 條線！</button>
+                    </div>
+                    <svg id="cube-svg" viewBox="0 0 360 200" width="100%" height="200" style="background:#0f172a; border-radius:8px; border:1px solid #334155;">
+                        <rect id="cb-sq1" x="110" y="65" width="95" height="95" fill="none" stroke="#38bdf8" stroke-width="2.5" style="transition:all 0.5s;"/>
+                        <rect id="cb-sq2" x="150" y="35" width="95" height="95" fill="none" stroke="#a855f7" stroke-width="2.5" style="transition:all 0.5s;"/>
+                        <line id="cb-l1" x1="110" y1="65" x2="150" y2="35" stroke="#f59e0b" stroke-width="2.5" style="transition:all 0.5s;"/>
+                        <line id="cb-l2" x1="205" y1="65" x2="245" y2="35" stroke="#f59e0b" stroke-width="2.5" style="transition:all 0.5s;"/>
+                        <line id="cb-l3" x1="110" y1="160" x2="150" y2="130" stroke="#f59e0b" stroke-width="2.5" style="transition:all 0.5s;"/>
+                        <line id="cb-l4" x1="205" y1="160" x2="245" y2="130" stroke="#f59e0b" stroke-width="2.5" style="transition:all 0.5s;"/>
+                    </svg>
+                    <div id="cube-desc" style="margin-top:10px; text-align:left; font-size:0.85rem; color:#cbd5e1; background:#1e293b; padding:10px; border-radius:6px;">
+                        📌 <strong>Slide 35</strong>：大腦看到一個透明 3D 立方體，但設計師從未畫過立方體！斜線 (Slanted lines) 提供了強烈的深度暗示（就像 Slide 24 鐵軌上的巨人與矮人）。
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2C: Optic Flow Particle Canvas & 2D: Motion Parallax -->
+            <div class="grid-2" style="margin-top:16px;">
+                <div class="svg-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-green); margin-bottom:8px;">🚀 交互實驗 2C：光流定位動畫 (Optic Flow — Slides 26-28)</h3>
+                    <p style="color:#cbd5e1; font-size:0.85rem; margin-bottom:10px;">
+                        點擊切換光流方向，觀察粒子擴張與收縮如何欺騙大腦並引起身體前傾/後仰：
+                    </p>
+                    <div class="btn-group">
+                        <button id="of-btn-exp" class="action-btn green-btn" onclick="setOpticFlow('expand')">💥 Expanding (擴張光流 = 前進 / 身體前傾)</button>
+                        <button id="of-btn-con" class="action-btn" onclick="setOpticFlow('contract')">🌀 Contracting (收縮光流 = 後退 / 身體後仰)</button>
+                    </div>
+                    <canvas id="optic-canvas" width="360" height="185" style="background:#050811; border-radius:8px; border:1px solid #334155; width:100%; max-width:360px;"></canvas>
+                    <div id="of-desc" style="margin-top:10px; text-align:left; font-size:0.85rem; color:#86efac; background:#1e293b; padding:10px; border-radius:6px;">
+                        ⚡ <strong>Expanding Optic Flow (向外擴張)</strong>：大腦解讀為「我們正在向前衝 (We go forward)」，會使人<strong>身體不自覺向前傾 (Makes the body lean forward)</strong>！
+                    </div>
+                </div>
+
+                <div class="svg-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-blue); margin-bottom:8px;">🐕 交互實驗 2D：運動視差 (Motion Parallax — Slides 29-34)</h3>
+                    <p style="color:#cbd5e1; font-size:0.85rem; margin-bottom:8px;">
+                        拖動滑桿<strong>向右移動頭部</strong>，對比小狗與月亮在視網膜底部劃過的弧線長度：
+                    </p>
+                    <div class="slider-row" style="grid-template-columns: 120px 1fr 80px;">
+                        <span>🚶 頭部位置:</span>
+                        <input type="range" id="mp-head" min="-100" max="100" value="0" oninput="updateParallax(this.value)">
+                        <span id="val-mp" style="color:var(--accent-green); font-weight:bold;">0 (居中)</span>
+                    </div>
+                    <svg viewBox="0 0 360 190" width="100%" height="190" style="background:#0f172a; border-radius:8px; border:1px solid #334155;">
+                        <circle cx="180" cy="24" r="11" fill="#fbbf24"/>
+                        <text x="200" y="28" fill="#fde68a" font-size="10" font-weight="bold">🌕 Moon (遠：短視網膜路徑)</text>
+                        <circle cx="180" cy="70" r="9" fill="#22c55e"/>
+                        <text x="125" y="74" fill="#86efac" font-size="10">🌳 Focal</text>
+                        <rect x="170" y="102" width="20" height="16" rx="3" fill="#a855f7"/>
+                        <text x="198" y="114" fill="#d8b4fe" font-size="10" font-weight="bold">🐕 Dog (近：長視網膜路徑)</text>
+
+                        <line id="mp-ray-moon" x1="180" y1="24" x2="180" y2="175" stroke="#fbbf24" stroke-width="2" stroke-dasharray="3,3"/>
+                        <line id="mp-ray-dog" x1="180" y1="110" x2="180" y2="175" stroke="#a855f7" stroke-width="2.5"/>
+
+                        <g id="mp-eye-group" transform="translate(180, 155)">
+                            <circle cx="0" cy="0" r="22" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                            <ellipse cx="0" cy="-20" rx="9" ry="3.5" fill="#22c55e"/>
+                            <path id="mp-ret-dog" d="M -14,18 Q 0,24 14,18" stroke="#a855f7" stroke-width="3" fill="none"/>
+                            <path id="mp-ret-moon" d="M -5,14 Q 0,16 5,14" stroke="#fbbf24" stroke-width="3" fill="none"/>
+                        </g>
+                    </svg>
+                    <div style="margin-top:8px; text-align:left; font-size:0.83rem; color:#cbd5e1; background:#1e293b; padding:10px; border-radius:6px;">
+                        • <strong>長短定律</strong>：小狗離得近 → 視網膜紫色路徑<strong>長 (Long path)</strong>；月亮離得遠 → 橙色路徑<strong>短 (Short path is behind long path)</strong>。<br>
+                        • <strong>同側定律</strong>：向右走時小狗從反側離開（留在後面），月亮留在同側半視野（<strong>Moon travels with you!</strong>）。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 3: GESTALT 7 PRINCIPLES VISUAL CANVAS ==================== -->
+    <section id="tab-gestalt" class="section">
+        <div class="card">
+            <h2><span>🧩</span> 格式塔感知 7 大原則交互視覺化畫布 (Gestalt Principles Interactive Canvas) <span class="tag">Slides 42 - 81</span></h2>
+            <p style="color:#cbd5e1; margin-bottom:12px;">
+                點擊下方 <strong>7 個原則按鈕</strong>，畫布將實時渲染對應的<strong>講義原版視覺圖形</strong>，並可點擊右上角「👁️ 點擊切換：揭秘隱藏結構」查看大腦是如何被欺騙的：
+            </p>
+
+            <div class="btn-group">
+                <button id="g-btn-1" class="action-btn active-btn" onclick="renderGestalt(1)">1. Similarity (相似性)</button>
+                <button id="g-btn-2" class="action-btn" onclick="renderGestalt(2)">2. Proximity (接近性)</button>
+                <button id="g-btn-3" class="action-btn" onclick="renderGestalt(3)">3. Symmetry (對稱性)</button>
+                <button id="g-btn-4" class="action-btn" onclick="renderGestalt(4)">4. Continuity (連續性)</button>
+                <button id="g-btn-5" class="action-btn" onclick="renderGestalt(5)">5. Closure (卡尼薩三角)</button>
+                <button id="g-btn-6" class="action-btn" onclick="renderGestalt(6)">6. Smallness (魯賓花瓶)</button>
+                <button id="g-btn-7" class="action-btn" onclick="renderGestalt(7)">7. Surroundedness ("TIE")</button>
+            </div>
+
+            <div class="svg-box">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:8px;">
+                    <h3 id="gestalt-canvas-title" style="color:var(--accent-blue); margin:0;">1. Similarity (相似性原則 — Slide 47)</h3>
+                    <button id="gestalt-toggle-btn" class="action-btn rose-btn" onclick="toggleGestaltReveal()">👁️ 點擊切換：揭秘隱藏結構 / 輔助線</button>
+                </div>
+
+                <svg id="gestalt-svg" viewBox="0 0 600 230" width="100%" height="230" style="background:#f8fafc; border-radius:8px; border:2px solid #334155;">
+                </svg>
+
+                <div id="gestalt-panel" class="info-panel">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 4: DATA IMPUTATION, LOTTO & ECG SIGNAL BIAS ==================== -->
+    <section id="tab-bias" class="section">
+        <div class="card">
+            <h2><span>💓</span> 交互實驗 4A：心電圖波形解讀偏見仿真器 (Interpretation Biases — Slides 82 - 86)</h2>
+            <p style="color:#cbd5e1; margin-bottom:12px;">
+                觀察下方紅色信號波形：<strong>哪一部分最重要？你的注意力焦點去哪了？</strong> 點擊下方按鈕切換「Input 1 vs Input 2」、「上下翻轉」與「揭曉真正關鍵信號」：
+            </p>
+            <div class="btn-group">
+                <button id="ecg-btn-1" class="action-btn active-btn" onclick="setEcgMode('input1')">📡 Input 1 (標準波形)</button>
+                <button id="ecg-btn-2" class="action-btn" onclick="setEcgMode('input2')">📡 Input 2 (改變輸入信號！觀察哪裡變了？)</button>
+                <button id="ecg-btn-flip" class="action-btn" onclick="setEcgMode('flip')">🔄 上下顛倒翻轉 (Slide 84)</button>
+                <button id="ecg-btn-truth" class="action-btn rose-btn" onclick="setEcgMode('truth')">🔍 揭曉真相：人類偏見 vs 真正信號 (Slides 85-86)</button>
+            </div>
+
+            <div class="svg-box">
+                <svg id="ecg-svg" viewBox="0 0 700 220" width="100%" height="220" style="background:#fff; border-radius:8px; border:2px solid #334155;">
+                    <g id="ecg-group" style="transition: transform 0.4s ease; transform-origin: 350px 110px;">
+                        <circle cx="60" cy="120" r="8" fill="#ef4444"/>
+                        <circle cx="640" cy="120" r="8" fill="#ef4444"/>
+                        <path id="ecg-path" d="M 60,120 L 160,120 L 185,105 L 220,120 L 245,120 L 255,142 L 265,120 L 285,120 L 298,82 L 312,120 L 330,120 L 340,132 L 358,18 L 385,205 L 402,120 L 440,120 L 475,80 L 510,120 L 640,120" fill="none" stroke="#ef4444" stroke-width="5" stroke-linejoin="round"/>
+                        
+                        <g id="ecg-bias-annot" opacity="1">
+                            <ellipse cx="358" cy="28" rx="34" ry="22" fill="none" stroke="#1d4ed8" stroke-width="2.5"/>
+                            <text x="410" y="32" fill="#0f172a" font-size="13" font-weight="bold">👈 人類注意力焦點 (Bias: High &gt; Low, Up &gt; Down)</text>
+                        </g>
+
+                        <g id="ecg-truth-annot" opacity="0">
+                            <ellipse cx="255" cy="135" rx="28" ry="20" fill="rgba(34,197,94,0.18)" stroke="#15803d" stroke-width="3"/>
+                            <ellipse cx="298" cy="88" rx="26" ry="20" fill="rgba(34,197,94,0.18)" stroke="#15803d" stroke-width="3"/>
+                            <text x="200" y="55" fill="#15803d" font-size="13" font-weight="bold" text-anchor="middle">✅ 真正隨 Input 系統性改變的小波峰/凹槽！</text>
+                            <text x="495" y="185" fill="#b91c1c" font-size="12" font-weight="bold">❌ 大尖峰只是每次都發生的無差別背景效應 (Undifferentiated effects)</text>
+                        </g>
+                    </g>
+                </svg>
+                <div id="ecg-desc" class="info-panel">
+                    📌 <strong>Slides 82-86 核心考點</strong>：為什麼大家第一眼都盯著中間最高的尖峰？因為人類有 <strong>"High is more important than low" (高比低重要)</strong> 與 <strong>"Up is more important than down" (上比下重要)</strong> 的解讀偏見 (Interpretation biases)！但點擊上方「📡 Input 2」你會發現：中間的大尖峰根本沒變（只是每次必發生的無差別背景效應），真正攜帶信息的其實是前面那個不起眼的小波峰！
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- 4B: Data Imputation Interactive -->
+            <div class="card">
+                <h2><span>🔢</span> 交互實驗 4B：數列插補陷阱 (Data Imputation) <span class="tag">Slides 69 - 70</span></h2>
+                <p style="color:#cbd5e1; margin-bottom:12px;">
+                    請問下方數列的空格中應該填什麼？點擊按鈕查看「格式塔直覺」與「最理性答案」的對決：
+                </p>
+                <div style="background:#0b1120; padding:18px; border-radius:10px; text-align:center; font-family:monospace; font-size:1.6rem; letter-spacing:2px; border:1px solid var(--border-color); margin-bottom:14px;">
+                    1; 2; 3; 4; 5; <span id="imp-slot" style="color:var(--accent-amber); font-weight:bold; border-bottom:3px solid var(--accent-amber); padding:0 8px;">_</span>; 7; 8; 9;
+                </div>
+                <div class="btn-group">
+                    <button class="action-btn" onclick="setImputation('6')">填 "6" (Closure 閉合性腦補)</button>
+                    <button class="action-btn green-btn" onclick="setImputation('idk')">💡 點擊揭曉：最理性的標準答案</button>
+                </div>
+                <div id="imp-desc" class="info-panel">
+                    點擊上方按鈕測試你的直覺！
+                </div>
+            </div>
+
+            <!-- 4C: Lotto Glued Balls Simulator -->
+            <div class="card">
+                <h2><span>🎰</span> 交互實驗 4C：樂透塗膠水作弊仿真器 <span class="tag">Slides 71 - 72</span></h2>
+                <p style="color:#cbd5e1; margin-bottom:10px; font-size:0.92rem;">
+                    70 個球抽 7 個（總組合數 <code>1,198,774,720</code>）：點擊切換「公平搖獎」與「主持人塗膠水作弊」，觀察你與主持人的中獎率變化：
+                </p>
+                <div class="btn-group">
+                    <button id="lotto-btn-fair" class="action-btn active-btn" onclick="setLottoMode('fair')">⚖️ 情境 1：70 個公平球 (你填 1~7 vs 鄰居填隨機號)</button>
+                    <button id="lotto-btn-glue" class="action-btn rose-btn" onclick="setLottoMode('glue')">🧪 情境 2：主持人在 7 個球上塗膠水增重作弊！</button>
+                </div>
+                <div class="metric-grid" style="margin-bottom:12px;">
+                    <div class="metric-box">
+                        <div id="lotto-host-prob" class="metric-val" style="color:var(--accent-amber);">1 / 1.198B</div>
+                        <div class="metric-lbl">主持人中獎率</div>
+                    </div>
+                    <div class="metric-box">
+                        <div id="lotto-your-prob" class="metric-val" style="color:var(--accent-blue);">1 / 1.198B</div>
+                        <div class="metric-lbl">不知情的你中獎率</div>
+                    </div>
+                </div>
+                <div id="lotto-desc" class="info-panel" style="font-size:0.88rem;">
+                    📌 <strong>公平搖獎</strong>：你填 <code>1 2 3 4 5 6 7</code> 與鄰居填 <code>9 21 34 45 56 63 70</code> 誰機會更大？<strong>No one!</strong> 在大數據中尋找新模式本質上是概率遊戲。
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 5: SUMMARY & QUIZ ==================== -->
+    <section id="tab-summary" class="section">
+        <div class="card">
+            <h2><span>📋</span> 終極總結：從 DATA 到 INFORMATION 的 11 步人腦加工清單 <span class="tag">Slides 87 - 90</span></h2>
+            <p style="color:#cbd5e1; margin-bottom:12px;">
+                HAL 9000 總結 (Slide 90)：我們常以為「從數據中提取信息」就像泡綠茶時茶多酚自然滲出一樣客觀中立。<strong>錯！信息絕不是中立的 (Information is NOT neutral)，所有電腦分析最終都依賴於人類分析 (ALL computer analysis depends on human analysis)！</strong>
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>步驟</th>
+                        <th>DATA → INFORMATION 的轉換機制 (Slide 89 官方 11 條完整清單)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>1. 模式濾波</strong></td><td>特定神經元（神經節細胞）充當模式濾波器，<strong>對中頻信號放行優於高頻與低頻</strong>。</td></tr>
+                    <tr><td><strong>2. 群體降噪</strong></td><td>單個細胞的隨機噪聲被更大的細胞群體透過<strong>相互抑制 (Mutual suppression)</strong> 糾正。</td></tr>
+                    <tr><td><strong>3. 主觀亮度</strong></td><td>Brightness 是對光強的主觀反應（以 JND 度量）。</td></tr>
+                    <tr><td><strong>4. 色彩解讀</strong></td><td>視錐細胞對波長敏感；<strong>顏色不是光的物理屬性</strong>，而是人腦對不同能量頻率撞擊細胞的解讀。</td></tr>
+                    <tr><td><strong>5. 3D 重建</strong></td><td><strong>3D 不是視網膜 2D 圖像的屬性</strong>，包含 10 步：切片 (Slicing up/fixations) → 記憶填補 (Imputing missing data) → 縮小 (Shrinking) → 不同角度拍攝 → 拆分 (Splitting) → 左右交叉 (Left goes right, right goes left) → 合併 (Merging) → 翻轉 (Flip) → 旋轉 (Rotate) → 放大還原 (Resize/blow up)。</td></tr>
+                    <tr><td><strong>6. 尺寸與深度</strong></td><td>由視角 (Visual angle)、距眼距離與圖像重疊 (Image overlap) 推導得出。</td></tr>
+                    <tr><td><strong>7. 大小恆常性</strong></td><td>熟悉物體儘管視角改變，仍被假定為具有恆定大小 (Size constancy)。</td></tr>
+                    <tr><td><strong>8. 空間光流定位</strong></td><td>由運動推導空間位置：<strong>擴張光流 (Expanding) = 前進</strong>；<strong>收縮光流 (Contracting) = 後退</strong>。</td></tr>
+                    <tr><td><strong>9. 視網膜路徑長短</strong></td><td>引起<strong>較短視網膜路徑</strong>的物體（如月亮）被解讀為位於引起<strong>較長路徑</strong>物體（如小狗）的<strong>後方 (Behind)</strong>。</td></tr>
+                    <tr><td><strong>10. 離開視野方向</strong></td><td>物體離開半視野的方向指示運動方向：<strong>與你同側 = 跟你一起走</strong>；<strong>反側 = 留在後面</strong>。</td></tr>
+                    <tr><td><strong>11. 格式塔 7 原則</strong></td><td>模式按以下偏好形成：<strong>Similarity (相似)</strong>、<strong>Proximity (接近)</strong>、<strong>Symmetry (對稱)</strong>、<strong>Continuity (連續)</strong>、<strong>Closure (閉合)</strong>、<strong>Small things (小面積成圖、大面積成背景)</strong>、<strong>Surroundedness (被不同數據包圍的數據視為獨立事件)</strong>。</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2><span>✍️</span> 隨堂自測題 (點擊檢驗理解)</h2>
+            <div style="margin-bottom:18px;">
+                <p><strong>Q1. 當你盯著遠處的樹向右走時，為什麼近處的小狗看起來向後退，而天上的月亮卻像跟著你一起走？(Slides 29-34)</strong></p>
+                <div class="btn-group" style="margin-top:8px; justify-content:flex-start;">
+                    <button class="action-btn" onclick="checkQuiz5(1, false)">A. 因為月亮在視網膜上的投影路徑比小狗更長</button>
+                    <button class="action-btn" onclick="checkQuiz5(1, true)">B. 因為小狗在視網膜上路徑長且從反方向離開視野，而月亮路徑短且留在你前進的同一側半視野</button>
+                </div>
+                <div id="q5-1" style="display:none; margin-top:8px; padding:10px; border-radius:6px;"></div>
+            </div>
+
+            <div style="margin-bottom:18px;">
+                <p><strong>Q2. 在「魯賓的花瓶/人臉 (Slides 73-75)」與「黑塊拼出白色 TIE 單詞 (Slides 76-81)」中，分別體現了哪兩個格式塔原則？</strong></p>
+                <div class="btn-group" style="margin-top:8px; justify-content:flex-start;">
+                    <button class="action-btn" onclick="checkQuiz5(2, true)">A. Smallness (小面積更容易被看成前景花瓶) 與 Surroundedness (被包圍的黑塊被看成獨立圖形，忽略了白色背景中的 TIE)</button>
+                    <button class="action-btn" onclick="checkQuiz5(2, false)">B. Continuity (連續性) 與 Proximity (接近性)</button>
+                </div>
+                <div id="q5-2" style="display:none; margin-top:8px; padding:10px; border-radius:6px;"></div>
+            </div>
+
+            <div>
+                <p><strong>Q3. 樂透主持人作弊在 7 個球上塗了膠水，使這 7 個球 100% 被抽出。請問不知情的你買一注彩票中獎的概率變成了多少？(Slide 72)</strong></p>
+                <div class="btn-group" style="margin-top:8px; justify-content:flex-start;">
+                    <button class="action-btn" onclick="checkQuiz5(3, false)">A. 0% (完全不可能中獎)</button>
+                    <button class="action-btn" onclick="checkQuiz5(3, true)">B. Same as before (和之前完全一樣，因為你仍可能湊巧選中那 7 個號碼)</button>
+                </div>
+                <div id="q5-3" style="display:none; margin-top:8px; padding:10px; border-radius:6px;"></div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function updateVisualAngle() {
+        const s = parseFloat(document.getElementById('va-s').value);
+        const d = parseFloat(document.getElementById('va-d').value);
+        document.getElementById('val-va-s').innerText = s + ' cm';
+        document.getElementById('val-va-d').innerText = d + ' cm';
+
+        const tanHalf = s / (2 * d);
+        const thetaDeg = 2 * Math.atan(tanHalf) * (180 / Math.PI);
+        document.getElementById('out-theta-deg').innerText = thetaDeg.toFixed(2) + '°';
+        document.getElementById('out-tan').innerText = tanHalf.toFixed(3);
+
+        const lensX = 422;
+        const objX = Math.max(40, lensX - d * 1.05);
+        const halfH = Math.min(55, s * 0.55);
+
+        const objLine = document.getElementById('va-obj');
+        objLine.setAttribute('x1', objX); objLine.setAttribute('x2', objX);
+        objLine.setAttribute('y1', 70 - halfH); objLine.setAttribute('y2', 70 + halfH);
+
+        document.getElementById('va-dline').setAttribute('x1', objX);
+        const dTxt = document.getElementById('va-dtxt');
+        dTxt.setAttribute('x', (objX + lensX) / 2);
+        dTxt.textContent = 'd = ' + d + ' cm';
+
+        const retHalf = Math.min(30, Math.max(4, tanHalf * 50));
+        document.getElementById('va-ray1').setAttribute('x1', objX);
+        document.getElementById('va-ray1').setAttribute('y1', 70 - halfH);
+        document.getElementById('va-ray1').setAttribute('y2', 70 + retHalf);
+
+        document.getElementById('va-ray2').setAttribute('x1', objX);
+        document.getElementById('va-ray2').setAttribute('y1', 70 + halfH);
+        document.getElementById('va-ray2').setAttribute('y2', 70 - retHalf);
+
+        document.getElementById('va-ret').setAttribute('y1', 70 - retHalf);
+        document.getElementById('va-ret').setAttribute('y2', 70 + retHalf);
+    }
+
+    let aiInterval = null;
+    function startAfterImageTimer() {
+        clearInterval(aiInterval);
+        const box = document.getElementById('ai-box');
+        const txt = document.getElementById('ai-timer');
+        box.setAttribute('fill', '#ff0000');
+        let sec = 10;
+        txt.textContent = `請死死盯住中心黑點... 剩餘 ${sec} 秒`;
+        aiInterval = setInterval(() => {
+            sec--;
+            if (sec > 0) {
+                txt.textContent = `請死死盯住中心黑點... 剩餘 ${sec} 秒`;
+            } else {
+                clearInterval(aiInterval);
+                box.setAttribute('fill', '#ffffff');
+                txt.textContent = `✨ 看白框內部！你看到青色 (Cyan) 殘像了嗎？`;
+            }
+        }, 1000);
+    }
+    function resetAfterImage() {
+        clearInterval(aiInterval);
+        document.getElementById('ai-box').setAttribute('fill', '#ff0000');
+        document.getElementById('ai-timer').textContent = '請盯住黑點';
+    }
+
+    function setOpticStage(stage) {
+        [1,2,3].forEach(i => document.getElementById('oc-btn-' + i).className = (i === stage) ? 'action-btn active-btn' : 'action-btn');
+        const icon = document.getElementById('oc-out-icon');
+        const desc = document.getElementById('oc-desc');
+        if (stage === 1) {
+            icon.setAttribute('transform', 'rotate(180 180 175) scale(0.6)');
+            desc.innerHTML = '📌 <strong>① 視網膜接收 (Retina)</strong>：雙眼從不同角度拍下兩張<strong>上下顛倒且縮小 (Upside-down &amp; shrank)</strong> 的 2D 圖像。';
+        } else if (stage === 2) {
+            icon.setAttribute('transform', 'rotate(90 180 175) scale(0.8)');
+            desc.innerHTML = '📌 <strong>② 視交叉拆分與合併 (Optic Chiasm)</strong>：圖像進入視交叉拆分——<strong>左視野去右腦、右視野去左腦 (left goes right, right goes left)</strong> 並合併為一體！';
+        } else {
+            icon.setAttribute('transform', 'rotate(0 180 175) scale(1.1)');
+            desc.innerHTML = '📌 <strong>③ 視覺皮層還原 (Visual Cortex)</strong>：在傳遞給下一站前，圖像被<strong>翻轉 (Flipped)、旋轉 (Rotated) 並放大還原 (Resized / Blow up)</strong> 成正常的立體感知！';
+        }
+    }
+
+    function setCubeMode(mode) {
+        [1,2,3].forEach(i => document.getElementById('cube-btn-' + i).className = (i === mode) ? 'action-btn active-btn' : 'action-btn');
+        const sq1 = document.getElementById('cb-sq1'), sq2 = document.getElementById('cb-sq2');
+        const l1 = document.getElementById('cb-l1'), l2 = document.getElementById('cb-l2'), l3 = document.getElementById('cb-l3'), l4 = document.getElementById('cb-l4');
+        const desc = document.getElementById('cube-desc');
+
+        if (mode === 1) {
+            sq1.setAttribute('x', 110); sq1.setAttribute('y', 65); sq1.setAttribute('fill', 'none');
+            sq2.setAttribute('x', 150); sq2.setAttribute('y', 35); sq2.setAttribute('fill', 'none');
+            l1.setAttribute('x1', 110); l1.setAttribute('y1', 65); l1.setAttribute('x2', 150); l1.setAttribute('y2', 35);
+            l2.setAttribute('x1', 205); l2.setAttribute('y1', 65); l2.setAttribute('x2', 245); l2.setAttribute('y2', 35);
+            l3.setAttribute('x1', 110); l3.setAttribute('y1', 160); l3.setAttribute('x2', 150); l3.setAttribute('y2', 130);
+            l4.setAttribute('x1', 205); l4.setAttribute('y1', 160); l4.setAttribute('x2', 245); l4.setAttribute('y2', 130);
+            desc.innerHTML = '📌 <strong>Slide 35</strong>：大腦自動將其解讀為一個 3D 透明立方體 (It\'s not a cube!)。';
+        } else if (mode === 2) {
+            sq1.setAttribute('x', 110); sq1.setAttribute('y', 65); sq1.setAttribute('fill', 'rgba(56,189,248,0.18)');
+            sq2.setAttribute('x', 150); sq2.setAttribute('y', 35); sq2.setAttribute('fill', 'rgba(168,85,247,0.18)');
+            l1.setAttribute('x1', 110); l1.setAttribute('y1', 65); l1.setAttribute('x2', 150); l1.setAttribute('y2', 35);
+            l2.setAttribute('x1', 205); l2.setAttribute('y1', 65); l2.setAttribute('x2', 245); l2.setAttribute('y2', 35);
+            l3.setAttribute('x1', 110); l3.setAttribute('y1', 160); l3.setAttribute('x2', 150); l3.setAttribute('y2', 130);
+            l4.setAttribute('x1', 205); l4.setAttribute('y1', 160); l4.setAttribute('x2', 245); l4.setAttribute('y2', 130);
+            desc.innerHTML = '📌 <strong>Slide 36</strong>：從 2D 平面區塊來看，它只不過是「2 個直角三角形 + 1 個長方形 + 4 個梯形」——但連這也不是設計師真正畫的！';
+        } else {
+            sq1.setAttribute('x', 25); sq1.setAttribute('y', 55); sq1.setAttribute('fill', 'none');
+            sq2.setAttribute('x', 135); sq2.setAttribute('y', 55); sq2.setAttribute('fill', 'none');
+            l1.setAttribute('x1', 255); l1.setAttribute('y1', 80); l1.setAttribute('x2', 295); l1.setAttribute('y2', 50);
+            l2.setAttribute('x1', 305); l2.setAttribute('y1', 80); l2.setAttribute('x2', 345); l2.setAttribute('y2', 50);
+            l3.setAttribute('x1', 255); l3.setAttribute('y1', 150); l3.setAttribute('x2', 295); l3.setAttribute('y2', 120);
+            l4.setAttribute('x1', 305); l4.setAttribute('y1', 150); l4.setAttribute('x2', 345); l4.setAttribute('y2', 120);
+            desc.innerHTML = '🎯 <strong>Slide 37 真相揭曉</strong>：設計師真正畫在畫布上的，僅僅是<strong>「2 個正方形 + 4 條斜線 (2 squares and 4 lines)」</strong>，而且它根本不是透明的！';
+        }
+    }
+
+    let flowDirection = 'expand';
+    const canvas = document.getElementById('optic-canvas');
+    const ctx = canvas.getContext('2d');
+    const stars = Array.from({length: 55}, () => ({
+        angle: Math.random() * Math.PI * 2,
+        r: Math.random() * 160 + 5,
+        speed: Math.random() * 1.5 + 0.8
+    }));
+
+    function setOpticFlow(dir) {
+        flowDirection = dir;
+        document.getElementById('of-btn-exp').className = dir === 'expand' ? 'action-btn green-btn' : 'action-btn';
+        document.getElementById('of-btn-con').className = dir === 'contract' ? 'action-btn rose-btn' : 'action-btn';
+        document.getElementById('of-desc').innerHTML = dir === 'expand'
+            ? '⚡ <strong>Expanding Optic Flow (向外擴張)</strong>：大腦解讀為「我們正在向前衝 (We go forward)」，會使人<strong>身體不自覺向前傾 (Makes the body lean forward)</strong>！'
+            : '🌀 <strong>Contracting Optic Flow (向內收縮)</strong>：大腦解讀為「我們正在後退 (Backward)」，會使人<strong>身體不自覺向後仰 (Makes the body lean backward)</strong>！';
+    }
+
+    function animateOpticFlow() {
+        ctx.fillStyle = 'rgba(5, 8, 17, 0.35)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const cx = canvas.width / 2, cy = canvas.height / 2;
+
+        stars.forEach(s => {
+            const oldX = cx + Math.cos(s.angle) * s.r;
+            const oldY = cy + Math.sin(s.angle) * s.r;
+            if (flowDirection === 'expand') {
+                s.r += s.speed * (s.r * 0.03 + 0.5);
+                if (s.r > 190) s.r = 4;
+            } else {
+                s.r -= s.speed * (s.r * 0.03 + 0.5);
+                if (s.r < 4) s.r = 185;
+            }
+            const newX = cx + Math.cos(s.angle) * s.r;
+            const newY = cy + Math.sin(s.angle) * s.r;
+
+            ctx.strokeStyle = flowDirection === 'expand' ? '#38bdf8' : '#f59e0b';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(oldX, oldY);
+            ctx.lineTo(newX, newY);
+            ctx.stroke();
+        });
+        requestAnimationFrame(animateOpticFlow);
+    }
+    animateOpticFlow();
+
+    function updateParallax(val) {
+        const offset = parseFloat(val);
+        document.getElementById('val-mp').innerText = offset > 0 ? `+${offset} (右)` : (offset < 0 ? `${offset} (左)` : '0 (居中)');
+        const eyeX = 180 + offset;
+        document.getElementById('mp-eye-group').setAttribute('transform', `translate(${eyeX}, 155)`);
+        document.getElementById('mp-ray-moon').setAttribute('x2', eyeX);
+        document.getElementById('mp-ray-dog').setAttribute('x2', eyeX);
+    }
+
+    let currentGestalt = 1;
+    let gestaltRevealed = false;
+
+    function toggleGestaltReveal() {
+        gestaltRevealed = !gestaltRevealed;
+        drawGestaltSVG(currentGestalt, gestaltRevealed);
+    }
+
+    function renderGestalt(idx) {
+        currentGestalt = idx;
+        gestaltRevealed = false;
+        [1,2,3,4,5,6,7].forEach(i => document.getElementById('g-btn-' + i).className = (i === idx) ? 'action-btn active-btn' : 'action-btn');
+        drawGestaltSVG(idx, false);
+    }
+
+    function drawGestaltSVG(idx, reveal) {
+        const svg = document.getElementById('gestalt-svg');
+        const title = document.getElementById('gestalt-canvas-title');
+        const panel = document.getElementById('gestalt-panel');
+        svg.style.background = '#f8fafc';
+
+        if (idx === 1) {
+            title.innerText = '1. Similarity (相似性原則 — Slide 47)';
+            let html = '';
+            for (let col = 0; col < 8; col++) {
+                if (reveal) {
+                    html += `<rect x="${92 + col * 52}" y="22" width="36" height="186" rx="6" fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="4,4"/>`;
+                }
+                for (let row = 0; row < 4; row++) {
+                    const x = 110 + col * 52, y = 45 + row * 45;
+                    if (col % 2 === 0) {
+                        html += `<rect x="${x-14}" y="${y-14}" width="28" height="28" fill="#0f172a"/>`;
+                    } else {
+                        html += `<circle cx="${x}" cy="${y}" r="14" fill="#0f172a"/>`;
+                    }
+                }
+            }
+            svg.innerHTML = html;
+            panel.innerHTML = '<strong>1. Similarity (相似性 — Slides 47, 50)</strong>：大多數人會自動將上圖看成「一列方塊、一列圓圈的垂直列 (Columns)」，而不是水平交替的行！在 Opera 瀏覽器中，相同背景色的選項也會被用戶自動綁定為同一組。';
+        } else if (idx === 2) {
+            title.innerText = '2. Proximity (接近性原則 — Slides 51 - 52)';
+            let html = '';
+            const leftCoords = [[170,50],[215,50],[170,115],[215,115],[170,180],[215,180]];
+            const rightCoords = [[275,85],[335,85],[395,85],[275,145],[335,145],[395,145]];
+            leftCoords.concat(rightCoords).forEach(([cx,cy]) => {
+                html += `<circle cx="${cx}" cy="${cy}" r="24" fill="#0f172a"/>`;
+            });
+            if (reveal) {
+                html += `
+                    <line x1="145" y1="50" x2="235" y2="50" stroke="#ef4444" stroke-width="4"/>
+                    <line x1="145" y1="115" x2="235" y2="115" stroke="#ef4444" stroke-width="4"/>
+                    <line x1="145" y1="180" x2="235" y2="180" stroke="#ef4444" stroke-width="4"/>
+                    <line x1="235" y1="50" x2="275" y2="85" stroke="#ef4444" stroke-width="4"/>
+                    <line x1="235" y1="115" x2="275" y2="85" stroke="#ef4444" stroke-width="4"/>
+                    <line x1="235" y1="115" x2="275" y2="145" stroke="#ef4444" stroke-width="4"/>
+                    <line x1="235" y1="180" x2="275" y2="145" stroke="#ef4444" stroke-width="4"/>
+                    <line x1="275" y1="85" x2="420" y2="85" stroke="#ef4444" stroke-width="4"/>
+                    <line x1="275" y1="145" x2="420" y2="145" stroke="#ef4444" stroke-width="4"/>
+                `;
+            }
+            svg.innerHTML = html;
+            panel.innerHTML = '<strong>2. Proximity (接近性 — Slides 51-53)</strong>：距離靠近的物體會被歸為一組（左邊看成 2 列，右邊看成 2 行）。點擊右上角「👁️ 揭秘」按鈕，你會看到 Slide 52 紅線標出的隱藏橫向分叉結構 (You probably did not see this one)！';
+        } else if (idx === 3) {
+            title.innerText = '3. Symmetry (對稱性原則 — Slides 54 - 55)';
+            let html = `<rect x="130" y="15" width="340" height="200" fill="${reveal ? '#fef08a' : '#ffffff'}" stroke="#0f172a" stroke-width="6"/>`;
+            const pillars = [200, 300, 400];
+            pillars.forEach((px, i) => {
+                const inv = (i === 1) ? -1 : 1;
+                html += `<path d="M ${px-32},${inv===1?210:20} C ${px-15},${inv===1?150:80} ${px-15},${inv===1?80:150} ${px-26},${inv===1?20:210} L ${px+26},${inv===1?20:210} C ${px+15},${inv===1?80:150} ${px+15},${inv===1?150:80} ${px+32},${inv===1?210:20} Z" fill="#0f172a"/>`;
+            });
+            if (reveal) {
+                html += `<text x="300" y="118" fill="#dc2626" font-size="15" font-weight="bold" text-anchor="middle">揭秘：你看到的是 3 個黑色對稱棋子，還是 4 個不對稱黃色背景塊？</text>`;
+            }
+            svg.innerHTML = html;
+            panel.innerHTML = '<strong>3. Symmetry (對稱性 — Slides 54-55)</strong>：問「圖中有幾個物體？」大多數人會回答 <strong>3 個黑色對稱形狀</strong>（國際象棋棋子），而不會回答「黑底上的 4 個不對稱白色物體」！因為對稱圖形會被優先作為整體感知。';
+        } else if (idx === 4) {
+            title.innerText = '4. Continuity (連續性原則：1987 股市泡沫與基因分叉 — Slides 56 - 59)';
+            let html = `
+                <line x1="70" y1="195" x2="530" y2="195" stroke="#334155" stroke-width="2"/>
+                <line x1="70" y1="25" x2="70" y2="195" stroke="#334155" stroke-width="2"/>
+                <text x="50" y="45" fill="#334155" font-size="11">400</text>
+                <text x="50" y="195" fill="#334155" font-size="11">150</text>
+                <path d="M 75,185 Q 180,175 250,150 T 390,55" fill="none" stroke="#0f172a" stroke-width="3.5"/>
+                <path d="M 220,162 Q 330,135 390,55 L 430,18" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-dasharray="5,5"/>
+                <text x="440" y="30" fill="#dc2626" font-size="12" font-weight="bold">📈 統計與人類連續性預測 (Continuity)</text>
+            `;
+            if (reveal) {
+                html += `
+                    <path d="M 390,55 L 398,155 L 430,135 L 470,120 L 510,115" fill="none" stroke="#2563eb" stroke-width="3.5"/>
+                    <text x="465" y="172" fill="#1d4ed8" font-size="13" font-weight="bold">💥 What actually happened (1987 真實暴跌！)</text>
+                `;
+            }
+            svg.innerHTML = html;
+            panel.innerHTML = '<strong>4. Continuity (連續性 — Slides 56-59)</strong>：人類總是順著最平滑的曲線 (Smoothest path) 預測未來。點擊「👁️ 揭秘」查看 1987 年股市真實發生的斷崖式崩盤！';
+        } else if (idx === 5) {
+            title.innerText = '5. Closure (閉合性原則：Kanizsa 卡尼薩三角形 — Slides 60 - 63)';
+            let html = `
+                <circle cx="220" cy="65" r="28" fill="#0f172a"/>
+                <circle cx="380" cy="65" r="28" fill="#0f172a"/>
+                <circle cx="300" cy="185" r="28" fill="#0f172a"/>
+                <polygon points="300,32 215,170 385,170" fill="none" stroke="#0f172a" stroke-width="3"/>
+                <polygon points="220,65 380,65 300,185" fill="#f8fafc" stroke="${reveal ? '#ef4444' : 'none'}" stroke-width="2.5" stroke-dasharray="5,5"/>
+            `;
+            if (reveal) {
+                html += `<text x="300" y="115" fill="#dc2626" font-size="13" font-weight="bold" text-anchor="middle">圖中根本沒有圓和三角形！全是缺口與折角！</text>`;
+            }
+            svg.innerHTML = html;
+            panel.innerHTML = '<strong>5. Closure (閉合性 — Slides 60-68)</strong>：問「圖中有幾個三角形、幾個圓？」其實<strong>圖裡根本沒有圓形也沒有三角形 (There are no circles or triangles)</strong>！只有 3 個缺口扇形 (Pac-Man) 和 3 個折角，但大腦自動忽略縫隙並補全了白色正三角形！';
+        } else if (idx === 6) {
+            title.innerText = '6. Smallness (小面積成圖原則：魯賓的花瓶與人臉 — Slides 73 - 75)';
+            const scale = reveal ? 0.55 : 1.0;
+            svg.innerHTML = `
+                <g transform="translate(300, 115) scale(${scale}) translate(-300, -115)" style="transition:all 0.4s;">
+                    <rect x="120" y="10" width="360" height="210" fill="#ffffff" stroke="#cbd5e1"/>
+                    <path d="M 210,10 Q 260,55 255,95 Q 240,120 265,140 Q 245,165 255,185 L 180,220 L 420,220 L 345,185 Q 355,165 335,140 Q 360,120 345,95 Q 340,55 390,10 Z" fill="#0f172a"/>
+                </g>
+                <text x="300" y="222" fill="#dc2626" font-size="12" font-weight="bold" text-anchor="middle">${reveal ? '🔍 縮小後 (Smallness)：黑色花瓶面積變小，一眼就看成前景花瓶！' : '放大時：很容易把兩側白色看成兩張面對面的人臉'}</text>
+            `;
+            panel.innerHTML = '<strong>6. Smallness (小面積原則 — Slides 73-75)</strong>：較小的區域傾向於被看作前景圖形 (Figure)，較大的區域被看作背景。點擊「👁️ 揭秘」將圖縮小，你會發現看到「黑色花瓶」變得容易得多！';
+        } else if (idx === 7) {
+            title.innerText = '7. Surroundedness (包圍性原則：黑塊與隱藏的 "TIE" — Slides 76 - 81)';
+            let html = '';
+            if (reveal) {
+                html += `<rect x="135" y="55" width="330" height="120" fill="#0f172a"/>`;
+                html += `<text x="300" y="148" fill="#ffffff" font-family="Impact, Arial Black, sans-serif" font-size="110" font-weight="900" letter-spacing="12" text-anchor="middle">TIE</text>`;
+                html += `<text x="300" y="35" fill="#dc2626" font-size="14" font-weight="bold" text-anchor="middle">✨ 加上黑色外框後：原來白色背景拼出了單詞 "TIE"！</text>`;
+            } else {
+                html += `
+                    <text x="300" y="35" fill="#334155" font-size="13" font-weight="bold" text-anchor="middle">What are these? (只看被白色包圍的 4 個黑塊，你能認出是什麼字嗎？)</text>
+                    <path d="M 150,60 L 175,60 L 175,90 L 195,90 L 195,170 L 150,170 Z" fill="#0f172a"/>
+                    <path d="M 225,90 L 245,90 L 245,60 L 260,60 L 260,80 L 280,80 L 280,150 L 260,150 L 260,170 L 235,170 L 235,150 L 225,150 Z" fill="#0f172a"/>
+                    <path d="M 315,60 L 330,60 L 330,80 L 345,80 L 345,150 L 330,150 L 330,170 L 315,170 L 315,150 L 305,150 L 305,80 L 315,80 Z" fill="#0f172a"/>
+                    <path d="M 385,80 L 425,80 L 425,105 L 400,105 L 400,125 L 425,125 L 425,150 L 385,150 L 385,135 L 410,135 L 410,95 L 385,95 Z M 425,60 L 445,60 L 445,170 L 425,170 Z" fill="#0f172a"/>
+                `;
+            }
+            svg.innerHTML = html;
+            panel.innerHTML = '<strong>7. Surroundedness (包圍性 — Slides 76-81)</strong>：被白色包圍的 4 個黑色區域，會被大腦自動當成「獨立的前景物體」，導致一開始幾乎沒人能看出白色背景裡其實寫著大大的 <strong>"TIE"</strong>！點擊「👁️ 揭秘」瞬間看懂！';
+        }
+    }
+    drawGestaltSVG(1, false);
+
+    function setEcgMode(mode) {
+        ['input1','input2','flip','truth'].forEach(m => {
+            const btnId = m === 'input1' ? 'ecg-btn-1' : (m === 'input2' ? 'ecg-btn-2' : (m === 'flip' ? 'ecg-btn-flip' : 'ecg-btn-truth'));
+            document.getElementById(btnId).className = (m === mode) ? 'action-btn active-btn' : (m === 'truth' ? 'action-btn rose-btn' : 'action-btn');
+        });
+        const path = document.getElementById('ecg-path');
+        const grp = document.getElementById('ecg-group');
+        const biasAnnot = document.getElementById('ecg-bias-annot');
+        const truthAnnot = document.getElementById('ecg-truth-annot');
+        const desc = document.getElementById('ecg-desc');
+
+        grp.style.transform = (mode === 'flip') ? 'scaleY(-1)' : 'scaleY(1)';
+
+        if (mode === 'input1') {
+            path.setAttribute('d', 'M 60,120 L 160,120 L 185,105 L 220,120 L 245,120 L 255,142 L 265,120 L 285,120 L 298,82 L 312,120 L 330,120 L 340,132 L 358,18 L 385,205 L 402,120 L 440,120 L 475,80 L 510,120 L 640,120');
+            biasAnnot.setAttribute('opacity', '1');
+            truthAnnot.setAttribute('opacity', '0');
+            desc.innerHTML = '📡 <strong>Input 1 波形 (Slide 82-83)</strong>：注意看中間最高的大尖峰（人腦默認焦點）以及左邊 <code>x=298</code> 處的小波峰 (Small peak)。現在點擊「📡 Input 2」看看哪裡變了！';
+        } else if (mode === 'input2') {
+            path.setAttribute('d', 'M 60,120 L 160,120 L 185,105 L 220,120 L 245,120 L 255,142 L 265,120 L 285,120 L 298,120 L 312,120 L 330,120 L 340,132 L 358,18 L 385,205 L 402,120 L 440,120 L 475,80 L 510,120 L 640,120');
+            biasAnnot.setAttribute('opacity', '0');
+            truthAnnot.setAttribute('opacity', '1');
+            desc.innerHTML = '⚡ <strong>Input 2 波形 (Slide 85)</strong>：看到了嗎？！<strong>中間那個巨大的上下尖峰一動都沒動！</strong> 反而是左邊原本的小波峰變成了平線 (<code>Input 1 → small peak; Input 2 → flat line</code>)！';
+        } else if (mode === 'flip') {
+            biasAnnot.setAttribute('opacity', '1');
+            truthAnnot.setAttribute('opacity', '0');
+            desc.innerHTML = '🔄 <strong>上下翻轉波形 (Slide 84)</strong>：就算把同一組數據上下顛倒，人們的注意力依然死死盯住朝上的最高峰（因為偏見認為 High &gt; Low, Up &gt; Down）！';
+        } else {
+            path.setAttribute('d', 'M 60,120 L 160,120 L 185,105 L 220,120 L 245,120 L 255,142 L 265,120 L 285,120 L 298,82 L 312,120 L 330,120 L 340,132 L 358,18 L 385,205 L 402,120 L 440,120 L 475,80 L 510,120 L 640,120');
+            biasAnnot.setAttribute('opacity', '1');
+            truthAnnot.setAttribute('opacity', '1');
+            desc.innerHTML = '🎯 <strong>真相總結 (Slides 85-86)</strong>：大尖峰只是每次都會發生的無差別背景效應 (Undifferentiated effects)；真正重要的信息藏在前面的小波峰與小凹槽裡！證明「高/上更重要」純粹是人類的解讀偏見 (Interpretation biases)。';
+        }
+    }
+
+    function setImputation(ans) {
+        const slot = document.getElementById('imp-slot');
+        const desc = document.getElementById('imp-desc');
+        if (ans === '6') {
+            slot.innerText = '6';
+            slot.style.color = '#f43f5e';
+            desc.innerHTML = '⚠️ <strong>這是格式塔閉合性 (Closure) 誘導的直覺答案！</strong> 大腦討厭空白，自動用熟悉的遞增規律填上了 6。但在科學與大數據分析中，如果這是一串隨機抽樣或非線性數據呢？';
+        } else {
+            slot.innerText = '? ("I don\'t know")';
+            slot.style.color = '#22c55e';
+            desc.innerHTML = '✅ <strong>Slide 70 官方標準答案：The most rational answer is: "I don\'t know" (我不知道)！</strong> 因為在沒有完整上下文與生成規則前，空格裡可以是任何值！';
+        }
+    }
+
+    function setLottoMode(mode) {
+        document.getElementById('lotto-btn-fair').className = mode === 'fair' ? 'action-btn active-btn' : 'action-btn';
+        document.getElementById('lotto-btn-glue').className = mode === 'glue' ? 'action-btn rose-btn' : 'action-btn';
+        const hostP = document.getElementById('lotto-host-prob');
+        const yourP = document.getElementById('lotto-your-prob');
+        const desc = document.getElementById('lotto-desc');
+
+        if (mode === 'fair') {
+            hostP.innerText = '1 / 1.198B';
+            yourP.innerText = '1 / 1.198B';
+            desc.innerHTML = '📌 <strong>公平搖獎 (Slide 72)</strong>：你填 <code>1 2 3 4 5 6 7</code>，鄰居填 <code>9 21 34 45 56 63 70</code>，誰中獎機會更大？<strong>No one!</strong> 每一組特定號碼組合的概率都是 1 / 1,198,774,720。';
+        } else {
+            hostP.innerText = '100% (必中!)';
+            yourP.innerText = 'Same as before!';
+            desc.innerHTML = '🎯 <strong>塗膠水作弊 (Slide 72 必考題)</strong>：主持人知道哪 7 個球塗了膠水，所以主持人中獎率是 <strong>100%</strong>。但對於<strong>不知情的你</strong>來說，你的中獎率是 <strong>Same as before (依然是 1 / 1,198,774,720)</strong>！因為你仍然可能湊巧選中跟主持人一模一樣的那 7 個號碼！<strong>結論：概率取決於你擁有的知識 (Chance depends on knowledge)！</strong>';
+        }
+    }
+
+    function checkQuiz5(qNum, isCorrect) {
+        const fb = document.getElementById('q5-' + qNum);
+        fb.style.display = 'block';
+        fb.style.background = isCorrect ? 'rgba(34, 197, 94, 0.15)' : 'rgba(244, 63, 94, 0.15)';
+        fb.style.border = isCorrect ? '1px solid #22c55e' : '1px solid #f43f5e';
+        fb.style.color = isCorrect ? '#86efac' : '#fda4af';
+        fb.innerHTML = isCorrect ? '✅ <strong>完全正確！</strong> 你已經徹底掌握了這個視覺感知考點！' : '❌ <strong>再想一下喔！</strong> 對照上方的視覺化實驗再試一次。';
+    }
+</script>
+
+</body>
+</html>
