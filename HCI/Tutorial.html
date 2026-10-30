@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMP3423 HCI Tutorials (Weeks 1–8 去Figma純考點精華) 全交互視覺化看板</title>
+    <style>
+        :root {
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-subtle: #f1f5f9;
+            --bg-accent-soft: #eff6ff;
+            --text-main: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-blue: #2563eb;
+            --accent-indigo: #4f46e5;
+            --accent-emerald: #059669;
+            --accent-amber: #d97706;
+            --accent-rose: #e11d48;
+            --border-light: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+            --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.06);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang HK", "Microsoft JhengHei", sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.65;
+            padding-bottom: 60px;
+        }
+        header {
+            background: linear-gradient(135deg, #ffffff 0%, #eff6ff 50%, #ecfdf5 100%);
+            border-bottom: 1px solid var(--border-light);
+            padding: 34px 24px;
+            text-align: center;
+        }
+        .badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: var(--accent-blue);
+            border: 1px solid #bfdbfe;
+            padding: 4px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        h1 { font-size: 1.95rem; color: #0f172a; margin-bottom: 8px; letter-spacing: -0.4px; }
+        .subtitle { color: var(--text-secondary); font-size: 0.96rem; max-width: 900px; margin: 0 auto; }
+
+        /* Essence Summary Banner */
+        .essence-banner {
+            max-width: 1180px;
+            margin: 20px auto 0;
+            background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+            border: 2px solid #93c5fd;
+            border-radius: 14px;
+            padding: 18px 22px;
+            box-shadow: var(--shadow-md);
+        }
+        .essence-title {
+            font-size: 1.12rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .essence-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 12px;
+        }
+        .essence-item {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid #bfdbfe;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 0.89rem;
+            color: var(--text-secondary);
+        }
+        .essence-item strong { color: var(--text-main); }
+        .term-pill {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #3730a3;
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 4px;
+            margin-left: 4px;
+        }
+
+        /* Sticky Navigation */
+        .nav-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 16px;
+            box-shadow: var(--shadow-sm);
+            margin-top: 20px;
+        }
+        .nav-btn {
+            background: var(--bg-subtle);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.87rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: #e2e8f0; color: var(--text-main); }
+        .nav-btn.active {
+            color: #ffffff;
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        }
+
+        .container { max-width: 1200px; margin: 26px auto; padding: 0 20px; }
+        .section { display: none; animation: fadeIn 0.25s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-bottom: 24px; }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+        }
+        .card h2 {
+            font-size: 1.3rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--accent-blue);
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+        .card h3 { font-size: 1.05rem; margin: 12px 0 8px; color: var(--text-main); }
+        .tag {
+            font-size: 0.74rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: #e0e7ff;
+            color: var(--accent-indigo);
+            font-weight: 600;
+            margin-left: auto;
+        }
+        ul.clean-list { list-style: none; padding-left: 0; }
+        ul.clean-list li {
+            position: relative;
+            padding-left: 18px;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.93rem;
+        }
+        ul.clean-list li::before {
+            content: "•";
+            position: absolute;
+            left: 4px;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        .lab-box {
+            width: 100%;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            margin-top: 12px;
+        }
+        .info-panel {
+            margin-top: 14px;
+            padding: 14px 18px;
+            background: var(--bg-accent-soft);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+        }
+        .warn-panel {
+            margin-top: 14px;
+            padding: 14px 18px;
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-left: 4px solid var(--accent-amber);
+            border-radius: 8px;
+            text-align: left;
+            font-size: 0.92rem;
+            color: #92400e;
+        }
+
+        .btn-group { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; justify-content: center; }
+        .action-btn {
+            background: #ffffff;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-hover);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 0.87rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .action-btn:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .action-btn.active-btn {
+            background: var(--accent-blue);
+            border-color: var(--accent-blue);
+            color: #ffffff;
+        }
+        .action-btn.emerald-btn {
+            background: #ecfdf5;
+            border-color: #6ee7b7;
+            color: var(--accent-emerald);
+        }
+        .action-btn.rose-btn {
+            background: #fff1f2;
+            border-color: #fecdd3;
+            color: var(--accent-rose);
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.89rem; background: #fff; }
+        th, td { border: 1px solid var(--border-light); padding: 10px 12px; text-align: left; }
+        th { background: #f8fafc; color: var(--accent-blue); font-weight: 700; }
+        tr:nth-child(even) { background: #fcfcfd; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="badge">The Hong Kong Polytechnic University · COMP3423 HCI Tutorials (By Jeff Tang)</div>
+    <h1>COMP3423 Tutorials 全考點去蕪存菁交互視覺化看板</h1>
+    <p class="subtitle">已全面剔除純 Figma 軟件操作步驟，100% 提煉「Tut 3 Maze 可用性指標」、「Tut 5 需求與 UI 規格書」、「Tut 6 設計思維與好壞設計」、「Tut 7.0/7.1/7.2 反饋、約束、STN 與 NLP 官方評分標準」及「Tut 8 Don't Make Me Think 視覺層次」</p>
+</header>
+
+<!-- ==================== TOP ESSENCE SUMMARY BANNER ==================== -->
+<div class="essence-banner">
+    <div class="essence-title">⚡ Tutorials 必考核心總綱（五句話秒殺全套 Tutorial 考點）</div>
+    <div class="essence-grid">
+        <div class="essence-item">
+            <strong>1. Requirement vs. Specification &amp; 功能/非功能需求</strong> <span class="term-pill">Tutorial 5</span><br>
+            <strong>Requirement (需求)</strong> = 利益相關者的需要 (What)；<strong>Specification (規格)</strong> = 技術分析文檔，描述特徵與行為 (How)。<strong>Functional (功能需求)</strong> 用<strong>動詞 (Verbs)</strong> 描述系統必須做什麼；<strong>Non-functional (非功能需求)</strong> 用<strong>形容詞/副詞</strong>描述系統品質（Look &amp; feel, Usability, Performance, Operational, Security）。
+        </div>
+        <div class="essence-item">
+            <strong>2. Design Thinking 五階段與 UI vs. UX</strong> <span class="term-pill">Tutorial 6</span><br>
+            <strong>UI</strong> 關注視覺與交互元素美感；<strong>UX</strong> 關注整體無縫且有意義的體驗。Stanford d.school 設計思維 5 階段：<strong>Empathize (共情) ➔ Define (定義問題/Personas) ➔ Ideate (構思) ➔ Prototype (低成本原型) ➔ Test (測試)</strong>——這是一個<strong>非線性、迭代 (Non-linear, iterative)</strong> 的過程，專治 <strong>Ill-defined / Wicked problems</strong>！
+        </div>
+        <div class="essence-item">
+            <strong>3. Feedback (反饋) vs. Constraints (約束)</strong> <span class="term-pill">Tutorial 7.0</span><br>
+            <strong>Feedback</strong> = 系統對用戶動作的直接回應（消除「我點到了嗎？」的不確定感，且報錯必須緊挨著出錯欄位！）。<strong>Constraints</strong> = 限制與防呆規則（如灰顯不可用選單、PS/2 顏色防呆、播放器帶豎線的跳到首尾圖標 <code>|◁</code> vs <code>▷|</code>），防止用戶犯錯。
+        </div>
+        <div class="essence-item">
+            <strong>4. 對話三層次定位法与 STN 單一 Escape 弧</strong> <span class="term-pill">Tutorial 7.1 &amp; 7.2 官方答案</span><br>
+            評分標準 (Marking Point)：「問題出在哪裡？」<strong>Shape/外觀 = LEXICAL</strong>；<strong>Sequence/順序 = SYNTACTIC</strong>；<strong>Effect on data/數據效果 = SEMANTIC</strong>。在 STN 中將 <code>Cancel</code> 畫成單一共享 Escape 弧，是為了<strong>避免每個狀態重複畫線導致變成意大利麵條圖 (Spaghetti of duplicated behaviour)</strong>！
+        </div>
+        <div class="essence-item">
+            <strong>5. Steve Krug《Don't Make Me Think》三大用戶真相</strong> <span class="term-pill">Tutorial 8</span><br>
+            ① <strong>We don't read pages, we SCAN them</strong>（用戶在執行任務，只掃視感興趣的碎片）；② <strong>We don't make optimal choices, we SATISFICE</strong>（匆忙中選第一個「足夠好」的合理選項，猜測更快更好玩）；③ <strong>We don't figure out how things work, we MUDDLE THROUGH</strong>（只要能用就將就用，不在乎底層原理）。
+        </div>
+        <div class="essence-item">
+            <strong>6. Maze 原型測試三大路徑指標與信息架構測試</strong> <span class="term-pill">Tutorial 3</span><br>
+            ① <strong>Direct Success (直接成功)</strong>：按預期路徑完成任務；② <strong>Indirect Success (間接成功)</strong>：走了非預期繞路但最終到達終點屏；③ <strong>Give-up / Bounce (放棄/跳出)</strong>：中途離開未完成。外加 <strong>Card Sort (卡片分類)</strong> 與 <strong>Tree Test (樹測試：檢驗層級導航共識)</strong>。
+        </div>
+    </div>
+</div>
+
+<nav class="nav-bar">
+    <button class="nav-btn active" onclick="switchTab('tab-t5', this)">📋 1. Tut 5 &amp; 3: 需求 vs 規格、PACT 與 Maze 指標</button>
+    <button class="nav-btn" onclick="switchTab('tab-t6', this)">💡 2. Tut 6: 設計思維 5 階段與 7 大壞設計診斷</button>
+    <button class="nav-btn" onclick="switchTab('tab-t70', this)">🛡️ 3. Tut 7.0: 反饋 vs 約束、6 大視覺辨析與 FSM</button>
+    <button class="nav-btn" onclick="switchTab('tab-t71', this)">✍️ 4. Tut 7.1 &amp; 7.2: 對話層次、Login STN 與 NLP 標準答案</button>
+    <button class="nav-btn" onclick="switchTab('tab-t8', this)">🧠 5. Tut 8 &amp; Tut 1: Don't Make Me Think 與官方題庫</button>
+</nav>
+
+<div class="container">
+
+    <!-- ==================== TAB 1: TUTORIAL 5 & TUTORIAL 3 ==================== -->
+    <section id="tab-t5" class="section active">
+        <div class="card">
+            <h2><span>📋</span> Tutorial 5: Specification for Interface Design (需求與界面規格書) <span class="tag">Week 5</span></h2>
+            <p style="color:var(--text-secondary); margin-bottom:14px;">
+                開篇經典樹鞦韆漫畫 (Figure 1)：沒有定義良好的需求文檔 (Absence of well-defined requirements) ➔ <strong>軟體項目必敗 (Software project failure)</strong>！客戶想要的是一個輪胎鞦韆，結果文檔沒寫、程序員寫成了拴在樹幹上的死繩子、賬單卻按過山車收費！
+            </p>
+
+            <div class="grid-2">
+                <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border-left:4px solid var(--accent-blue);">
+                    <h3>⚖️ 1. Requirement (需求) vs. Specification (規格)</h3>
+                    <table>
+                        <thead>
+                            <tr><th>維度</th><th>Requirement (需求)</th><th>Specification (規格說明書)</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>核心定義</strong></td>
+                                <td>利益相關者的需要 (A need of a stakeholder)，描述軟體系統必須提供的服務與運行約束。</td>
+                                <td>經過分析後的<strong>技術文檔 (Technical document)</strong>，詳細描述如何滿足該需求。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>回答問題</strong></td>
+                                <td><strong>What</strong> the software should do (軟體應該做什麼)。</td>
+                                <td><strong>How</strong> that need will be met — 描述軟體的<strong>特徵與行為 (Features and behavior)</strong>，減少開發失敗。</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SDLC 生命週期</strong></td>
+                                <td colspan="2">系統開發週期 6 步：<code>1. Requirements ➔ 2. Analysis ➔ 3. Design ➔ 4. Code ➔ 5. Test ➔ 6. Implement/deploy</code>。<br>
+                                ⭐ <strong>必考細節：其中第 1, 2, 3, 5 步與 HCI 直接相關！</strong> 前期投入資源收集正確需求，能避免超支並防止程序員過早跳入細節設計。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border-left:4px solid var(--accent-indigo);">
+                    <h3>🔍 2. 需求收集方法與 PACT 框架 (Page 4)</h3>
+                    <ul class="clean-list">
+                        <li><strong>設計系統前必須搞清的 7 個問題</strong>：誰用 (Who)？在哪用 (Where)？用來做什麼 (What for)？怎麼用 (How)？什麼會降低用戶效率？什麼會降低你設計的效率？相關人員有什麼隱藏或公開的議程 (Agendas)？</li>
+                        <li><strong>12 種需求收集方法</strong>：Ethnography (民族誌/實地觀察)、Interviews (訪談)、Focus Groups (焦點小組)、User Logging (日誌記錄)、Questionnaires (問卷)、Technology tour、Task analysis (任務分析)、End-user profiling (用戶畫像)、Cultural probes (文化探針)、Artefact collection (人工製品收集)、Activity theory (活動理論)。</li>
+                        <li><strong>🔥 必背縮寫：PACT Analysis</strong> = <strong>P</strong>eople (人) + <strong>A</strong>ctivity (活動) + <strong>C</strong>ontext (語境/環境) + <strong>T</strong>echnology (技術)！</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interactive Lab 1A: Functional vs Non-Functional Classifier (PDA Hospital Case) -->
+            <div class="lab-box" style="margin-top:16px;">
+                <h3 style="color:var(--accent-blue); margin-bottom:8px;">🏥 交互實驗 1A：Functional (功能) vs. Non-Functional (非功能) 需求分類器 (基於 Appendix 1: PDA 醫院系統)</h3>
+                <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:12px;">
+                    <strong>Functional (功能需求 = 動詞 Verbs，系統必須做什麼，絕不是 'fast' 這種品質)</strong> vs. <strong>Non-functional (非功能需求 = 形容詞/副詞 Adjectives/Adverbs，系統必須具備的品質，用戶往往主要根據非功能品質評價消費產品！)</strong>。點擊下方按鈕切換查看 PDA 醫院系統的 6 大需求實例：
+                </p>
+                <div class="btn-group">
+                    <button id="req-btn-1" class="action-btn active-btn" onclick="showPdaReq(1)">1. Functional (功能需求 - 動詞)</button>
+                    <button id="req-btn-2" class="action-btn" onclick="showPdaReq(2)">2. Look &amp; Feel (非功能：外觀感覺)</button>
+                    <button id="req-btn-3" class="action-btn" onclick="showPdaReq(3)">3. Usability (非功能：可用性 ⭐HCI重心)</button>
+                    <button id="req-btn-4" class="action-btn" onclick="showPdaReq(4)">4. Performance (非功能：性能與崩潰率)</button>
+                    <button id="req-btn-5" class="action-btn" onclick="showPdaReq(5)">5. Operational (非功能：運行環境)</button>
+                    <button id="req-btn-6" class="action-btn" onclick="showPdaReq(6)">6. Security (非功能：安全與防嗅探)</button>
+                </div>
+                <div id="pda-req-panel" class="info-panel">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+
+            <!-- UI Specification & Maze Metrics -->
+            <div class="grid-2" style="margin-top:20px;">
+                <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border-top:3px solid var(--accent-emerald);">
+                    <h3>📐 3. Usability / UI Specifications (界面規格書四要素, Pages 5-8)</h3>
+                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:8px;">
+                        呼應 Lecture 02：當問題具備完整規範 (Full specification) 時就是 <strong>Well-defined problem</strong>。UI Spec 是設計界面的藍圖與模板，包含 4 大要素：
+                    </p>
+                    <ul class="clean-list" style="font-size:0.88rem;">
+                        <li><strong>1. Visual overview of the screen</strong>：將屏幕拆分為多個區塊 (Sections)，並在文檔中為每個區塊建立對應章節。</li>
+                        <li><strong>2. Display rules within each section</strong>：每個區塊內的顯示規則（例如搜尋結果如何排序？顯示哪些欄位？某欄位缺失時怎麼辦？）。</li>
+                        <li><strong>3. Consider messaging</strong>：在特定條件下要顯示什麼特定提示訊息？</li>
+                        <li><strong>4. Evaluate the links</strong>：每個連結跳轉到哪個頁面是否顯而易見？若不明顯必須明確指定。<br>
+                        <em>（Example 2 採用「字母 A-F 標註界面元素 + 數字 1-7 標註技術整合邏輯」的左右對照法！）</em></li>
+                    </ul>
+                </div>
+
+                <div style="background:var(--bg-subtle); padding:16px; border-radius:10px; border-top:3px solid var(--accent-amber);">
+                    <h3>🧭 4. Tutorial 3 考點提煉：Maze 可用性測試指標</h3>
+                    <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:8px;">
+                        在原型可用性測試中，分析結果有兩種維度：<strong>By block (按任務塊)</strong> 與 <strong>By tester (按測試者全流程 Session)</strong>。核心指標包括：
+                    </p>
+                    <ul class="clean-list" style="font-size:0.88rem;">
+                        <li><strong>Direct Success (直接成功)</strong>：測試者沿著你設定的<strong>預期路徑 (Expected path)</strong> 完成任務。</li>
+                        <li><strong>Indirect Success (間接成功)</strong>：測試者走了<strong>非預期路徑 (Unexpected path / Off-path)</strong> 繞了彎路，但最終仍到達了終點界面。</li>
+                        <li><strong>Give-up / Bounce (放棄 / 跳出)</strong>：測試者中途離開或放棄，未能完成任務。</li>
+                        <li><strong>Card Sort (卡片分類塊)</strong>：查看多少百分比與唯一數量的用戶將某張卡片歸入你定義的分類中。</li>
+                        <li><strong>Tree Test (樹測試塊)</strong>：查看最受歡迎的最終分類 (End screen) 與最常見層級路徑 (Most common paths)，判斷用戶對內容分類與導航是否存在共識 (Consensus)。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 2: TUTORIAL 6 DESIGN THINKING & POOR DESIGNS ==================== -->
+    <section id="tab-t6" class="section">
+        <div class="card">
+            <h2><span>💡</span> Tutorial 6: Design Thinking (設計思維 5 階段) 與 UI vs. UX <span class="tag">Week 6.1</span></h2>
+            <div class="grid-2">
+                <div style="background:var(--bg-subtle); padding:15px; border-radius:10px; border-left:4px solid var(--accent-blue);">
+                    <h3>🎨 UI Design vs. UX Design (Page 1 框線重點)</h3>
+                    <ul class="clean-list">
+                        <li><strong>UI Design (用戶界面設計)</strong>：聚焦於產品的<strong>視覺與交互元素 (Visual, interactive elements)</strong>，以打造賞心悅目的界面 (Aesthetically pleasing interfaces)。</li>
+                        <li><strong>UX Design (用戶體驗設計)</strong>：聚焦於透過理解用戶需求、開展調研並設計直觀界面，創造<strong>無縫且有意義的用戶體驗 (Seamless and meaningful user experience)</strong>。</li>
+                    </ul>
+                </div>
+                <div style="background:var(--bg-subtle); padding:15px; border-radius:10px; border-left:4px solid var(--accent-indigo);">
+                    <h3>🔄 為什麼需要 Design Thinking？(Pages 1-2)</h3>
+                    <ul class="clean-list">
+                        <li><strong>核心定義</strong>：設計思維是一個<strong>非線性、迭代的過程 (Non-linear, iterative process)</strong>，最擅長解決<strong>定義不良或未知的問題 (Ill-defined / unknown / wicked problems)</strong>！</li>
+                        <li><strong>作用</strong>：以人為中心重構問題 (Reframe in human-centric ways)，是<strong>「跳出思維定勢 (Thinking outside the box)」</strong>的最佳方法。各階段常並行、亂序並反覆迭代執行。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interactive Lab 2A: Stanford d.school 5 Stages Explorer -->
+            <div class="lab-box">
+                <h3 style="color:var(--accent-blue); margin-bottom:10px;">🧭 交互實驗 2A：Stanford d.school 設計思維 5 階段非線性流轉器 (Pages 1 - 3)</h3>
+                <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:12px;">
+                    點擊下方 5 個階段節點，查看每個階段的核心任務、產出物（如 Personas、Problem Statements、Paper Prototyping）與非線性回跳關係：
+                </p>
+                <div class="btn-group">
+                    <button id="dt-btn-1" class="action-btn active-btn" onclick="setDtStage(1)">1. Empathize (共情調研)</button>
+                    <button id="dt-btn-2" class="action-btn" onclick="setDtStage(2)">2. Define (定義問題/Personas)</button>
+                    <button id="dt-btn-3" class="action-btn" onclick="setDtStage(3)">3. Ideate (挑戰假設/頭腦風暴)</button>
+                    <button id="dt-btn-4" class="action-btn" onclick="setDtStage(4)">4. Prototype (低成本/紙面原型)</button>
+                    <button id="dt-btn-5" class="action-btn emerald-btn" onclick="setDtStage(5)">5. Test (嚴格測試與迭代回跳)</button>
+                </div>
+                <svg viewBox="0 0 720 120" width="100%" height="120" style="background:#ffffff; border-radius:8px; border:1px solid var(--border-light);">
+                    <!-- Forward arrows -->
+                    <line x1="125" y1="60" x2="175" y2="60" stroke="#94a3b8" stroke-width="2"/>
+                    <line x1="265" y1="60" x2="315" y2="60" stroke="#94a3b8" stroke-width="2"/>
+                    <line x1="405" y1="60" x2="455" y2="60" stroke="#94a3b8" stroke-width="2"/>
+                    <line x1="545" y1="60" x2="595" y2="60" stroke="#94a3b8" stroke-width="2"/>
+                    <!-- Iterative non-linear feedback arcs -->
+                    <path d="M 640,32 C 550,2 300,2 220,32" fill="none" stroke="#10b981" stroke-width="1.8" stroke-dasharray="4,4"/>
+                    <path d="M 500,88 C 440,115 390,115 360,88" fill="none" stroke="#3b82f6" stroke-width="1.8" stroke-dasharray="4,4"/>
+                    <path d="M 640,88 C 560,118 420,118 360,88" fill="none" stroke="#10b981" stroke-width="1.8" stroke-dasharray="4,4"/>
+
+                    <!-- 5 Nodes -->
+                    <g onclick="setDtStage(1)" style="cursor:pointer;"><rect id="dt-rect-1" x="35" y="35" width="90" height="50" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/><text x="80" y="65" font-size="12" font-weight="bold" fill="#1e40af" text-anchor="middle">1. Empathize</text></g>
+                    <g onclick="setDtStage(2)" style="cursor:pointer;"><rect id="dt-rect-2" x="175" y="35" width="90" height="50" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/><text x="220" y="65" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">2. Define</text></g>
+                    <g onclick="setDtStage(3)" style="cursor:pointer;"><rect id="dt-rect-3" x="315" y="35" width="90" height="50" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/><text x="360" y="65" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">3. Ideate</text></g>
+                    <g onclick="setDtStage(4)" style="cursor:pointer;"><rect id="dt-rect-4" x="455" y="35" width="90" height="50" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/><text x="500" y="65" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">4. Prototype</text></g>
+                    <g onclick="setDtStage(5)" style="cursor:pointer;"><rect id="dt-rect-5" x="595" y="35" width="90" height="50" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/><text x="640" y="65" font-size="12" font-weight="bold" fill="#334155" text-anchor="middle">5. Test</text></g>
+                </svg>
+                <div id="dt-desc" class="info-panel">
+                    <!-- Dynamic text -->
+                </div>
+            </div>
+
+            <!-- Good vs Poor Design & 7 Bad Design Gallery -->
+            <div class="lab-box" style="margin-top:20px;">
+                <h3 style="color:var(--accent-rose); margin-bottom:8px;">🚫 交互實驗 2B：David Joyner 15 大設計原則與「7 大糟糕設計 (Poor Designs)」診斷室 (Pages 4 - 6)</h3>
+                <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:10px;">
+                    <strong>Good design</strong> = 創新、簡單、可用、易學、易懂且有驚艷感 (Wow factor)；<strong>Poor design</strong> = 難用、難懂功能、交互不足以理解當前狀態。<br>
+                    <strong>David Joyner 15 原則 (Fig 2)</strong>：<code>Discoverability (可發現性)</code>、<code>Feedback (反饋)</code>、<code>Constraints (約束)</code>、<code>Mapping (映射)</code>、<code>Consistency (一致性)</code>、<code>Affordances (示能)</code>、<code>Structure (結構)</code>、<code>Simplicity (簡潔)</code>、<code>Tolerance (容錯)</code>、<code>Equity (公平)</code>、<code>Flexibility (靈活)</code>、<code>Perceptibility (可感知)</code>、<code>Ease (輕鬆)</code>、<code>Comfort (舒適)</code>、<code>Documentation (文檔)</code>。<br>
+                    點擊下方 7 個反面案例，查看它們分別違背了哪條 HCI 原則：
+                </p>
+                <div class="btn-group">
+                    <button id="bad-btn-1" class="action-btn active-btn" onclick="showBadDesign(1)">🔌 1. 插線板開關與插孔</button>
+                    <button id="bad-btn-2" class="action-btn" onclick="showBadDesign(2)">🪧 2. 酒店 113 房間路牌</button>
+                    <button id="bad-btn-3" class="action-btn" onclick="showBadDesign(3)">🪑 3. 四面封死的高腳椅</button>
+                    <button id="bad-btn-4" class="action-btn" onclick="showBadDesign(4)">☕ 4. 貓耳戳眼睛馬克杯</button>
+                    <button id="bad-btn-5" class="action-btn" onclick="showBadDesign(5)">💬 5. WhatsApp 刪除訊息提示</button>
+                    <button id="bad-btn-6" class="action-btn" onclick="showBadDesign(6)">微波爐 6. 幾十個按鍵的微波爐</button>
+                    <button id="bad-btn-7" class="action-btn" onclick="showBadDesign(7)">📅 7. 可選 2078 年出生的下拉框</button>
+                </div>
+                <div id="bad-design-panel" class="warn-panel">
+                    <!-- Dynamic text -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 3: TUTORIAL 7.0 FEEDBACK, CONSTRAINTS & FSM ==================== -->
+    <section id="tab-t70" class="section">
+        <div class="card">
+            <h2><span>🛡️</span> Tutorial 7.0: Feedback (反饋)、Constraints (約束) 與有限狀態機 (FSM) <span class="tag">Week 7 Part 1</span></h2>
+            <div class="grid-2">
+                <div style="background:var(--bg-subtle); padding:15px; border-radius:10px; border-left:4px solid var(--accent-blue);">
+                    <h3>📢 1. What is Feedback? (什麼是反饋, Pages 1-2)</h3>
+                    <ul class="clean-list">
+                        <li>系統對用戶動作的直接反應或回應（界面與用戶對話，告知當前發生了什麼，並指引下一步如何正確完成任務）。</li>
+                        <li><strong>核心心理作用</strong>：消除用戶的<strong>「這東西管用嗎？我剛才按到按鈕了嗎？表單提交成功了嗎？」</strong>等不確定感與焦慮，帶來安心感 (Peace of mind，如 Blackboard 提交作業後的綠色確認橫幅與回執編號)。</li>
+                    </ul>
+                </div>
+                <div style="background:var(--bg-subtle); padding:15px; border-radius:10px; border-left:4px solid var(--accent-emerald);">
+                    <h3>🚧 2. What are Constraints? (什麼是約束, Pages 2-5)</h3>
+                    <ul class="clean-list">
+                        <li>限制或規則 (Limit or restriction)。<strong>好的約束能防止用戶犯錯</strong>（防止輸錯數據、按錯按鈕、選錯選項）。</li>
+                        <li><strong>講義 7 大約束+反饋實例 (Pages 4-5)</strong>：① 刪除文件確認彈窗；② 手機連電腦的提示音 + USB 傳輸模式單選約束（不選 File Transfer 就不能傳文件）；③ 風扇調速旋鈕（圓圈指示 1~4 檔，限制最高只能轉到 4 檔）；④ 筆電充電蜂鳴與 100% 上限約束；⑤ 定位權限 3 選 1 約束（Only this time / While using / Deny）；⑥ 冰箱季節溫度檔位約束（冬1-3 / 雨季3-5 / 夏5-7）；⑦ 紅綠燈 3 種約束（紅停、綠行、黃準備停）。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interactive Lab 3A: 6 Visual Discussion Challenges (Pages 6-8) -->
+            <div class="lab-box">
+                <h3 style="color:var(--accent-blue); margin-bottom:8px;">🔍 交互實驗 3A：Tutorial 7.0 六大經典視覺辨析題 (Pages 6 - 8 · 必考圖形題！)</h3>
+                <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:12px;">
+                    Jeff Tang 在第 6–8 頁列出了 6 組沒有寫出標準答案的課堂討論圖（考試極愛直接拿來出題！）。點擊下方按鈕查看每一題的視覺重現與滿分解析：
+                </p>
+                <div class="btn-group">
+                    <button id="t70-btn-1" class="action-btn active-btn" onclick="showT70Case(1)">1. Email 表單報錯 (Good vs Bad)</button>
+                    <button id="t70-btn-2" class="action-btn" onclick="showT70Case(2)">2. Save 按鈕高光陰影 (Good vs Bad)</button>
+                    <button id="t70-btn-3" class="action-btn" onclick="showT70Case(3)">3. 右鍵彈出選單為什麼有灰有黑？</button>
+                    <button id="t70-btn-4" class="action-btn" onclick="showT70Case(4)">4. 主機背板接口 A vs B 誰不歧義？</button>
+                    <button id="t70-btn-5" class="action-btn" onclick="showT70Case(5)">5. 三扇危險門標誌 (Danger)</button>
+                    <button id="t70-btn-6" class="action-btn emerald-btn" onclick="showT70Case(6)">⭐ 6. 播放器按鈕 a vs b 誰更好映射約束？</button>
+                </div>
+                <div id="t70-case-box" style="background:#ffffff; border:1px solid var(--border-light); border-radius:8px; padding:16px; text-align:left;">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- Interactive Lab 3B: Bank Account & Game FSM Simulator (Pages 8-10) -->
+            <div class="lab-box" style="margin-top:18px;">
+                <h3 style="color:var(--accent-indigo); margin-bottom:8px;">🏦 交互實驗 3B：有限狀態機 (FSM / STN) — 銀行賬戶生命週期仿真器 (Pages 8 - 10)</h3>
+                <p style="font-size:0.86rem; color:var(--text-secondary); margin-bottom:10px;">
+                    <strong>Finite State Machine (FSM)</strong>：在任意給定時刻只能處於有限個狀態中的唯一一個狀態（Components: <strong>States 圓圈/方框</strong> + <strong>Transitions 帶方向箭頭，由 Action/Event 觸發，可自循環 Loop back</strong>）。點擊下方事件按鈕操控銀行賬戶狀態機：
+                </p>
+                <div class="btn-group">
+                    <button class="action-btn active-btn" onclick="stepBank('new')">1. Opens Account (開戶 ➔ New)</button>
+                    <button class="action-btn" onclick="stepBank('active')">2. Places Order (下單 ➔ Active)</button>
+                    <button class="action-btn rose-btn" onclick="stepBank('frozen')">3. On Credit Hold (信用凍結 ➔ Frozen)</button>
+                    <button class="action-btn emerald-btn" onclick="stepBank('paid')">4. Paid Balance (還清欠款 ➔ 回 Active)</button>
+                    <button class="action-btn" onclick="stepBank('closed')">5. Customer / Campus Bikes Closes Account (銷戶 ➔ Closed)</button>
+                </div>
+                <svg id="bank-svg" viewBox="0 0 660 155" width="100%" height="155" style="background:#ffffff; border-radius:8px; border:1px solid var(--border-light);">
+                    <!-- Rendered via JS -->
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 4: TUTORIAL 7.1 & 7.2 OFFICIAL ANSWERS ==================== -->
+    <section id="tab-t71" class="section">
+        <div class="card">
+            <h2><span>✍️</span> Tutorial 7.1 &amp; 7.2: 對話三層次、Login STN 與 NLP 官方滿分標準答案 <span class="tag">Week 7 Part 2 · 100% 考題風格！</span></h2>
+            <p style="color:var(--text-secondary); margin-bottom:14px;">
+                這兩份文件是助教專門針對期末考題型設計的 <strong>30 分鐘隨堂模考與官方評分標準 (Marking Points)</strong>。請務必把下面三個 Part 的標準答題句式背熟：
+            </p>
+
+            <!-- Part 1: Dialog Levels Interactive Classifier -->
+            <div class="lab-box" style="margin-top:0;">
+                <h3 style="color:var(--accent-blue); margin-bottom:8px;">🏛️ Part 1: 圖書館自助機 (Library Self-Service Kiosk) — 對話三層次診斷 (10 min)</h3>
+                <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:12px;">
+                    🎯 <strong>官方評分鐵律 (Marking Point)</strong>：<em>"The level answers 'where is the problem located' — <strong>shape (LEXICAL)</strong>, <strong>sequence (SYNTACTIC)</strong>, or <strong>effect (SEMANTIC)</strong>."</em> 點擊下方 a, b, c 三道題查看官方標準答案：
+                </p>
+                <div class="grid-3" style="margin-bottom:0; text-align:left;">
+                    <div style="background:#ffffff; border:1px solid var(--border-light); border-radius:10px; padding:14px;">
+                        <p style="font-weight:bold; font-size:0.9rem; margin-bottom:8px;">a) The “Confirm” button is round and green; the “Cancel” button is square and grey.</p>
+                        <button class="action-btn active-btn" onclick="toggleAnswer('t71-a')">👁️ 查看官方評分答案</button>
+                        <div id="t71-a" style="display:block; margin-top:10px; padding:10px; background:#eff6ff; border-radius:6px; font-size:0.86rem; color:#1e40af;">
+                            ✅ <strong>LEXICAL (詞法層)</strong> — It is about the physical <strong>shape and appearance</strong> of the controls (round/green vs. square/grey).
+                        </div>
+                    </div>
+                    <div style="background:#ffffff; border:1px solid var(--border-light); border-radius:10px; padding:14px;">
+                        <p style="font-weight:bold; font-size:0.9rem; margin-bottom:8px;">b) The kiosk asks for payment BEFORE letting the user choose which books to renew, and users keep tapping back.</p>
+                        <button class="action-btn active-btn" onclick="toggleAnswer('t71-b')">👁️ 查看官方評分答案</button>
+                        <div id="t71-b" style="display:block; margin-top:10px; padding:10px; background:#eff6ff; border-radius:6px; font-size:0.86rem; color:#1e40af;">
+                            ✅ <strong>SYNTACTIC (句法層)</strong> — It is about the wrong <strong>ORDER (先後順序)</strong> of inputs and outputs in the conversation; every tap itself “works”.
+                        </div>
+                    </div>
+                    <div style="background:#ffffff; border:1px solid var(--border-light); border-radius:10px; padding:14px;">
+                        <p style="font-weight:bold; font-size:0.9rem; margin-bottom:8px;">c) Pressing “Renew all” silently renews three books that were reserved by another user – the tap was fine, the effect was wrong.</p>
+                        <button class="action-btn active-btn" onclick="toggleAnswer('t71-c')">👁️ 查看官方評分答案</button>
+                        <div id="t71-c" style="display:block; margin-top:10px; padding:10px; background:#eff6ff; border-radius:6px; font-size:0.86rem; color:#1e40af;">
+                            ✅ <strong>SEMANTIC (語義層)</strong> — Input and order were correct, but the <strong>effect on the application's data</strong> was wrong (reserved books got renewed).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 2: Login STN Model Answer -->
+            <div class="lab-box" style="margin-top:18px;">
+                <h3 style="color:var(--accent-indigo); margin-bottom:8px;">🔐 Part 2: 繪製 Login Dialog 的 STN 模型與「單一 Escape 弧」必考問答 (10 min)</h3>
+                <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:10px;">
+                    <strong>題目要求</strong>：系統打開在 <code>Welcome</code> 界面；用戶選擇 “Log in”，在 <code>Login form</code> 輸入憑證並按 Submit。若密碼有效則結束於 <code>Logged in</code>；若無效則顯示錯誤並返回 <code>Login form</code>。“Cancel” 逃生弧可從登錄對話框內任意位置返回 <code>Welcome</code>。
+                </p>
+                <svg viewBox="0 0 680 185" width="100%" height="185" style="background:#ffffff; border-radius:8px; border:1px solid var(--border-light);">
+                    <defs>
+                        <marker id="arr-dark" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#0f172a"/>
+                        </marker>
+                    </defs>
+                    <!-- Start arrow -->
+                    <line x1="35" y1="85" x2="88" y2="85" stroke="#0f172a" stroke-width="2" marker-end="url(#arr-dark)"/>
+                    <text x="55" y="78" font-size="11" fill="#334155">start</text>
+
+                    <!-- State 1: Welcome -->
+                    <circle cx="130" cy="85" r="38" fill="#f8fafc" stroke="#0f172a" stroke-width="2"/>
+                    <text x="130" y="89" font-size="12.5" font-weight="bold" text-anchor="middle">Welcome</text>
+
+                    <!-- Arc: choose Log in -->
+                    <line x1="168" y1="85" x2="295" y2="85" stroke="#0f172a" stroke-width="2" marker-end="url(#arr-dark)"/>
+                    <text x="232" y="75" font-size="11" fill="#1e40af" font-weight="bold" text-anchor="middle">choose "Log in"</text>
+
+                    <!-- State 2: Login form -->
+                    <circle cx="338" cy="85" r="38" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+                    <text x="338" y="82" font-size="12" font-weight="bold" text-anchor="middle">Login</text>
+                    <text x="338" y="97" font-size="12" font-weight="bold" text-anchor="middle">form</text>
+
+                    <!-- Arc: submit valid -->
+                    <path d="M 374,72 Q 455,52 532,72" fill="none" stroke="#059669" stroke-width="2" marker-end="url(#arr-dark)"/>
+                    <text x="455" y="48" font-size="11" fill="#047857" font-weight="bold" text-anchor="middle">submit: password valid</text>
+
+                    <!-- Arc: submit invalid loop back -->
+                    <path d="M 532,98 Q 455,120 374,98" fill="none" stroke="#e11d48" stroke-width="1.8" marker-end="url(#arr-dark)"/>
+                    <text x="455" y="132" font-size="11" fill="#be123c" font-weight="bold" text-anchor="middle">submit: invalid, show error, return to form</text>
+
+                    <!-- State 3: Logged in -->
+                    <circle cx="572" cy="85" r="38" fill="#ecfdf5" stroke="#059669" stroke-width="2.5"/>
+                    <text x="572" y="82" font-size="12" font-weight="bold" fill="#065f46" text-anchor="middle">Logged</text>
+                    <text x="572" y="97" font-size="12" font-weight="bold" fill="#065f46" text-anchor="middle">in</text>
+
+                    <!-- Dashed Escape Arc -->
+                    <path d="M 304,106 Q 230,90 162,110" fill="none" stroke="#0f172a" stroke-width="1.8" stroke-dasharray="5,4" marker-end="url(#arr-dark)"/>
+                    <text x="235" y="160" font-size="11" fill="#334155" font-weight="bold" text-anchor="middle">Escape arc: "Cancel" — active everywhere in the login sub-dialog</text>
+                </svg>
+                <div class="info-panel" style="margin-top:10px;">
+                    🔥 <strong>必背一行簡答題：Why is the escape drawn as one arc rather than on every state?</strong><br>
+                    ✅ <strong>官方滿分答案 (Tutorial 7.2 Page 1)</strong>：<em>"Without it, every state needs its own identical Cancel arc – the diagram turns into <strong>spaghetti of duplicated behaviour</strong>; a single shared escape (like a Help menu at meta level) keeps the model readable."</em>
+                </div>
+            </div>
+
+            <!-- Part 3: NLP Warm-up Exam Style -->
+            <div class="lab-box" style="margin-top:18px; text-align:left;">
+                <h3 style="color:var(--accent-emerald); margin-bottom:10px; text-align:center;">🗣️ Part 3: NLP Warm-up, Exam Style 官方三連問標準答案 (Tutorial 7.1 &amp; 7.2 Page 2)</h3>
+                <p style="font-size:0.9rem; color:var(--text-main); margin-bottom:10px; text-align:center;">
+                    情境：The user says to the computer: <code>“There is a power reduction in section L-94. Explain it.”</code>
+                </p>
+                <table>
+                    <thead>
+                        <tr><th>考題 (Exam-style Question)</th><th>Jeff Tang 官方滿分標準答案 (Model Answer)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>a) Coreference: what does “it” refer to?</strong></td>
+                            <td>✅ <strong>“it” refers to the power reduction</strong> (coreference resolution links the pronoun to the entity).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>b) What is the name of the hierarchical structure produced when a parser analyses groups of related tokens that form larger constructs?</strong></td>
+                            <td>✅ <strong>A parse tree.</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>c) One line: give ONE example from the lecture of a language where tokenisation is not trivial, and why.</strong></td>
+                            <td>✅ <strong>Chinese</strong> – no spaces between words, so <strong>word segmentation</strong> is needed before tokenisation; OR<br>
+                            ✅ <strong>Turkish</strong> – a single word packs many morphemes, so <strong>intra-word tokenisation</strong> is needed. <em>(Either example, with the reason, earns the mark!)</em></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== TAB 5: TUTORIAL 8 (DON'T MAKE ME THINK) & TUTORIAL 1 QUIZ ==================== -->
+    <section id="tab-t8" class="section">
+        <div class="card">
+            <h2><span>🧠</span> Tutorial 8: Usability by Examples — Steve Krug《Don't Make Me Think》 <span class="tag">Week 8</span></h2>
+            <p style="color:var(--text-secondary); margin-bottom:14px;">
+                <strong>核心法則</strong>：糟糕的 UI 設計就像「把你扔在沙漠中央，指望你自己走出去 (Drops you off in the middle of the desert)」。一個好的網頁或 App 應該是<strong>不言自明、顯而易見、自我解釋的 (Self-evident, obvious, and self-explanatory)</strong>——目標是<strong>消滅用戶腦子裡所有的問號 (Get rid of question marks)</strong>！
+            </p>
+
+            <div class="grid-3">
+                <div style="background:var(--bg-subtle); padding:15px; border-radius:10px; border-top:3px solid var(--accent-rose);">
+                    <h3>❓ 1. 讓用戶思考的 6 件事 (Page 2)</h3>
+                    <ul class="clean-list" style="font-size:0.88rem;">
+                        <li>1. <strong>Cute or clever names</strong> (自作聰明的花哨名稱，如把求職叫 <code>Job-o-Rama</code>)</li>
+                        <li>2. <strong>Marketing-induced names</strong> (營銷造詞)</li>
+                        <li>3. <strong>Company-specific names</strong> (公司內部黑話)</li>
+                        <li>4. <strong>Unfamiliar technical terms</strong> (生僻技術術語)</li>
+                        <li>5. <strong>Too much information</strong> (信息過載)</li>
+                        <li>6. <strong>Not clear links</strong> (看不出能不能點的連結)</li>
+                    </ul>
+                    <div style="margin-top:8px; padding:8px; background:#fff1f2; border-radius:6px; font-size:0.82rem; color:#be123c;">
+                        <strong>求職按鈕對比</strong>：<code>[Jobs]</code> (0思考，直接點) &gt; <code>[Employment Opportunities]</code> (幾毫秒思考) &gt; <code>[Job-o-Rama]</code> (滿頭問號)！
+                    </div>
+                </div>
+
+                <div style="background:var(--bg-subtle); padding:15px; border-radius:10px; border-top:3px solid var(--accent-blue);">
+                    <h3>👀 2. 用戶如何真正使用 UI？(Pages 5-7)</h3>
+                    <ul class="clean-list" style="font-size:0.88rem;">
+                        <li><strong>真相 1：We don't read pages, we SCAN them (只掃視不閱讀)</strong>。為什麼？① 我們在執行任務 (On a mission)，趕時間；② 知道不必讀完所有內容，只找感興趣的碎片；③ 我們很擅長掃視。</li>
+                        <li><strong>真相 2：We don't make optimal choices (不找最優解，只找滿意解 Satisficing)</strong>。為什麼？① 趕時間；② 選錯幾乎沒懲罰 (點 Back 就行)；③ 權衡選項未必更好；④ 猜測更有趣且更快！</li>
+                        <li><strong>真相 3：We don't figure out how things work, we MUDDLE THROUGH (將就湊合用)</strong>。只要能用就不在乎原理；一旦找到一個能用的笨辦法就會一直用下去。</li>
+                    </ul>
+                </div>
+
+                <div style="background:var(--bg-subtle); padding:15px; border-radius:10px; border-top:3px solid var(--accent-emerald);">
+                    <h3>🏛️ 3. 慣例與有效視覺層次 (Pages 7-11)</h3>
+                    <ul class="clean-list" style="font-size:0.88rem;">
+                        <li><strong>Conventions are your friends (慣例是你的朋友)</strong>：① 位置慣例（Logo 在左上角，主導航在頂部或左側）；② 工作方式慣例（電商購物車隱喻）；③ 外觀慣例（標準化視頻/社交圖標）。</li>
+                        <li><strong>Effective Visual Hierarchy (有效視覺層次 3 大特徵)</strong>：<br>
+                            1. <strong>越重要的東西越突出</strong> (More important = more prominent)；<br>
+                            2. <strong>邏輯相關的東西在視覺上也相關</strong> (Related logically = related visually)；<br>
+                            3. <strong>視覺嵌套顯示從屬關係</strong> (Nested visually to show what's part of what)。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Interactive Lab 5A: Flawed Visual Hierarchy & Flight Search Fix -->
+            <div class="grid-2" style="margin-top:16px;">
+                <div class="lab-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-blue); margin-bottom:8px;">✈️ 案例對比 1：機票搜尋 BOS vs. NY 與路邊停車牌重构 (Pages 3 - 4)</h3>
+                    <div style="background:#ffffff; border:1px solid var(--border-light); border-radius:8px; padding:12px; text-align:left; font-size:0.86rem;">
+                        • <strong>壞設計 (Page 3)</strong>：用戶在出發地輸入 <code>bos</code>，下拉選單貼心彈出 <code>Boston, MA, US (BOS)</code>，選中後框裡卻只剩代碼 <code>BOS</code>；接著用戶以為系統很聰明，在目的地輸入 <code>ny</code> 並直接點搜尋，系統卻報錯：<code>Please enter a valid 'TO' City or Airport code</code>（因為紐約有 JFK/LGA/EWR 多個機場，沒有 NY 這個機場代碼，違反了一致性與容錯）！<br>
+                        • <strong>好設計 (Page 4)</strong>：輸入 <code>ny</code> 時自動展開下拉選單列出 <code>NYC - New York City (Area)</code> 等所有匹配項，且選中後完整顯示 <code>BOS - Boston Logan Inter</code>！<br>
+                        • <strong>路邊停車牌重构 (Page 4 下圖)</strong>：將原本4塊上下堆疊、充滿文字邏輯計算的告示牌，重構為一張<strong>「星期 × 時間軸」的紅綠網格時間表 (Parking Schedule Grid)</strong>，一眼就能掃視 (Scan) 出現在能不能免費停車！
+                    </div>
+                </div>
+
+                <div class="lab-box" style="margin-top:0;">
+                    <h3 style="color:var(--accent-rose); margin-bottom:8px;">📐 案例對比 2：有缺陷的視覺層次 (Flawed Visual Hierarchy) 與排版掃視法則 (Pages 9 - 11)</h3>
+                    <div style="background:#ffffff; border:1px solid var(--border-light); border-radius:8px; padding:12px; text-align:left; font-size:0.86rem;">
+                        • <strong>Flawed VH (橫跨錯誤的標題欄, Page 10)</strong>：如果把黑底標題欄 <code>Computer Books</code> 畫得橫跨左邊的導航欄 (Books, Music, Movies, Games) 和右邊的主內容區，會在視覺嵌套上誤導用戶以為「Music 和 Movies 也屬於 Computer Books 的子分類」！<strong>正確做法：標題欄只橫跨右側它真正統轄的主內容區！</strong><br>
+                        • <strong>支持掃視 (Support Scanning) 的排版鐵律 (Page 11)</strong>：<br>
+                        1. 大量使用標題 (Use plenty of headings)，且<strong>不要讓標題懸浮 (Don't let heading float — 標題離它引出的正文距離，必須小於離上一段結尾的距離)</strong>；<br>
+                        2. 保持段落簡短 (Keep paragraphs short)；<br>
+                        3. 使用項目符號列表 (Use bulleted lists，且<strong>列表項之間要留出適當行距</strong>，不要擠成一團)；<br>
+                        4. 高亮/加粗關鍵詞 (Highlight key terms)。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tutorial 1 Extracted Official 11 Quiz Questions -->
+        <div class="card">
+            <h2><span>🎯</span> Tutorial 1 隱藏寶藏：COMPGame 官方內置 9 道經典選擇題題庫 <span class="tag">Tutorial 1 Pages 6, 11 - 13</span></h2>
+            <p style="color:var(--text-secondary); margin-bottom:14px;">
+                雖然 <code>Tutorial 1.pdf</code> 是 COMPGame 軟件說明書，但它的截圖裡直接曝光了課程題庫裡的 <strong>9 道標準選擇題</strong>！點擊選項即可自測：
+            </p>
+            <div id="t1-quiz-container">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function toggleAnswer(id) {
+        const el = document.getElementById(id);
+        el.style.display = (el.style.display === 'none') ? 'block' : 'none';
+    }
+
+    // ==================== 1A: PDA HOSPITAL REQUIREMENTS ====================
+    const pdaReqs = {
+        1: `<strong>1. Functional Requirements (功能需求 — 系統必須做什麼，使用動詞 Verbs！)</strong><br>
+            • 必須允許醫生<strong>查看 (review)</strong> 數據、<strong>創建 (create)</strong> 筆記並<strong>訪問 (have access to)</strong> 病患資料、化驗單與待辦事項。<br>
+            • 必須允許用戶<strong>查詢藥品信息</strong>（適應症、起始劑量、禁忌症、藥物相互作用、不良反應）。<br>
+            • 必須允許在交接班時與其他醫生<strong>共享信息 (sharing of information)</strong>。<br>
+            • 必須允許<strong>電子開立處方與計費 (billing and writing of prescriptions)</strong>，並與腸胃科 (GI unit) 數據庫直接集成同步。`,
+        2: `<strong>2. Non-Functional — Look &amp; Feel (外觀與感覺品質)</strong><br>
+            • 體現產品精神與美學（但不是具體的細節設計）：<em>"The PDA should be <strong>compact, light and portable</strong> so that it can be carried in a lab coat pocket or attached in some way to the doctor."</em> (小巧輕便，能放進白大褂口袋)。`,
+        3: `<strong>3. Non-Functional — Usability (可用性品質 ⭐HCI 核心焦點，必須可量化測試！)</strong><br>
+            • 支援手寫識別與快速滾動筆記；術語清晰簡潔；提供在線幫助；配備輕便折疊中號鍵盤以加速大量數據輸入。<br>
+            • <strong>可量化指標實例</strong>：<em>"The required training of the unit users and new users of the PDA system <strong>must be less than 2 hours</strong>."</em> (新用戶培訓時間必須少於 2 小時！)。`,
+        4: `<strong>4. Non-Functional — Performance (性能、速度與可靠性指標)</strong><br>
+            • <strong>響應速度</strong>：從科室局域網訪問時，<strong>平均響應時間必須少於 5 秒 (less than 5 seconds)</strong>。<br>
+            • <strong>可靠性與崩潰率 (Robustness)</strong>：輕微崩潰（恢復時間 &lt; 2小時）每月不得超過 2 次；嚴重崩潰（恢復時間 &gt; 24小時）在測試期每 3 個月不得超過 2 次，正式運行期每年不得超過 2 次！`,
+        5: `<strong>5. Non-Functional — Operational (技術與物理運行環境)</strong><br>
+            • 必須能在無線局域網 (Wireless-LAN / PAN) 環境下使用；配備備用電池支持 <strong>24 小時全天候使用</strong>；當醫生處於網絡盲區 (Dead spots) 時具備安全模式快速啟動與請求排隊功能；支持連接筆電或台式機打印。`,
+        6: `<strong>6. Non-Functional — Security (安全性品質)</strong><br>
+            • 支持互聯網安全數據庫管理，<strong>數據傳輸必須防止網絡嗅探器 (Protected from Internet sniffers)</strong>；必須具備<strong>密碼訪問控制 (Password access)</strong> 防止未授權訪問。`
+    };
+    function showPdaReq(idx) {
+        [1,2,3,4,5,6].forEach(i => document.getElementById('req-btn-' + i).className = (i === idx) ? 'action-btn active-btn' : 'action-btn');
+        document.getElementById('pda-req-panel').innerHTML = pdaReqs[idx];
+    }
+    showPdaReq(1);
+
+    // ==================== 2A: DESIGN THINKING 5 STAGES ====================
+    const dtStages = {
+        1: `<strong>Stage 1: Empathize — Research Your Users' Needs (共情：研究用戶需求)</strong><br>
+            • 透過用戶調研 (User research) 獲得對待解決問題的共情理解。<strong>Empathy (共情)</strong> 至關重要，因為它能讓你<strong>放下自己對世界的主觀假設 (Set aside your own assumptions)</strong>，獲得對用戶及其需求的真實洞察。`,
+        2: `<strong>Stage 2: Define — State Your Users' Needs and Problems (定義：陳述用戶需求與問題)</strong><br>
+            • 匯總並分析 Empathize 階段收集的信息，提煉定義出核心問題——稱為 <strong>Problem Statements (問題陳述)</strong>。在此階段可以創建 <strong>Personas (用戶畫像)</strong>，確保團隊在進入構思前始終保持以人為中心。`,
+        3: `<strong>Stage 3: Ideate — Challenge Assumptions and Create Ideas (構思：挑戰假設並創造點子)</strong><br>
+            • 基於前兩階段的紮實背景，開始<strong>「跳出盒子思考 (Think outside the box)」</strong>，尋找看待問題的替代視角，並透過 <strong>Brainstorming (頭腦風暴)</strong> 為問題陳述找出創新解決方案。`,
+        4: `<strong>Stage 4: Prototype — Start to Create Solutions (原型：開始創造解決方案)</strong><br>
+            • 這是一個<strong>實驗階段 (Experimental phase)</strong>，目標是為每個問題找出最佳可能方案。團隊應製作一些<strong>低成本、按比例縮小的產品版本 (Inexpensive, scaled-down versions，例如 Paper prototyping 紙面原型)</strong> 來檢驗點子。`,
+        5: `<strong>Stage 5: Test — Try Your Solutions Out (測試：檢驗解決方案並迭代回跳)</strong><br>
+            • 評估者嚴格測試原型。儘管這是最後階段，但設計思維是<strong>迭代的 (Iterative)</strong>：測試結果常被用來<strong>重新定義 (Redefine) 一個或多個問題</strong>，回跳到前面的 Define / Ideate / Prototype 階段做進一步修改與排除！`
+    };
+    function setDtStage(idx) {
+        [1,2,3,4,5].forEach(i => {
+            document.getElementById('dt-btn-' + i).className = (i === idx) ? 'action-btn active-btn' : (i === 5 ? 'action-btn emerald-btn' : 'action-btn');
+            const rect = document.getElementById('dt-rect-' + i);
+            rect.setAttribute('fill', i === idx ? '#dbeafe' : '#f8fafc');
+            rect.setAttribute('stroke', i === idx ? '#2563eb' : '#64748b');
+            rect.setAttribute('stroke-width', i === idx ? '2.5' : '1.5');
+        });
+        document.getElementById('dt-desc').innerHTML = dtStages[idx];
+    }
+    setDtStage(1);
+
+    // 2B: 7 Bad Designs
+    const badDesigns = {
+        1: `<strong>🔌 1. 插線板開關與插孔錯位 (Violates Mapping &amp; Proximity — Page 5)</strong><br>
+            • <strong>為什麼差？</strong> 左邊有 3 個插孔，右邊集中放了 2 個開關（左開關控制第 1 個插孔，右開關控制第 2 個插孔）。開關與它控制的插孔沒有空間對應關係，用戶根本分不清哪個開關管哪個孔！`,
+        2: `<strong>🪧 2. 酒店 113 房間路牌歧義 (Violates Consistency, Gestalt Proximity &amp; Mapping — Page 5)</strong><br>
+            • <strong>為什麼差？</strong> 牌子左上角寫 <code>Rooms 101-113</code>，右上角畫 <code>➔</code>，左下角畫 <code>⬅</code>，右下角寫 <code>Rooms 114-126</code>。用戶完全懵了：這牌子是應該「從左往右橫著讀」還是「從上往下豎著讀」？去 113 房到底該往左還是往右？`,
+        3: `<strong>🪑 3. 四面都被椅背圍死的高腳椅 (Violates Affordance &amp; Comfort — Page 5)</strong><br>
+            • <strong>為什麼差？</strong> <em>"How should I get in this chair?"</em> 座位四周全被欄杆圍住，完全違背了椅子「可供坐下 (Affordance)」的基本物理功能與舒適度！`,
+        4: `<strong>☕ 4. 貓耳立在杯口邊緣的馬克杯 (Violates Comfort, Safety &amp; Usability — Page 5)</strong><br>
+            • <strong>為什麼差？</strong> 為了追求藝術造型，把兩隻尖尖的「貓耳朵」做在杯口正上方——用戶端起杯子喝水時，尖耳朵會直接戳進眼睛裡 (Poke the person in the eyes)！（呼應 Tut 8：切勿為了藝術表達而犧牲可用性與安全）。`,
+        5: `<strong>💬 5. WhatsApp 撤回訊息留下「You deleted this message」給對方看 (Violates User Goal / Mental Model — Page 5)</strong><br>
+            • <strong>為什麼差？</strong> 用戶撤回/刪除訊息的初衷本來就是不想讓對方知道自己發錯了話；結果系統在收件人屏幕上留下一串顯眼的 <em>"This message was deleted"</em>，徹底暴露了發件人刪訊息的行為，違背了功能初衷！`,
+        6: `<strong>微波爐 6. 擁有十幾個複雜按鍵的微波爐 (Violates Simplicity — Page 6)</strong><br>
+            • <strong>為什麼差？</strong> 按鍵越多產品看起來越複雜難懂。絕大多數用戶一輩子只用「加熱 30 秒」那一個鍵，多餘的複雜按鈕徒增認知負荷。`,
+        7: `<strong>📅 7. 出生年份可以選到 2060 ~ 2078 年的註冊下拉框 (Violates Constraints — Page 6)</strong><br>
+            • <strong>為什麼差？</strong> 在員工註冊頁面的「出生日期 (Date of Birth)」下拉選單裡，年份居然列出了 <code>2060 ~ 2078</code> 年！還沒出生的人也能註冊當員工？完全缺乏合理的數據範圍約束 (Constraints)！`
+    };
+    function showBadDesign(idx) {
+        [1,2,3,4,5,6,7].forEach(i => document.getElementById('bad-btn-' + i).className = (i === idx) ? 'action-btn active-btn' : 'action-btn');
+        document.getElementById('bad-design-panel').innerHTML = badDesigns[idx];
+    }
+    showBadDesign(1);
+
+    // ==================== 3A: TUTORIAL 7.0 6 VISUAL CASES ====================
+    const t70Cases = {
+        1: `<strong>1. 表單驗證報錯對比：Good vs. Bad (Page 6 上圖 — Feedback &amp; Proximity)</strong><br>
+            • <strong>Bad (右圖)</strong>：只在表單最頂部冷冰冰寫一句技術黑話 <code>"validation fault - format does not match database. Invalid entry."</code>，既沒標出是哪一個輸入框錯了，也沒告訴用戶怎麼改。<br>
+            • <strong>Good (左圖)</strong>：① <strong>Proximity (就近原則)</strong>：直接在出錯的 <code>Email</code> 輸入框加紅框與感嘆號圖標；② <strong>Human-friendly Feedback (人性化反饋與指引)</strong>：緊貼下方用大白話寫明原因與下一步行動：<em>"Oops! This doesn't look like a valid email address. Try adding '@' before the domain name."</em> 並附上 <u>Accepted email formats</u> 連結！`,
+        2: `<strong>2. Save 按鈕視覺設計：Good vs. Bad (Page 6 下圖 — Affordance &amp; Visual Cues)</strong><br>
+            • <strong>Good (左圖)</strong>：綠色膠囊按鈕帶有微妙的底部高光/立體邊框與投影，提供了清晰的<strong>可點擊示能 (Clickability Affordance)</strong>。<br>
+            • <strong>Bad (右圖)</strong>：過於扁平或缺乏邊界反饋，看起來像死板的靜態色塊標籤。`,
+        3: `<strong>3. 右鍵彈出選單：為什麼有些選項是灰色，有些是黑色？(Page 7 上圖 — Constraints &amp; Feedback)</strong><br>
+            • <strong>解析</strong>：灰色選項（如 <code>Undo, Redo, Make Pixel Perfect, Crop Image</code>）代表<strong>當前狀態下的約束 (Constraints — Disabled state)</strong>！因為用戶當前選中的是一個 Group（群組）而非單張圖片，所以裁剪圖片等操作不可用。將不可用選項<strong>灰顯 (Greyed out)</strong> 既作為視覺反饋告知當前狀態，又作為物理約束防止用戶誤點報錯！而黑色選項（如 <code>Isolate Selected Group, Ungroup</code>）則是當前合法的可用操作。`,
+        4: `<strong>4. 電腦主機背板 PS/2 鍵鼠接口：A 還是 B 更不具歧義 (Less ambiguous)？(Page 7 下圖 — Mapping &amp; Constraints)</strong><br>
+            • <strong>解析：B 遠比 A 清晰無歧義！</strong><br>
+            • 最左邊原圖沒有任何標記，兩個圓孔一模一樣；圖 A 雖然貼了鍵盤和滑鼠小貼紙，但貼紙夾在兩個接口中間，不清楚貼紙是指向旁邊還是下方的孔；而 <strong>圖 B 直接將接口塑膠底座做成「紫色對紫色、綠色對綠色 (Colour coding 色彩編碼)」，並用帶箭頭的色塊框明確指向對應插孔</strong>，完美消除歧義！`,
+        5: `<strong>5. 三扇配電室門上的危險標誌：Danger or not danger? (Page 8 上圖 — Language, Culture &amp; Symbols)</strong><br>
+            • <strong>解析</strong>：① 左圖只寫漢字 <code>25000V 電線 危險</code>，不懂中文的外國人看不懂（語言障礙）；② 中圖雖然有紅底白字 <code>DANGER</code>，但下方卻寫了一句粗俗戲謔的廢話 <em>"THIS WORKPLACE DOES NOT GIVE A SHIT FOR SAFETY"</em>，削弱了嚴肅性且未說明具體危險源；③ <strong>右圖最佳</strong>：結合了全球通用的<strong>骷髏頭視覺符號 (Universal Icon)</strong> + 雙語文字 <code>Danger!! Mines!!</code>，跨越語言障礙瞬間傳達致命危險！`,
+        6: `<strong>⭐ 6. 媒體播放器控制鍵：a 還是 b 更好地映射了約束 (Better at mapping the constraints)？(Page 8 下圖 · 高頻考題！)</strong><br>
+            <div style="margin:10px 0; padding:12px; background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; text-align:center; font-family:monospace; font-size:1.3rem;">
+                Row a (錯誤): <code>[ ▷| ]  [ ◁ ]  [ |◁ ]  [ ▷ ]</code><br>
+                Row b (正確): <code style="color:#059669;font-weight:bold;">[ |◁ ]  [ ◁ ]  [ ▷ ]  [ ▷| ]</code>
+            </div>
+            • <strong>答案：b 遠比 a 好！</strong><br>
+            • <strong>原因 (Spatial Mapping &amp; Constraints)</strong>：在人類的時間軸心智模型中，<strong>左邊代表開頭/過去 (Beginning)，右邊代表結尾/未來 (End)</strong>。圖標上的豎線 <code>|</code> 代表<strong>「邊界約束/停止牆 (Boundary constraint / Limit)」</strong>：在 <strong>b</strong> 中，<code>[ |◁ ]</code> 放在最左邊，直觀映射「向左退直到撞上開頭邊界停止（跳到第一首）」；<code>[ ▷| ]</code> 放在最右邊，直觀映射「向右進直到撞上結尾邊界停止（跳到最後一首）」，中間則是普通的後退 <code>◁</code> 與前進 <code>▷</code>。而 <strong>a</strong> 把方向和邊界完全放反了！`
+    };
+    function showT70Case(idx) {
+        [1,2,3,4,5,6].forEach(i => document.getElementById('t70-btn-' + i).className = (i === idx) ? 'action-btn active-btn' : (i === 6 ? 'action-btn emerald-btn' : 'action-btn'));
+        document.getElementById('t70-case-box').innerHTML = t70Cases[idx];
+    }
+    showT70Case(6);
+
+    // 3B: Bank Account FSM
+    let bankState = 'New';
+    function stepBank(action) {
+        if (action === 'new') bankState = 'New';
+        else if (action === 'active' || action === 'paid') bankState = 'Active';
+        else if (action === 'frozen') bankState = 'Frozen';
+        else if (action === 'closed') bankState = 'Closed';
+        renderBankSvg();
+    }
+    function renderBankSvg() {
+        const hi = (st) => bankState === st ? 'fill="#dbeafe" stroke="#2563eb" stroke-width="3"' : 'fill="#f1f5f9" stroke="#64748b" stroke-width="1.5"';
+        document.getElementById('bank-svg').innerHTML = `
+            <circle cx="30" cy="55" r="9" fill="#2563eb"/>
+            <line x1="39" y1="55" x2="95" y2="55" stroke="#334155" stroke-width="2"/>
+            <text x="67" y="45" font-size="10" text-anchor="middle">Opens Account</text>
+
+            <rect x="95" y="35" width="80" height="40" rx="6" ${hi('New')}/>
+            <text x="135" y="60" font-size="13" font-weight="bold" text-anchor="middle">New</text>
+
+            <line x1="175" y1="55" x2="250" y2="55" stroke="#334155" stroke-width="2"/>
+            <text x="212" y="45" font-size="10" text-anchor="middle">Places Order</text>
+
+            <rect x="250" y="35" width="85" height="40" rx="6" ${hi('Active')}/>
+            <text x="292" y="60" font-size="13" font-weight="bold" text-anchor="middle">Active</text>
+
+            <!-- Active <-> Frozen -->
+            <line x1="275" y1="75" x2="275" y2="125" stroke="#e11d48" stroke-width="2"/>
+            <line x1="275" y1="125" x2="325" y2="125" stroke="#e11d48" stroke-width="2"/>
+            <text x="235" y="105" font-size="9.5" fill="#be123c" text-anchor="middle">On Credit Hold</text>
+
+            <rect x="325" y="105" width="85" height="38" rx="6" ${hi('Frozen')}/>
+            <text x="367" y="129" font-size="12.5" font-weight="bold" text-anchor="middle">Frozen</text>
+
+            <line x1="367" y1="105" x2="315" y2="75" stroke="#059669" stroke-width="2"/>
+            <text x="365" y="90" font-size="9.5" fill="#047857">Paid Balance</text>
+
+            <!-- Active -> Closed -->
+            <line x1="335" y1="55" x2="455" y2="55" stroke="#334155" stroke-width="2"/>
+            <text x="395" y="45" font-size="9.5" text-anchor="middle">Customer Closes</text>
+            <path d="M 292,35 L 292,15 L 495,15 L 495,35" fill="none" stroke="#334155" stroke-width="1.5"/>
+            <text x="395" y="11" font-size="9.5" text-anchor="middle">Campus Bikes Closes Account</text>
+
+            <rect x="455" y="35" width="85" height="40" rx="6" ${hi('Closed')}/>
+            <text x="497" y="60" font-size="13" font-weight="bold" text-anchor="middle">Closed</text>
+
+            <line x1="540" y1="55" x2="595" y2="55" stroke="#334155" stroke-width="2"/>
+            <circle cx="610" cy="55" r="12" fill="none" stroke="#2563eb" stroke-width="2"/>
+            <circle cx="610" cy="55" r="5" fill="#2563eb"/>
+        `;
+    }
+    renderBankSvg();
+
+    // ==================== 5. TUTORIAL 1 OFFICIAL 9 QUIZ ITEMS ====================
+    const t1Quizzes = [
+        {
+            q: "Q1 (Tut 1 Page 6): Fitts' Law predicts that pointing time...",
+            opts: ["A. increases as targets get farther away or smaller", "B. depends mainly on screen resolution", "C. is constant regardless of target position", "D. decreases as the number of targets increases"],
+            ans: 0,
+            exp: "根據 Fitts' Law $T = a + b \\log_2(2D/W)$，距離 $D$ 越遠或目標寬度 $W$ 越小，指向時間越長。"
+        },
+        {
+            q: "Q2 (Tut 1 Page 6): Miller's Law states that working memory holds approximately...",
+            opts: ["A. 3 items at a time", "B. 7 ± 2 chunks", "C. 15 items if chunked well", "D. unlimited items with practice"],
+            ans: 1,
+            exp: "George Miller (1956) 著名的魔法數字：人類短期工作記憶 (STM) 容量約為 7 ± 2 個信息組塊 (Chunks)。"
+        },
+        {
+            q: "Q3 (Tut 1 Page 6): In Norman's Action Cycle, the 'Gulf of Execution' (執行鴻溝) means...",
+            opts: ["A. the computer takes a long time to respond", "B. the user cannot tell whether their action worked", "C. the user cannot figure out how to do what they want", "D. the interface has too many steps"],
+            ans: 2,
+            exp: "執行鴻溝 (Gulf of Execution) 是「用戶想達成的目標」與「系統提供的物理操作手段」之間的落差（不知道怎麼操作）；而選項 B（看不出操作是否生效）則是評估鴻溝 (Gulf of Evaluation)！"
+        },
+        {
+            q: "Q4 (Tut 1 Page 6): The Gestalt principle of Proximity says objects are grouped because...",
+            opts: ["A. they look similar to each other", "B. they are physically near each other", "C. they share the same colour", "D. the brain fills in gaps between them"],
+            ans: 1,
+            exp: "Proximity (接近性原則) 指空間位置彼此靠近的物體被歸為一組（A 和 C 是 Similarity，D 是 Closure）。"
+        },
+        {
+            q: "Q5 (Tut 1 Page 7): According to Hick's Law (希克定律), adding more choices to a menu...",
+            opts: ["A. doubles decision time with each new item", "B. has no effect if items are clearly labelled", "C. increases decision time by a fixed logarithmic amount", "D. only matters for novice users"],
+            ans: 2,
+            exp: "Hick's Law 指出決策反應時間隨選項數量呈對數增長 ($T = b \\log_2(n+1)$)。"
+        },
+        {
+            q: "Q6 (Tut 1 Page 11): In 'ID = log₂(A/W + 0.5)', what does W stand for?",
+            opts: ["A. The number of windows open", "B. The width of the target along the direction of approach", "C. The weight given to the movement", "D. The waiting time before the movement starts"],
+            ans: 1,
+            exp: "正如我們之前討論過的，$W$ 代表沿著運動接近方向上的目標寬度 (Width of the target along the direction of approach)！"
+        },
+        {
+            q: "Q7 (Tut 1 Page 11): Two buttons sit the same distance from the pointer. One is 30 px wide, the other 120 px. Which has the higher index of difficulty (ID)?",
+            opts: ["A. They are equal, because the distance is the same", "B. The 120 px button, because it covers more area", "C. The 30 px button, because a smaller W makes the ratio A/W larger", "D. Neither — ID depends only on distance"],
+            ans: 2,
+            exp: "$W$ 在分母上，30 px 按鈕的 $W$ 更小，使比值 $A/W$ 更大，因此難度指數 ID 更高。"
+        },
+        {
+            q: "Q8 (Tut 1 Page 11): A paper reports a target's index of difficulty (ID) as 3.2. Three point two what?",
+            opts: ["A. Milliseconds", "B. Pixels", "C. Centimetres", "D. Bits"],
+            ans: 3,
+            exp: "Fitts' Law 源自香農信息論，Index of Difficulty (ID) 的單位永遠是 Bits (比特)！"
+        },
+        {
+            q: "Q9 (Tut 1 Page 12-13): A mobile 'Send' button can be made twice as tall in the direction the thumb approaches (2W), or moved so the thumb travels half as far (0.5A). Which reduces the index of difficulty (ID) more?",
+            opts: ["A. Making it taller, because the thumb is imprecise", "B. Moving it closer, because travel is the slower part", "C. Neither, because thumbs are not modelled by Fitts' Law", "D. Both equally — each halves the ratio A/W"],
+            ans: 3,
+            exp: "官方綠勾標準答案 (Page 13)：Both equally — 因為無論是把寬度 $W$ 翻倍還是把距離 $A$ 減半，都會使比值 $A/W$ 減半（對數項減少完全相同的量）！"
+        }
+    ];
+
+    function renderT1Quizzes() {
+        let html = '';
+        t1Quizzes.forEach((item, idx) => {
+            html += `<div style="margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid var(--border-light);">
+                <p style="font-weight:700; font-size:0.94rem; margin-bottom:8px; color:var(--text-main);">${item.q}</p>
+                <div class="btn-group" style="justify-content:flex-start; margin-bottom:6px;">`;
+            item.opts.forEach((opt, oIdx) => {
+                html += `<button class="action-btn" onclick="checkT1Quiz(${idx}, ${oIdx})">${opt}</button>`;
+            });
+            html += `</div>
+                <div id="t1-fb-${idx}" style="display:none; padding:10px 14px; border-radius:6px; font-size:0.88rem; margin-top:6px;"></div>
+            </div>`;
+        });
+        document.getElementById('t1-quiz-container').innerHTML = html;
+    }
+
+    function checkT1Quiz(qIdx, oIdx) {
+        const item = t1Quizzes[qIdx];
+        const fb = document.getElementById('t1-fb-' + qIdx);
+        fb.style.display = 'block';
+        if (oIdx === item.ans) {
+            fb.style.background = '#ecfdf5';
+            fb.style.border = '1px solid #6ee7b7';
+            fb.style.color = '#065f46';
+            fb.innerHTML = `✅ <strong>正確！</strong> ${item.exp}`;
+        } else {
+            fb.style.background = '#fff1f2';
+            fb.style.border = '1px solid #fecdd3';
+            fb.style.color = '#be123c';
+            fb.innerHTML = `❌ <strong>再試一次喔！</strong> 提示：${item.exp}`;
+        }
+    }
+    renderT1Quizzes();
+</script>
+
+</body>
+</html>

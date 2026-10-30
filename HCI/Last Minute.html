@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COMP3423 考前終極視覺化互動複習面板 (Week 1–7)</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.2);
+      --emerald: #34d399;
+      --amber: #fbbf24;
+      --rose: #fb7185;
+      --purple: #c084fc;
+    }
+
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang HK", "Microsoft JhengHei", sans-serif;
+  background-color: var(--bg);
+  color: var(--text-main);
+  line-height: 1.6;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+.header-left h1 {
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.header-left p {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+}
+
+.badge-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--card-border);
+}
+
+.badge.hot { color: var(--amber); border-color: rgba(251, 191, 36, 0.4); background: rgba(251, 191, 36, 0.1); }
+.badge.ok { color: var(--emerald); border-color: rgba(52, 211, 153, 0.4); background: rgba(52, 211, 153, 0.1); }
+.badge.info { color: var(--accent); border-color: rgba(56, 189, 248, 0.4); background: rgba(56, 189, 248, 0.1); }
+
+/* Navigation Tabs */
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+  padding-bottom: 6px;
+}
+
+.tab-btn {
+  background: var(--card-bg);
+  color: var(--text-muted);
+  border: 1px solid var(--card-border);
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-main);
+  border-color: var(--accent);
+}
+
+.tab-btn.active {
+  background: var(--accent);
+  color: #0f172a;
+  border-color: var(--accent);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.tab-panel {
+  display: none;
+  animation: fadeIn 0.25s ease;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Grid & Cards */
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.card h2 {
+  font-size: 1.15rem;
+  margin-bottom: 12px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card h3 {
+  font-size: 1rem;
+  margin: 12px 0 6px;
+  color: var(--amber);
+}
+
+.kw {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.88em;
+  font-weight: 600;
+}
+
+.kw-warn {
+  background: rgba(251, 113, 133, 0.15);
+  color: var(--rose);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.kw-ok {
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--emerald);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+ul.clean-list {
+  list-style: none;
+}
+
+ul.clean-list li {
+  position: relative;
+  padding-left: 18px;
+  margin-bottom: 8px;
+  font-size: 0.92rem;
+}
+
+ul.clean-list li::before {
+  content: "•";
+  color: var(--accent);
+  font-weight: bold;
+  position: absolute;
+  left: 0;
+}
+
+/* Timeline & Pioneers */
+.timeline-item {
+  border-left: 2px solid var(--accent);
+  padding-left: 14px;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.timeline-item::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: absolute;
+  left: -6px;
+  top: 6px;
+}
+
+.timeline-year {
+  font-size: 0.8rem;
+  color: var(--amber);
+  font-weight: 700;
+}
+
+/* Interactive Fitts' Law */
+.slider-row {
+  margin: 12px 0;
+}
+
+.slider-row label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.fitts-arena {
+  background: #090d16;
+  border: 1px dashed var(--card-border);
+  border-radius: 10px;
+  height: 110px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.pointer-dot {
+  width: 16px;
+  height: 16px;
+  background: var(--amber);
+  border-radius: 50%;
+  position: absolute;
+  left: 24px;
+  box-shadow: 0 0 10px var(--amber);
+}
+
+.target-btn {
+  background: var(--emerald);
+  color: #090d16;
+  font-weight: 700;
+  font-size: 0.8rem;
+  height: 44px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  transition: all 0.2s ease;
+}
+
+/* SVG Diagram Styling */
+.svg-box {
+  background: #0b1120;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  overflow-x: auto;
+}
+
+/* Quiz Styling */
+.quiz-item {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 14px;
+}
+
+.quiz-q {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text-main);
+}
+
+.quiz-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.quiz-opt {
+  background: #0f172a;
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.88rem;
+  transition: all 0.15s;
+}
+
+.quiz-opt:hover {
+  border-color: var(--accent);
+}
+
+.quiz-opt.correct {
+  background: rgba(52, 211, 153, 0.2);
+  border-color: var(--emerald);
+  color: var(--emerald);
+}
+
+.quiz-opt.wrong {
+  background: rgba(251, 113, 133, 0.2);
+  border-color: var(--rose);
+  color: var(--rose);
+}
+
+.quiz-exp {
+  display: none;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  padding: 8px 12px;
+  background: rgba(56, 189, 248, 0.1);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-top: 8px;
+}
+
+th, td {
+  border: 1px solid var(--card-border);
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background: rgba(255,255,255,0.05);
+  color: var(--accent);
+}
+
+/* Gestalt Visuals */
+.gestalt-demo {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  background: #0b1120;
+  padding: 14px;
+  border-radius: 10px;
+  margin-top: 8px;
+  min-height: 90px;
+}
+
+.dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+}
+
+.dot.alt {
+  background: var(--amber);
+  border-radius: 3px;
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-left">
+        <h1>🚀 COMP3423 考前視覺化衝刺總覽 (Week 1–7)</h1>
+        <p>涵蓋 Lecture 1–7 + Tutorial 1–7.2（不含 Figma 與 Tut 8）｜31 Oct (Sat) 11:30 AM 閉卷考</p>
+      </div>
+      <div class="badge-group">
+        <span class="badge hot">⚡ 15 MC + T/F + Short Q + Case Study</span>
+        <span class="badge info">⏱️ 預計 40 分鐘 (30–35 pts)</span>
+        <span class="badge ok">🧮 無需計算機 (Calculator No Need)</span>
+      </div>
+    </header>
+
+
+<div class="nav-tabs">
+  <button class="tab-btn active" onclick="switchTab('tab-rescue')">🎯 1. 你的錯題急救卡</button>
+  <button class="tab-btn" onclick="switchTab('tab-lec12')">🏛️ 2. Lec 1–2 歷史與災難</button>
+  <button class="tab-btn" onclick="switchTab('tab-lec34')">🧠 3. Lec 3–4 解題與 Fitts' Law</button>
+  <button class="tab-btn" onclick="switchTab('tab-lec56')">👁️ 4. Lec 5–6 視覺與 Gestalt</button>
+  <button class="tab-btn" onclick="switchTab('tab-lec7')">💬 5. Lec 7 & Tut 5–7 (STN/NLP)</button>
+  <button class="tab-btn" onclick="switchTab('tab-quiz')">⚡ 6. 考前 3 分鐘互動刷題</button>
+</div>
+
+<!-- TAB 1: 錯題急救卡 -->
+<div id="tab-rescue" class="tab-panel active">
+  <div class="card" style="border-color: var(--rose);">
+    <h2>🔥 你在 43 分鐘模考中暴露的「最後 5 個搶分缺口」（背熟直接 +8.5 分！）</h2>
+    <div class="grid-2">
+      <div class="card" style="margin-bottom:0; background:#0f172a;">
+        <h3>① Dialog 對話三層次 (Tut 7.1 必考！)</h3>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:8px;">口訣：問問題出在哪裡（Where is the problem located?）</p>
+        <ul class="clean-list">
+          <li><span class="kw">LEXICAL (詞法層 = Shape)</span>：按鈕的<strong>物理形狀、顏色、外觀</strong>（如圓形綠色 Confirm vs. 方形灰色 Cancel）。</li>
+          <li><span class="kw">SYNTACTIC (句法層 = Order/Sequence)</span>：輸入與輸出的<strong>先後步驟順序反了</strong>（如還沒選書就先叫你付款）。</li>
+          <li><span class="kw">SEMANTIC (語義層 = Effect on Data)</span>：外觀和順序都對，但<strong>對底層數據產生的結果錯了</strong>（如點續借卻把別人預約的書續借了、點刪除單項卻清空整個 Database）。</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-bottom:0; background:#0f172a;">
+        <h3>② NLP 兩大必背填空詞 (Tut 7.2 原題！)</h3>
+        <ul class="clean-list">
+          <li><strong>問題 1</strong>：當 Parser 分析相關 Tokens 組成更大結構時，產生的<strong>階層結構 (Hierarchical structure)</strong> 叫什麼？<br>
+          👉 必寫標準答案：<span class="kw-ok">A parse tree</span>（語法分析樹）！</li>
+          <li><strong>問題 2</strong>：舉出課堂上一個 <strong>Tokenisation (分詞) 不容易的人類語言</strong> 並說明原因：<br>
+          👉 必寫標準答案：<span class="kw-ok">Chinese (中文)</span> — 因為 <span class="kw">no spaces between words, so word segmentation is needed before tokenisation</span>（或寫 <span class="kw">Turkish</span>：單詞內含多個語素 morphemes）。</li>
+          <li><strong>問題 3</strong>：Coreference 指代消解（如 <em>"There is a power reduction... Explain <strong>it</strong>"</em>）<br>
+          👉 <span class="kw">"it" refers to the power reduction</span>。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-top:16px; margin-bottom:0;">
+      <div class="card" style="margin-bottom:0; background:#0f172a;">
+        <h3>③ STN 圖避坑 (Tut 7.2)</h3>
+        <ul class="clean-list">
+          <li><strong>圓圈名字千萬別複製貼上忘記改</strong>！終點狀態要寫 <span class="kw">Logged in</span> 或 <span class="kw">Booking Confirmed</span>。</li>
+          <li><strong>為什麼 Cancel 只畫一條共享 Escape Arc？</strong><br>
+          👉 必背金句：避免圖表變成 <span class="kw-warn">spaghetti of duplicated behaviour</span>，保持模型 <span class="kw-ok">readable</span>！</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-bottom:0; background:#0f172a;">
+        <h3>④ Design Thinking 5 階段 (Tut 6)</h3>
+        <ul class="clean-list">
+          <li>別跟傳統軟體工程 (Requirements/Analysis) 搞混！</li>
+          <li>Stanford d.school 五階段：<br>
+          <span class="kw">Empathize</span> $\rightarrow$ <span class="kw">Define</span> $\rightarrow$ <span class="kw">Ideate</span> $\rightarrow$ <span class="kw">Prototype</span> $\rightarrow$ <span class="kw">Test</span></li>
+          <li>性質：<span class="kw-ok">Non-linear, iterative process</span>（非線性迭代，解決 Ill-defined 問題）。</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-bottom:0; background:#0f172a;">
+        <h3>⑤ 解題策略名稱 (Lec 3 & 4)</h3>
+        <ul class="clean-list">
+          <li><strong>只看眼前最近一步（掉入 Local maximum trap）</strong>：<br>
+          👉 叫 <span class="kw-warn">Difference Reduction</span>（差異縮減法）。</li>
+          <li><strong>允許暫時繞遠路達成最終目標</strong>：<br>
+          👉 叫 <span class="kw-ok">Means-End Analysis</span>（手段目的分析，允許 <span class="kw">Temporary goal state evasion</span>）。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 2: Lecture 1 & 2 -->
+<div id="tab-lec12" class="tab-panel">
+  <div class="grid-2">
+    <div class="card">
+      <h2>🌷 1. 課件標註「Quiz item!!」與創新四角色</h2>
+      <h3>🎯 Quiz Item 1：這四樣東西來自哪裡？(Lec 1 P.8)</h3>
+      <p style="font-size:0.9rem; margin-bottom:10px;">
+        <strong>Wi-Fi</strong> (Cees Links)、<strong>Python</strong> (Guido van Rossum)、<strong>Blender</strong> (3D 軟件)、<strong>"geek"</strong> 詞源 $\rightarrow$ 全部來自 <span class="kw-ok">The Netherlands (荷蘭)</span>！（因為 Prof. Hoorn 是荷蘭人！）
+      </p>
+
+      <h3>🎯 創新軌跡四角色 (Innovation Trajectory, Lec 1 P.62)</h3>
+      <table>
+        <thead>
+          <tr><th>年份</th><th>人物</th><th>角色定位</th><th>核心貢獻與名言</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1850</td><td><strong>James Clerk Maxwell</strong></td><td><span class="kw">The Poet</span></td><td>用<strong>類比 (Analogy)</strong> 把電磁場渦旋比作旋轉齒輪 (Vortex : ? :: Wheels : gears)</td></tr>
+          <tr><td>1890</td><td><strong>Heinrich Hertz</strong></td><td><span class="kw">The Scientist</span></td><td><em>"Useless experimentation"</em>（證明電磁波存在，但說「大概沒啥實際用途吧」）</td></tr>
+          <tr><td>1990</td><td><strong>Cees Links</strong></td><td><span class="kw">The Go-getter</span></td><td><em>"Not useless but applicable"</em>（固執的實幹家，發明 Wi-Fi 應用標準）</td></tr>
+          <tr><td>1999</td><td><strong>Steve Jobs</strong></td><td><span class="kw">The Entrepreneur</span></td><td><em>"And profitable"</em>（有遠見的創業家，將 Wi-Fi 放進 iBook/iPhone 實現商業突破）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>💥 2. 三大災難案例 + KLM 退票案 (必考！)</h2>
+      <ul class="clean-list">
+        <li><strong>Mizuho 日本瑞穗證券烏龍指 (Fat-finger syndrome)</strong>：壓力下按錯小按鍵（1股61萬變61萬股1元），證交所系統無法撤銷 (No cancel)，損失 3.31 億美元。<br>
+        👉 <strong>Exam Sample Item (Lec 2 P.59)</strong>：與 Fitts' Law 的關係是 <span class="kw-ok">D: A and B are correct</span>（<strong>A. 壓力惡化表現 Stress worsens performance</strong> + <strong>B. Fitts 考慮指標與目標的寬度比例 width ratio between pointer and widget</strong>）。</li>
+        <li><strong>AA965 空難 (Cali Accident)</strong>：輸入 <code>'R'</code> 想去 ROZO 卻導航去 ROMEO，<strong>缺乏選定信標的反饋 (No feedback on chosen beacon)</strong>，且加速時未自動收起減速板。官方怪機師，實為 <strong>Poorly designed HCI</strong>。</li>
+        <li><strong>Three Mile Island 三哩島核災 (Harrisburg)</strong>：
+          <br>❌ <strong>四大罪狀</strong>：1. 指示燈假陽性 (<span class="kw-warn">Malfunction of indicator / False positive</span>)；2. 1500 個警報 (<span class="kw-warn">Information overload</span>)；3. 標籤擋住燈 (<span class="kw-warn">Human error / Tag in front</span>)；4. 警報靜音鍵無彈性 (<span class="kw-warn">Inflexible alarm system</span>)。
+          <br>✅ <strong>四大改善原則 (必背！)</strong>：<span class="kw-ok">Offer informative feedback</span>、<span class="kw-ok">Reduce short-term memory load</span>、<span class="kw-ok">Offer error prevention</span>、<span class="kw-ok">Support internal locus of control</span>。
+        </li>
+        <li><strong>KLM 與 Expedia 機票無預警取消案 (Lec 1 P.20–24)</strong>：證明 HCI 不只是介面設計，還包含 <span class="kw">Customer journey, organization of work, task delegation, business processes, algorithms</span>。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>⏳ 3. HCI 歷史先驅 (Pioneers) vs. 商業收割者 (Settlers) (Lec 2 Quiz Item!!)</h2>
+    <div class="grid-3">
+      <div class="timeline-item">
+        <div class="timeline-year">1945 — Vannevar Bush</div>
+        <strong>Memex (Memory Extender)</strong>：《As We May Think》，基於微縮膠片 (Microfilm)，支援超連結鏈 (Trails) 與邊緣筆記，是 <strong>Hypertext 與 WWW 先驅</strong>（未實作）。
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1960 — J.C.R. Licklider</div>
+        <strong>Man-Computer Symbiosis (人機共生)</strong>：提出分時共享、電子 I/O，以及自然語言理解（Syntax, Semantics, Pragmatics）長遠願景。
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1963 / 1968 — Ivan Sutherland</div>
+        <strong>SketchPad (1963)</strong>：首個 GUI、OOP master/instance 概念、Icons、光筆。<br>
+        <strong>3D HMD (1968)</strong>：首個頭戴式顯示器（VR 先驅）。
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1964 / 1968 — Douglas Engelbart</div>
+        <strong>發明滑鼠 (Mouse)</strong>，《Augmenting Human Intellect》，1968 AFIPS 展示。實驗證明 <strong>Mouse 比 Joystick/Step keys 定位最快</strong>，最接近 Optimal device。
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1969 — Alan Kay</div>
+        <strong>Dynabook</strong>：現代筆記型電腦與平板電腦 (Tablet) 的概念先驅（當時只有 Cardboard prototype 紙板模型）。
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1973 / 1981 — Xerox PARC vs. Apple</div>
+        <strong>Alto (1973) 五位創造者 (Quiz Item)</strong>：Ed McCreight, Chuck Thacker, Butler Lampson, Bob Sproull, Dave Boggs。<br>
+        <strong>Star 8010 (1981)</strong>：首個基於可用性工程的商業 GUI，但賣 \$15,000 太貴、封閉架構而失敗（<strong>Pioneer</strong>）。<br>
+        <strong>Apple Mac (1984)</strong>：賣 \$2,500 成功（<strong>Settler</strong>），但有「把磁碟拖進垃圾桶 = 退片 (Pull to Trash to eject)」的反直覺缺陷。
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 3: Lecture 3 & 4 -->
+<div id="tab-lec34" class="tab-panel">
+  <div class="grid-2">
+    <div class="card">
+      <h2>🧩 1. 問題空間、兩種思維模式與三種表徵層次</h2>
+      <ul class="clean-list">
+        <li><strong>Well-defined problem (Exam Sample Item 原文定義)</strong>：<br>
+        <span class="kw-ok">With full specification of the provided data, actions, strategies, and goal states, which can be represented in a problem space</span>（如 Debug 找少寫的分號、下棋）。</li>
+        <li><strong>Ill-defined problem</strong>：規格模糊不完整（如寫公司 Mission statement），需透過 <span class="kw">Goal decomposition</span>（目標拆解）分成 Sub-goals。</li>
+      </ul>
+      <table>
+        <thead>
+          <tr><th>維度</th><th>Logic Rationalist (邏輯理性派)</th><th>Associative Empiricist (聯想經驗派)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>系統偏好</strong></td><td>封閉系統 (Closed systems，如魚缸裡的魚、COMP 學生)</td><td>開放系統 (Open systems，如樹上的鳥、SD 設計系學生)</td></tr>
+          <tr><td><strong>視角與數據</strong></td><td>第三人稱獨立視角 (Person-independent)；偏好<strong>精確數字表格</strong></td><td>第一人稱視角 (First-person)；偏好<strong>全局趨勢圖表 (Bar chart)</strong></td></tr>
+          <tr><td><strong>Tree-Bin-Me 案例</strong></td><td>直接畫一條直線連起三點：<em>"I can reason from the givens."</em></td><td>因為樹擋住視線看不見垃圾桶，認為無法回答，需親眼測量驗證</td></tr>
+          <tr><td><strong>表徵層次</strong></td><td><span class="kw">Symbolic level</span> ($H_2O(s) \rightleftharpoons H_2O(l)$) & <span class="kw">Structural level</span> (分子結構)</td><td><span class="kw">Surface / Phenomenological level</span> (冰淇淋融化外觀、顏色、滴落)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>🎯 2. Fitts' Law 互動模擬器 (Lecture 4 核心！)</h2>
+      <p style="font-size:0.88rem; color:var(--text-muted);">
+        公式：$T = a + b \log_2(2D/W)$ 或 Shannon 版 $ID = \log_2(D/W + 1)$，效能指標 $IP = 1/b$。<br>
+        ⚠️ <strong>鐵律</strong>：<span class="kw">ID 只取決於任務 (D 和 W)，與設備無關</span>；常數 $a, b$ 才取決於設備！
+      </p>
+
+      <div class="slider-row">
+        <label><span>距離 Distance ($D$)：<strong id="d-val">160</strong> px</span><span>(距離翻倍 $\rightarrow$ ID +1 bit)</span></label>
+        <input type="range" id="d-slider" min="40" max="320" step="20" value="160" oninput="updateFitts()" />
+      </div>
+
+      <div class="slider-row">
+        <label><span>目標寬度 Width ($W$)：<strong id="w-val">40</strong> px</span><span>(寬度減半 $\rightarrow$ ID +1 bit)</span></label>
+        <input type="range" id="w-slider" min="20" max="120" step="10" value="40" oninput="updateFitts()" />
+      </div>
+
+      <div style="display:flex; justify-content:space-between; background:#0f172a; padding:10px 14px; border-radius:8px; font-size:0.9rem;">
+        <span>難度指標 $ID = \log_2(2D/W)$：<strong id="id-val" style="color:var(--accent);">3.00</strong> bits</span>
+        <span>預估時間 $T$：<strong id="t-val" style="color:var(--emerald);">1.32</strong> sec</span>
+      </div>
+
+      <div class="fitts-arena">
+        <div class="pointer-dot" title="起點游標"></div>
+        <div id="fitts-target" class="target-btn" style="left: 184px; width: 40px;">Target</div>
+      </div>
+
+      <p style="font-size:0.84rem; color:var(--text-muted); margin-top:10px;">
+        💡 <strong>反應時間排序 (Reaction Time, Lec 4 P.44)</strong>：<span class="kw-ok">Visual (~200 ms) 最快</span> &lt; <span class="kw">Pain (~700 ms)</span> &lt; <span class="kw-warn">Auditory (~1500 ms) 最慢</span>！
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 4: Lecture 5 & 6 -->
+<div id="tab-lec56" class="tab-panel">
+  <div class="grid-2">
+    <div class="card">
+      <h2>👁️ 1. 視覺生理與 3D 運動感知 (Lecture 5)</h2>
+      <ul class="clean-list">
+        <li><strong>Rods (桿細胞)</strong>：負責低光暗視覺 (Low-light vision)。</li>
+        <li><strong>Cones (錐細胞)</strong>：負責色彩視覺。<span class="kw-warn">Blue acuity is lowest (藍色敏銳度最低)</span>；8% 男性與 1% 女性色盲。</li>
+        <li><strong>Ganglion cells (神經節細胞)</strong>：作為 Pattern filters，<strong>中頻率 (Middle frequencies) 通過最好</strong>；具備 <span class="kw-ok">Mutual suppression (相互抑制)</span> 機制 $\rightarrow$ 解釋了 <strong>Hermann Grid 交叉口看到灰點</strong> 以及 <strong>紅配青互補色視覺殘留 (After-images)</strong>。</li>
+        <li><strong>Optic Flow (光流)</strong>：<span class="kw">Expanding (擴張)</span> = 感覺前進 (身體前傾 Lean forward)；<span class="kw">Contracting (收縮)</span> = 感覺後退 (身體後仰 Lean backward)。</li>
+        <li><strong>Retinal Path & Motion Parallax (運動視差)</strong>：近處的狗視網膜移動路徑長 (跑得快)，遠處的月亮路徑短。<strong>物體從視野同側離開 = 感覺跟著你走；從反側離開 = 感覺留在後面</strong>。</li>
+        <li><strong>斑點狗 (Dalmatian Dog) 為什麼人類認得出、AI 認不出？</strong><br>
+        👉 黑點只是 <span class="kw">unconnected data points</span>。人類靠 <span class="kw-ok">Closure (封閉性)</span> 與記憶中的 <span class="kw-ok">Concept-driven (頂層概念驅動)</span> 填補空白；AI 只是底層像素/邊緣匹配。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🎨 2. Gestalt 格式塔 7 大知覺原則視覺化</h2>
+      <div class="grid-2" style="margin-bottom:0;">
+        <div>
+          <h3>① Proximity (接近性)</h3>
+          <p style="font-size:0.82rem; color:var(--text-muted);">距離近的自動歸為一組（左2直欄、右2橫排）</p>
+          <div class="gestalt-demo">
+            <div style="display:grid; grid-template-columns:16px 16px; gap:4px 14px;">
+              <span class="dot"></span><span class="dot"></span>
+              <span class="dot"></span><span class="dot"></span>
+              <span class="dot"></span><span class="dot"></span>
+            </div>
+            <div style="display:grid; grid-template-columns:16px 16px 16px; gap:14px 4px; margin-left:14px;">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3>② Similarity (相似性)</h3>
+          <p style="font-size:0.82rem; color:var(--text-muted);">形狀/顏色相同的自動歸為直欄</p>
+          <div class="gestalt-demo">
+            <div style="display:grid; grid-template-columns:repeat(4, 16px); gap:6px;">
+              <span class="dot"></span><span class="dot alt"></span><span class="dot"></span><span class="dot alt"></span>
+              <span class="dot"></span><span class="dot alt"></span><span class="dot"></span><span class="dot alt"></span>
+              <span class="dot"></span><span class="dot alt"></span><span class="dot"></span><span class="dot alt"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ul class="clean-list" style="margin-top:12px;">
+        <li><strong>③ Symmetry (對稱性)</strong>：對稱圖形被視為整體前景（如西洋棋剪影）。</li>
+        <li><strong>④ Continuity (連續性)</strong>：視線傾向沿著<strong>最平滑的路徑 (Smoothest path)</strong> 延伸。</li>
+        <li><strong>⑤ Closure (封閉性)</strong>：大腦自動忽略缺口補全熟悉圖形（如 <strong>Kanizsa 三角形</strong>、<strong>IBM 條紋 Logo</strong>）。</li>
+        <li><strong>⑥ Smallness (小面積原則)</strong>：小面積區域易被視為前景 (Figure)，大面積視為背景（如魯賓之杯）。</li>
+        <li><strong>⑦ Surroundedness (包圍性)</strong>：被包圍的區域易被看作獨立圖形（導致一開始看不出黑塊中間白色的 <strong>"TIE"</strong> 字）。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 5: Lecture 7 & Tutorials -->
+<div id="tab-lec7" class="tab-panel">
+  <div class="card">
+    <h2>🔄 1. STN (State Transition Network) 滿分標準畫法模板 (Tut 7.1 & 7.2)</h2>
+    <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:12px;">
+      對照你模考畫的圖：記得<strong>每個圓圈裡面的狀態名 (State Name) 必須不同</strong>！並且用一條共享虛線表示 <code>Cancel</code> Escape Arc：
+    </p>
+
+    <div class="svg-box">
+      <svg width="780" height="210" viewBox="0 0 780 210">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+          </marker>
+          <marker id="arrow-err" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#fb7185" />
+          </marker>
+          <marker id="arrow-esc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#fbbf24" />
+          </marker>
+        </defs>
+
+        <!-- Start Arrow -->
+        <line x1="20" y1="85" x2="75" y2="85" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+        <text x="45" y="75" fill="#94a3b8" font-size="12" text-anchor="middle">start</text>
+
+        <!-- State 1: Home / Welcome -->
+        <circle cx="125" cy="85" r="45" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5" />
+        <text x="125" y="89" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle">Home</text>
+
+        <!-- Arc 1 -> 2 -->
+        <line x1="170" y1="85" x2="315" y2="85" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+        <text x="242" y="75" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="middle">tap "Book Room"</text>
+
+        <!-- State 2: Select Slot -->
+        <circle cx="365" cy="85" r="45" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5" />
+        <text x="365" y="82" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Select</text>
+        <text x="365" y="98" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Slot</text>
+
+        <!-- Self-loop for Unavailable / Invalid -->
+        <path d="M 345 43 C 330 5, 400 5, 385 43" fill="none" stroke="#fb7185" stroke-width="2" marker-end="url(#arrow-err)" />
+        <text x="365" y="15" fill="#fb7185" font-size="11" font-weight="bold" text-anchor="middle">submit: unavailable (show error, return)</text>
+
+        <!-- Arc 2 -> 3 (Available) -->
+        <line x1="410" y1="85" x2="585" y2="85" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)" />
+        <text x="497" y="75" fill="#34d399" font-size="12" font-weight="bold" text-anchor="middle">submit: slot available</text>
+
+        <!-- State 3: Booking Confirmed -->
+        <circle cx="635" cy="85" r="48" fill="#1e293b" stroke="#34d399" stroke-width="2.5" />
+        <text x="635" y="81" fill="#34d399" font-size="13" font-weight="bold" text-anchor="middle">Booking</text>
+        <text x="635" y="97" fill="#34d399" font-size="13" font-weight="bold" text-anchor="middle">Confirmed</text>
+
+        <!-- Shared Escape Arc: Cancel -->
+        <path d="M 365 130 Q 245 185 135 128" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="6,4" marker-end="url(#arrow-esc)" />
+        <text x="255" y="178" fill="#fbbf24" font-size="12" font-weight="bold" text-anchor="middle">Escape arc: "Cancel" (drawn once to avoid spaghetti of duplicated behaviour)</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h2>📋 2. Tutorial 5：需求工程必考對比</h2>
+      <ul class="clean-list">
+        <li><strong>Requirement (需求)</strong> = 利益相關者的需要 (<span class="kw">What</span> the software should do)。</li>
+        <li><strong>Specification (規格)</strong> = 經過分析後的技術文檔，描述軟體特徵與行為 (<span class="kw">How</span> that need will be met)。</li>
+        <li><strong>Functional Requirement (功能需求)</strong>：用<strong>動詞 (Verbs)</strong> 描述系統做什麼。<br>
+        ✅ 例：<em>"The system shall <strong>verify</strong> the student's 6-digit pickup code."</em></li>
+        <li><strong>Non-functional Requirement (非功能需求)</strong>：用<strong>形容詞/可量化指標</strong>描述系統品質（Usability / Performance / Security）。<br>
+        ✅ 例：<em>"The interface must be <strong>easy to learn</strong> so a novice can check in within <strong>60 seconds</strong>."</em></li>
+        <li><strong>PACT 框架</strong>：<span class="kw">P</span>eople, <span class="kw">A</span>ctivity, <span class="kw">C</span>ontext, <span class="kw">T</span>echnology。</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2>🛠️ 3. Tutorial 1, 3, 6：定律與測試指標</h2>
+      <ul class="clean-list">
+        <li><strong>Miller's Law</strong>：短期工作記憶容量 = <span class="kw-ok">7 ± 2 chunks</span>。</li>
+        <li><strong>Hick's Law</strong>：選單選項增加，決策時間呈 <span class="kw-ok">對數增加 (logarithmic increase)</span>。</li>
+        <li><strong>Norman's Gulf of Execution (執行鴻溝)</strong>：用戶不知道該按哪裡才能達成目標。</li>
+        <li><strong>Maze 原型測試 3 大指標 (Tut 3)</strong>：
+          <br>1. <span class="kw-ok">Direct Success</span>：走預期路徑完成任務；
+          <br>2. <span class="kw">Indirect Success</span>：走非預期路徑但仍到達終點畫面；
+          <br>3. <span class="kw-warn">Give-up / Bounce</span>：中途放棄離開。
+        </li>
+        <li><strong>灰顯按鈕 (Greyed-out menu item, Tut 6)</strong>：同時體現了 <span class="kw-ok">Constraints</span>（防呆禁止誤觸）與 <span class="kw-ok">Feedback</span>（告知當前不可用）。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- TAB 6: 考前 3 分鐘互動刷題 -->
+<div id="tab-quiz" class="tab-panel">
+  <div class="card">
+    <h2>⚡ 考前 3 分鐘「專治粗心」互動快問快答（點擊選項直接對答案！）</h2>
+    <div id="quiz-container"></div>
+  </div>
+</div>
+
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    function updateFitts() {
+      const d = parseFloat(document.getElementById('d-slider').value);
+      const w = parseFloat(document.getElementById('w-slider').value);
+      document.getElementById('d-val').textContent = d;
+      document.getElementById('w-val').textContent = w;
+
+      const id = Math.log2((2 * d) / w);
+      const t = 1.03 + 0.096 * id;
+
+      document.getElementById('id-val').textContent = id.toFixed(2);
+      document.getElementById('t-val').textContent = t.toFixed(2);
+
+      const target = document.getElementById('fitts-target');
+      target.style.left = (24 + d) + 'px';
+      target.style.width = w + 'px';
+    }
+
+    const quizData = [
+      {
+        q: "1. [Tut 7.1 必考] 在自助圖書機上，系統要求用戶「先付款、後選書」，導致用戶不斷按返回。這屬於哪個對話層次的問題？",
+        opts: ["A. Lexical level (外觀形狀)", "B. Syntactic level (輸入輸出順序)", "C. Semantic level (底層數據結果)", "D. Pragmatic level"],
+        ans: 1,
+        exp: "✅ 正確答案：B (Syntactic level)！因為每個按鈕本身都能按，但「先付款後選書」是步驟的先後順序 (Order/Sequence) 錯了！"
+      },
+      {
+        q: "2. [Tut 7.1 必考] 用戶點擊「刪除單筆記錄」，按鈕外觀和確認順序都正常，但系統卻把整個資料庫清空了。這屬於哪個層次的問題？",
+        opts: ["A. Lexical level", "B. Syntactic level", "C. Semantic level", "D. Surface level"],
+        ans: 2,
+        exp: "✅ 正確答案：C (Semantic level)！因為動作對應用程式底層數據產生的實際效果 (Effect on application's data) 錯了！"
+      },
+      {
+        q: "3. [Tut 7.2 原題] 當 NLP 的 Parser 分析相關 Tokens 組成更大結構時，產生的階層結構 (Hierarchical structure) 叫什麼？",
+        opts: ["A. Word segmentation", "B. Coreference resolution", "C. A parse tree", "D. State Transition Network"],
+        ans: 2,
+        exp: "✅ 正確答案：C (A parse tree 語法分析樹)！短答題看到 hierarchical structure + parser 直接寫 A parse tree！"
+      },
+      {
+        q: "4. [Tut 6 必考] Stanford d.school 的 Design Thinking 包含哪五個階段？",
+        opts: [
+          "A. Requirements, Analysis, Design, Code, Test",
+          "B. Empathize, Define, Ideate, Prototype, Test",
+          "C. People, Activity, Context, Technology, Test",
+          "D. Lexical, Syntactic, Semantic, Prototype, Test"
+        ],
+        ans: 1,
+        exp: "✅ 正確答案：B (Empathize, Define, Ideate, Prototype, Test)！千萬別跟 A (傳統軟體工程階段) 搞混！"
+      },
+      {
+        q: "5. [Lec 1 & 2 必考] 誰在 1964 年發明了滑鼠 (Mouse)，並透過實驗證明滑鼠比 Joystick 定位最快？",
+        opts: ["A. Vannevar Bush (1945 Memex)", "B. Ivan Sutherland (1963 SketchPad)", "C. Douglas Engelbart (1964 Mouse)", "D. Alan Kay (1969 Dynabook)"],
+        ans: 2,
+        exp: "✅ 正確答案：C (Douglas Engelbart)！記住：Bush=Memex, Sutherland=SketchPad/HMD, Engelbart=Mouse, Kay=Dynabook！"
+      },
+      {
+        q: "6. [Lec 3 & 4 必考] 當物流調度員為了省電，決定「先去距離終點更遠的下風處小鎮，再順風滑翔回來」，他使用的是什麼進階解題策略？",
+        opts: [
+          "A. Difference reduction (差異縮減法)",
+          "B. Means-end analysis (手段目的分析，允許 Temporary goal state evasion)",
+          "C. Random trial-and-error",
+          "D. Surface phenomenology"
+        ],
+        ans: 1,
+        exp: "✅ 正確答案：B (Means-end analysis)！只看眼前最近一步而掉進局部最優陷阱的才叫 Difference reduction！"
+      }
+    ];
+
+    function renderQuiz() {
+      const container = document.getElementById('quiz-container');
+      container.innerHTML = quizData.map((item, idx) => `
+        <div class="quiz-item">
+          <div class="quiz-q">${item.q}</div>
+          <div class="quiz-options">
+            ${item.opts.map((opt, oIdx) => `
+              <button class="quiz-opt" onclick="checkQuiz(\${idx}, \${oIdx}, this)">${opt}</button>
+            `).join('')}
+          </div>
+          <div id="exp-\${idx}" class="quiz-exp">\${item.exp}</div>
+        </div>
+      `).join('');
+    }
+
+    function checkQuiz(qIdx, oIdx, btn) {
+      const parent = btn.parentElement;
+      const buttons = parent.querySelectorAll('.quiz-opt');
+      const correctIdx = quizData[qIdx].ans;
+
+      buttons.forEach((b, i) => {
+        b.disabled = true;
+        if (i === correctIdx) b.classList.add('correct');
+      });
+
+      if (oIdx !== correctIdx) {
+        btn.classList.add('wrong');
+      }
+
+      document.getElementById(`exp-${qIdx}`).style.display = 'block';
+    }
+
+    renderQuiz();
+  </script>
+
+
+</body>
+</html>

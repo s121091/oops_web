@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COMP3423 考前終極一頁通速查筆記 (Week 1–7)</title>
+<style>
+  :root {
+    --bg-page: #FDFBF7;
+    --bg-sidebar: #F9F3E8;
+    --bg-section: #FFFFFF;
+    --bg-header: #FFF3E0;
+    --bg-sub: #FFF9F0;
+    --primary: #E66A3E;
+    --primary-soft: #FFE8DF;
+    --amber: #D9822B;
+    --amber-soft: #FFF3CD;
+    --green: #1E8E5A;
+    --green-soft: #E6F7EE;
+    --red: #D93848;
+    --red-soft: #FDE8EA;
+    --purple: #6B5B95;
+    --purple-soft: #EFEBF7;
+    --text-main: #2C221E;
+    --text-sec: #6E5D54;
+    --border-color: #EBDCCB;
+  }
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+scroll-behavior: smooth;
+}
+
+body {
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang HK", "Microsoft JhengHei", sans-serif;
+background-color: var(--bg-page);
+color: var(--text-main);
+line-height: 1.58;
+font-size: 14.5px;
+}
+
+/* Layout: Left Sticky TOC + Right Continuous Document */
+.layout {
+display: flex;
+max-width: 1280px;
+margin: 0 auto;
+min-height: 100vh;
+}
+
+/* Sidebar TOC */
+.sidebar {
+width: 250px;
+background: var(--bg-sidebar);
+border-right: 1px solid var(--border-color);
+padding: 20px 14px;
+position: sticky;
+top: 0;
+height: 100vh;
+overflow-y: auto;
+flex-shrink: 0;
+}
+
+.sidebar-title {
+font-size: 1.05rem;
+font-weight: 800;
+color: var(--primary);
+margin-bottom: 6px;
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+.sidebar-sub {
+font-size: 0.78rem;
+color: var(--text-sec);
+margin-bottom: 14px;
+padding-bottom: 10px;
+border-bottom: 1px dashed var(--border-color);
+}
+
+.search-box {
+width: 100%;
+padding: 7px 10px;
+border: 1.5px solid var(--border-color);
+border-radius: 8px;
+background: #fff;
+font-size: 0.82rem;
+margin-bottom: 14px;
+outline: none;
+}
+
+.search-box:focus {
+border-color: var(--primary);
+}
+
+.toc-list {
+list-style: none;
+}
+
+.toc-list li {
+margin-bottom: 4px;
+}
+
+.toc-link {
+display: block;
+text-decoration: none;
+color: var(--text-main);
+font-size: 0.83rem;
+font-weight: 600;
+padding: 6px 10px;
+border-radius: 7px;
+transition: all 0.15s;
+}
+
+.toc-link:hover {
+background: var(--primary-soft);
+color: var(--primary);
+}
+
+.toc-link.urgent {
+background: var(--red-soft);
+color: var(--red);
+font-weight: 700;
+}
+
+/* Main Content Stream */
+.main-content {
+flex: 1;
+padding: 24px 32px 80px;
+max-width: 1030px;
+}
+
+@media (max-width: 860px) {
+.layout {
+flex-direction: column;
+}
+.sidebar {
+width: 100%;
+height: auto;
+position: relative;
+border-right: none;
+border-bottom: 2px solid var(--border-color);
+}
+.toc-list {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+}
+.main-content {
+padding: 16px;
+}
+}
+
+/* Top Exam Info Banner */
+.top-banner {
+background: linear-gradient(120deg, #FFF0E5 0%, #FFF8E7 100%);
+border: 1.5px solid #F3CFB6;
+border-radius: 12px;
+padding: 16px 20px;
+margin-bottom: 24px;
+}
+
+.top-banner h1 {
+font-size: 1.4rem;
+color: #2C1A12;
+margin-bottom: 6px;
+}
+
+.meta-pills {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+margin-top: 8px;
+}
+
+.pill {
+font-size: 0.78rem;
+font-weight: 700;
+padding: 3px 10px;
+border-radius: 6px;
+}
+
+.pill-orange { background: var(--primary); color: #fff; }
+.pill-amber { background: var(--amber-soft); color: #8A4B08; border: 1px solid #F0C987; }
+.pill-green { background: var(--green-soft); color: var(--green); border: 1px solid #B7E4C7; }
+
+/* Document Sections */
+.doc-section {
+background: var(--bg-section);
+border: 1.5px solid var(--border-color);
+border-radius: 12px;
+margin-bottom: 26px;
+overflow: hidden;
+box-shadow: 0 2px 10px rgba(160, 120, 80, 0.04);
+}
+
+.sec-header {
+background: var(--bg-header);
+padding: 12px 20px;
+border-bottom: 1.5px solid var(--border-color);
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: wrap;
+gap: 8px;
+}
+
+.sec-header h2 {
+font-size: 1.15rem;
+color: #2C1A12;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.sec-tag {
+font-size: 0.75rem;
+font-weight: 700;
+padding: 2px 9px;
+border-radius: 99px;
+background: #fff;
+color: var(--primary);
+border: 1px solid var(--border-color);
+}
+
+.sec-body {
+padding: 18px 22px;
+}
+
+h3.sub-title {
+font-size: 1rem;
+color: var(--primary);
+margin: 18px 0 8px;
+padding-bottom: 4px;
+border-bottom: 1.5px solid var(--primary-soft);
+display: flex;
+align-items: center;
+gap: 6px;
+}
+
+h3.sub-title:first-child {
+margin-top: 0;
+}
+
+/* Compact Tables for Fast Scanning */
+table.scan-table {
+width: 100%;
+border-collapse: collapse;
+margin: 8px 0 14px;
+font-size: 0.88rem;
+}
+
+table.scan-table th,
+table.scan-table td {
+border: 1px solid var(--border-color);
+padding: 8px 12px;
+text-align: left;
+vertical-align: top;
+}
+
+table.scan-table th {
+background: var(--bg-sub);
+font-weight: 700;
+color: #3D2B22;
+width: auto;
+}
+
+table.scan-table tr:nth-child(even) td {
+background: #FFFEFC;
+}
+
+/* Inline Highlight Tags */
+.kw {
+background: var(--amber-soft);
+color: #854600;
+font-weight: 700;
+padding: 1px 5px;
+border-radius: 4px;
+font-family: "SFMono-Regular", Consolas, monospace;
+font-size: 0.9em;
+}
+
+.kw-ok {
+background: var(--green-soft);
+color: var(--green);
+font-weight: 700;
+padding: 1px 5px;
+border-radius: 4px;
+}
+
+.kw-err {
+background: var(--red-soft);
+color: var(--red);
+font-weight: 700;
+padding: 1px 5px;
+border-radius: 4px;
+}
+
+.quiz-flag {
+background: var(--red);
+color: #fff;
+font-size: 0.7rem;
+font-weight: 800;
+padding: 1px 6px;
+border-radius: 4px;
+text-transform: uppercase;
+margin-left: 4px;
+}
+
+/* Compact Bullet List */
+ul.dense-list {
+padding-left: 18px;
+margin: 6px 0 12px;
+}
+
+ul.dense-list li {
+margin-bottom: 5px;
+}
+
+/* Callout Strip */
+.callout {
+background: var(--bg-sub);
+border-left: 4px solid var(--amber);
+padding: 10px 14px;
+border-radius: 6px;
+margin: 10px 0;
+font-size: 0.88rem;
+}
+
+.callout-red {
+background: #FFF8F8;
+border-left: 4px solid var(--red);
+}
+
+.callout-green {
+background: #F4FBF7;
+border-left: 4px solid var(--green);
+}
+
+/* Formula Box */
+.formula-bar {
+background: #FFF6E9;
+border: 1px solid #F0D2A8;
+border-radius: 8px;
+padding: 10px 14px;
+margin: 8px 0;
+font-family: "SFMono-Regular", Consolas, monospace;
+font-size: 0.9rem;
+font-weight: 700;
+color: #5C3409;
+}
+</style>
+
+</head>
+<body>
+
+
+<div class="layout">
+  <!-- Left Sticky Sidebar TOC -->
+  <aside class="sidebar">
+    <div class="sidebar-title">📖 COMP3423 速查目錄</div>
+    <div class="sidebar-sub">一頁全展開 · 點擊瞬間跳轉</div>
+    <input type="text" id="filterInput" class="search-box" placeholder="🔍 輸入關鍵字高亮定位..." oninput="highlightText(this.value)">
+    <ul class="toc-list">
+      <li><a class="toc-link urgent" href="#sec-mistakes">🚨 0. 你的兩次模考錯題總表</a></li>
+      <li><a class="toc-link" href="#sec-lec12">🏛️ 1. Lec 1–2 重要價值與歷史先驅</a></li>
+      <li><a class="toc-link" href="#sec-lec34">🧠 2. Lec 3–4 資訊處理、解題與 Fitts</a></li>
+      <li><a class="toc-link" href="#sec-lec56">👁️ 3. Lec 5–6 視覺生理、Gestalt 與排版</a></li>
+      <li><a class="toc-link" href="#sec-lec7">💬 4. Lec 7 對話三層次、STN 與 NLP</a></li>
+      <li><a class="toc-link" href="#sec-tuts">🛠️ 5. Tut 1–7.2 必考題庫與真題解析</a></li>
+      <li><a class="toc-link urgent" href="#sec-templates">⚡ 6. 考場短答 & Case Study 萬能公式</a></li>
+    </ul>
+  </aside>
+
+
+  <!-- Right Continuous Stream -->
+
+
+  <main class="main-content" id="docContent">
+    <div class="top-banner">
+      <h1>🎯 COMP3423 (Week 1–7) 終極一頁通複習筆記</h1>
+      <p style="font-size:0.88rem; color:var(--text-sec);">
+        摒棄翻頁卡片，改用最高效的<strong>「連續文檔流 + 對比總表」</strong>。已 100% 整合 <strong>Lecture 1–7</strong>、<strong>Tutorial 1–7.2 (除 Figma 外全部內容)</strong> 與<strong>你的兩次模考專屬錯題訂正</strong>。
+      </p>
+      <div class="meta-pills">
+        <span class="pill pill-orange">📅 考試：31 Oct (Sat) 11:30 AM</span>
+        <span class="pill pill-amber">📝 題型：15 MC + True/False + 短答 + 1 Case Study (共 30–35 分)</span>
+        <span class="pill pill-green">🚫 規則：Closed Book · 不用計算機 · 不考 Figma · 不考 Week 8</span>
+      </div>
+    </div>
+
+
+<!-- ==================== SECTION 0: YOUR MISTAKES ==================== -->
+<section class="doc-section" id="sec-mistakes">
+  <div class="sec-header">
+    <h2>🚨 Part 0：你的兩次模考「專屬錯題與失分點」一覽表</h2>
+    <span class="sec-tag">考前優先看這張表，直接救回 12+ 分！</span>
+  </div>
+  <div class="sec-body">
+    <table class="scan-table">
+      <thead>
+        <tr>
+          <th style="width:18%;">考點模組</th>
+          <th style="width:36%;">❌ 你在模考中的寫法 / 誤區</th>
+          <th style="width:46%;">✅ 明天考場必寫的滿分 Keywords (踩分點)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. 路徑規劃解題策略</strong><br>(Lec 3 & 4 / 25-26 真題)</td>
+          <td>• 把策略名字寫成 <em>"Goal State"</em> 和 <em>"Well-defined strategy"</em>。<br>• 只用白話解釋「先飛去近的會沒電，應該先繞去順風的遠處」。</td>
+          <td>
+            • <strong>思維與表徵</strong>：<span class="kw">Associative Empiricist</span>，依賴 <span class="kw">Surface / Phenomenological level</span>（只看表面距離，忽略結構層風阻/坡度）。<br>
+            • <strong>失敗策略</strong>：<span class="kw">Difference Reduction</span>（每步都必須縮短與目標距離 ➔ 掉入 <span class="kw">Local maximum trap</span> 局部最優陷阱）。<br>
+            • <strong>正確進階策略</strong>：<span class="kw">Means-End Analysis</span>（允許為了全局最優而<strong>暫時遠離目標</strong> <span class="kw">Temporary goal state evasion</span>）。
+          </td>
+        </tr>
+        <tr>
+          <td><strong>2. STN 狀態轉換圖</strong><br>(Tut 7.1 & 7.2 / Lec 7)</td>
+          <td>• 畫了 4 個圓圈，但後面 3 個圓圈名字<strong>全部複製成 "Select Slot"</strong>。<br>• 解釋共享 Cancel 弧時寫 <em>"bring to home page and reduce repetition click"</em>。</td>
+          <td>
+            • <strong>畫圖鐵律</strong>：<strong>圓圈 = States (狀態/畫面)</strong>，每個圓圈名字必須唯一（如 <code>Home</code> ➔ <code>Select Slot</code> ➔ <code>Booking Confirmed</code>）；失敗重試畫成指回自己的<strong>自迴圈 (Self-loop)</strong>。<br>
+            • <strong>共享 Escape Arc 原因 (Tut 7.2 原話)</strong>：避免每個狀態都畫重複的 Cancel 弧導致圖表變成 <span class="kw">spaghetti of duplicated behaviour</span>，共享單一弧能保持模型易讀 (<span class="kw">keeps the model readable</span>)。
+          </td>
+        </tr>
+        <tr>
+          <td><strong>3. NLP 解析與分詞</strong><br>(Tut 7.1 & 7.2 / Lec 7)</td>
+          <td>• 問 Parser 產生的層級結構叫什麼，猜了 <em>"Tokenisation?"</em>。<br>• 問哪個語言 Tokenisation 不簡單，寫了 <em>"voice controlling"</em>。<br>• 語音漏掉報修指令，寫了 <em>"not pre-coded in hardware drives"</em>。</td>
+          <td>
+            • <strong>Parser 生成的層級結構名稱</strong>：<span class="kw">A parse tree</span>（解析樹/語法樹）。<br>
+            • <strong>分詞困難的語言 (二選一)</strong>：<br>
+              1. <span class="kw">Chinese (中文)</span>：<strong>No spaces between words</strong>, so <strong>word segmentation</strong> is needed before tokenisation.<br>
+              2. <span class="kw">Turkish (土耳其語)</span>：A single word packs many morphemes, so <strong>intra-word tokenisation</strong> is needed.<br>
+            • <strong>複合指令遺漏 (一句話含兩件事)</strong>：<span class="kw">Discourse Analysis / Multi-intent Syntactic Parsing / Pragmatics failure</span>。
+          </td>
+        </tr>
+        <tr>
+          <td><strong>4. 對話三層次分類</strong><br>(Tut 7.1 & 7.2 / Lec 7)</td>
+          <td>• 看到「自助機要求<strong>先付款 BEFORE 選書</strong>，用戶一直按返回」，誤選了 <em>Lexical</em>。</td>
+          <td>
+            • <span class="kw">LEXICAL (詞法層 = Shape)</span>：按鈕的外觀、形狀、顏色、圖標（如圓綠 Confirm vs. 方灰 Cancel）。<br>
+            • <span class="kw">SYNTACTIC (句法層 = Order/Sequence)</span>：操作與輸出的<strong>先後順序顛倒</strong>（如<strong>先付款 BEFORE 選書</strong>）。<br>
+            • <span class="kw">SEMANTIC (語義層 = Effect on Data)</span>：外觀與順序都正常，但<strong>對底層數據產生的效果錯了</strong>（如誤續借了別人預約的書）。
+          </td>
+        </tr>
+        <tr>
+          <td><strong>5. Fitts' Law 與視網膜</strong><br>(Lec 4 & Lec 5)</td>
+          <td>• 誤寫 $ID = a + b(D/W)$，混淆了 $T$ 與 $ID$。<br>• 漏答「昏暗病房用深藍色按鈕」的視網膜生理缺陷。</td>
+          <td>
+            • <strong>Fitts' Law</strong>：$ID = \log_2(2D/W)$（單位 <strong>Bits</strong>，<strong>只取決於任務本身 D 與 W，與設備無關！</strong>）；$T = a + b \cdot ID$（常數 $a, b$ 與 $IP = 1/b$ 才取決於硬體設備）。<br>
+            • <strong>視網膜生理</strong>：昏暗環境靠 <span class="kw">Rods (視桿細胞)</span>（無色彩分辨力），色彩靠 <span class="kw">Cones (視錐細胞)</span>，且人眼對<strong>藍光敏銳度最低 (<span class="kw">Blue acuity is lowest</span>)</strong>！
+          </td>
+        </tr>
+        <tr>
+          <td><strong>6. Design Thinking & 需求</strong><br>(Tut 5 & Tut 6)</td>
+          <td>• T/F 題寫 <em>"it carry not only 5 stage"</em>。<br>• Non-functional requirement 寫成 <em>"carry no decorative banner"</em>（寫成了具體 UI 設計）。</td>
+          <td>
+            • <strong>Design Thinking</strong>：確實是 <strong>5 個階段</strong>（<code>Empathize ➔ Define ➔ Ideate ➔ Prototype ➔ Test</code>），錯在它不是線性，而是 <span class="kw">Non-linear & Iterative</span>！<br>
+            • <strong>Non-functional Requirement</strong>：必須寫<strong>可量化的品質/性能指標</strong>（如：<em>"Users shall complete birthday entry within 3 seconds with &lt;1% error rate"</em>）。
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== SECTION 1: LECTURE 1 & 2 ==================== -->
+<section class="doc-section" id="sec-lec12">
+  <div class="sec-header">
+    <h2>🏛️ Part 1：Lecture 1 & 2 — HCI 商業價值、三大災難與歷史先驅</h2>
+    <span class="sec-tag">Use and Context (Part 1 & 2)</span>
+  </div>
+  <div class="sec-body">
+    <h3 class="sub-title">1.1 荷蘭四寶與創新軌跡 (Innovation Trajectory) <span class="quiz-flag">Lec 1 P.8 Quiz Item!!</span></h3>
+    <ul class="dense-list">
+      <li><strong>Where do I come from? (Quiz Item)</strong>：<span class="kw">Wi-Fi</span> (Cees Links)、<span class="kw">Python</span>、3D 軟件 <span class="kw">Blender</span>、單詞 <span class="kw">"geek"</span> 全部來自 <strong>The Netherlands (荷蘭)</strong>！</li>
+      <li><strong>創新軌跡四角色 (Lec 1 P.59–62)</strong>：
+        <br>1. <strong>The Poet (詩人, 1850) — James Clerk Maxwell</strong>：運用<strong>類比推理 (Analogy: partly reasoning, partly association)</strong>，將旋轉渦流比作旋轉齒輪 (<code>Vortex : ? :: Wheels : gears</code>) 提出電磁場理論。
+        <br>2. <strong>The Scientist (科學家, 1890) — Heinrich Hertz</strong>：進行「無用實驗 (<span class="kw">Useless experimentation</span>)」證實電磁波存在，被問及有什麼應用價值時回答 <em>"Nothing, I guess."</em>
+        <br>3. <strong>The Go-getter (實幹者, 1990) — Cees Links</strong>：被稱為 <em>"a backward, idiotic, stiff-headed go-getter"</em>，將電磁波轉化為實用的 <strong>Wi-Fi</strong>。
+        <br>4. <strong>The Entrepreneur (企業家, 1999) — Steve Jobs</strong>：具備商業遠見，將 Wi-Fi 整合進 Apple 產品實現商業突破與獲利 (<em>"And profitable"</em>)。
+      </li>
+    </ul>
+
+    <h3 class="sub-title">1.2 軟體工程經濟學、邏輯信念與 KLM 退票案例</h3>
+    <ul class="dense-list">
+      <li><strong>63% 大型軟體專案超支 (Go over cost) 的 4 大用戶相關原因 (Lec 1 P.10)</strong>：
+        <br>① <strong>Users requested changes</strong>（用戶要求變更）；② <strong>Overlooking tasks</strong>（忽略實際任務）；③ <strong>Users did not understand their own requirements</strong>（用戶不了解自身需求）；④ <strong>Insufficient user-developer communication and understanding</strong>（用戶與開發者溝通理解不足）。</li>
+      <li><strong>開發模型與返工成本 (Cost of change due to rework, Lec 1 P.11–13)</strong>：
+        <br>• <strong>Waterfall (傳統瀑布模型, Böhm)</strong>：要求第一次交付就完美，後期修改已實作系統的<strong>財務風險與時間成本極高 (High financial risk & time expenditure)</strong>。
+        <br>• <strong>Fail fast innovation / Agile / Extreme Programming (XP)</strong>：透過 <span class="kw">Rapid prototyping</span>、<span class="kw">User testing</span>、<span class="kw">Stakeholder co-design</span> 在正式實作前多次重新設計，風險與成本最低（口號：<span class="kw">"Pay a little now, or pay a lot later!"</span>）。</li>
+      <li><strong>真實世界的計算邏輯 (Modus Ponens vs. 條件真值 iff, Lec 1 P.16)</strong>：
+        <br>民間信念認為「維他命 B 對頭髮好，洗髮精有維他命 B，所以洗髮精對頭髮好」是<strong>經驗上錯誤的結論 (Empirically false conclusion)</strong>！因為維他命 B 必須<strong>經由食物代謝 (iff metabolized from food)</strong> 才有效，洗髮精不會被代謝。因此寫程式前必須先做實證研究 (<span class="kw">Research precedes computing</span>)。</li>
+      <li><strong>KLM 升艙被 Expedia 取消整張機票案 (Lec 1 P.20–24)</strong>：
+        <br>Prof. Hoorn 在 Expedia 買票後去 KLM 官網嘗試用里程升艙未果並中止操作，結果整張機票被取消。證明 <strong>HCI 絕不只是介面設計 (Not just interface design)</strong>，還包含 <span class="kw">Customer journey</span>、<span class="kw">Organization of work</span>、<span class="kw">Task delegation</span>、<span class="kw">Business processes</span> 與演算法！</li>
+    </ul>
+
+    <h3 class="sub-title">1.3 三大震撼災難案例 (Shocking Examples — 必背成因與改善對策)</h3>
+    <table class="scan-table">
+      <thead>
+        <tr>
+          <th style="width:22%;">災難名稱</th>
+          <th style="width:45%;">HCI 設計缺陷與事故原因</th>
+          <th style="width:33%;">必考結論與改善原則 (Keywords)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Mizuho 瑞穗證券烏龍指</strong><br>(Fat-finger syndrome, 2005)</td>
+          <td>日本交易員在高壓快節奏下把「1股賣61萬日圓」誤輸為「61萬股賣1日圓」，且東京證交所系統拒絕撤銷錯誤訂單，損失 3.31 億美元。</td>
+          <td>
+            • <span class="quiz-flag">Exam Sample Item (Lec 2 P.59)</span>：與 Fitts' Law 的關聯是 <strong>D. A and B are correct</strong>：<br>
+            ① <strong>Stress worsens performance</strong>（壓力惡化表現）<br>
+            ② <strong>Pointer-to-target width ratio</strong>（手指太粗、按鈕太小）
+          </td>
+        </tr>
+        <tr>
+          <td><strong>2. AA965 美國航空空難</strong><br>(Cali Accident, 1995)</td>
+          <td>機師在 FMS 輸入 <code>'R'</code> 想去 <strong>ROZO</strong> 導航台，系統卻靜默選了同為 R 開頭的 <strong>ROMEO</strong>；且嘗試加速爬升時未自動解除減速板 (Speed brakes)。</td>
+          <td>
+            • <span class="kw">No feedback on chosen beacon</span>（缺乏反饋）<br>
+            • 官方報告怪罪 <em>"Pilot error"</em>，實際原因是 <span class="kw">Poorly designed HCI</span>。
+          </td>
+        </tr>
+        <tr>
+          <td><strong>3. Three Mile Island 三哩島核災</strong><br>(Harrisburg Meltdown, 1979)</td>
+          <td>
+            1. 指示燈顯示閥門已關閉，但實際上沒關 (<span class="kw">Malfunction of indicator / False positive</span>)<br>
+            2. 控制室有超過 1500 個警報指示燈 (<span class="kw">Information overload</span>)<br>
+            3. 指示燈被另一個閥門的維修標籤擋住 (<span class="kw">Human error: tag in front of indicator</span>)<br>
+            4. 只有一個總靜音鍵，按了怕漏掉關鍵資訊 (<span class="kw">Inflexible alarm system</span>)
+          </td>
+          <td>
+            <strong>必背 4 大改善對策 (Lec 1 P.38)</strong>：<br>
+            1. <span class="kw-ok">Offer informative feedback</span><br>
+            2. <span class="kw-ok">Reduce short-term memory load</span><br>
+            3. <span class="kw-ok">Offer error prevention</span><br>
+            4. <span class="kw-ok">Support internal locus of control</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-title">1.4 HCI 歷史演進與先驅人物總表 <span class="quiz-flag">Lec 2 P.28 Quiz Item!!</span></h3>
+    <div class="callout">
+      <strong>人機互動模式演進 (Lec 1 P.42)</strong>：
+      <code>Batch processing</code> (打卡紙批次處理，無互動 Impersonal，人服務機器) ➔ <code>Timesharing</code> (1960s CTSS 分時系統，讓人產生獨享電腦的錯覺，促成 Interactive computing) ➔ <code>Networking</code> (Community computing) ➔ <code>Graphical displays</code> (Direct manipulation) ➔ <code>Microprocessors</code> (Personal computing) ➔ <code>WWW</code> ➔ <code>Ubiquitous computing / IoT</code> ➔ <code>Social robots</code> (機器服務人)。
+    </div>
+    <table class="scan-table">
+      <thead>
+        <tr>
+          <th style="width:25%;">先驅人物 / 系統 (年份)</th>
+          <th style="width:75%;">核心貢獻與考點細節 (Pioneer 先驅 vs. Settler 收割者)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>COLOSSUS (1943)</strong> & <strong>ENIAC (1946)</strong></td>
+          <td>COLOSSUS 是世界第一台全電子計算機 (1,500 真空管)；Mark I (1944) 與 IBM SSEC (1948) 是機電式；ENIAC (1946) 是第二台全電子計算機 (19,000 真空管)。演進：<code>Radio tubes ➔ Transistors ➔ Microprocessors</code>。</td>
+        </tr>
+        <tr>
+          <td><strong>Vannevar Bush (1945)</strong></td>
+          <td>發表《As We May Think》，提出 <span class="kw">Memex (Memory Extender)</span>：使用<strong>微縮膠片 (Microfilm)</strong> 儲存個人資料，支援快速索引、邊緣筆記與建立連結軌跡 (Trails)，是 <strong>Hypertext 與 WWW 的概念先驅</strong>（未實際建造）。</td>
+        </tr>
+        <tr>
+          <td><strong>J.C.R. Licklider (1960)</strong></td>
+          <td>發表《<span class="kw">Man-Computer Symbiosis</span>》（人機共生）：提出短期目標（分時、電子 I/O）、中期目標（語音識別、手寫識別、光筆）、長期願景（自然語言理解 Syntax/Semantics/Pragmatics、啟發式編程）。</td>
+        </tr>
+        <tr>
+          <td><strong>Ivan Sutherland (1963 / 1968)</strong></td>
+          <td>1963 發明 <span class="kw">SketchPad</span>（首個 GUI 繪圖工具、引入 OOP master/instance 概念、Constraints、Icons、光筆）；1968 發明首個 <strong>3D 頭戴顯示器 (HMD / VR 先驅)</strong>。</td>
+        </tr>
+        <tr>
+          <td><strong>Douglas Engelbart (1962 / 1964)</strong></td>
+          <td>發表《Augmenting Human Intellect》，<strong>1964 發明滑鼠 (<span class="kw">Mouse</span>)</strong>，並於 1968 AFIPS 會議展示文書處理、超媒體、視訊會議與單手和弦鍵盤 (Chorded keyboard)。實驗證明 <strong>Mouse 比 Joystick / Text keys / Step keys 定位時間最快</strong>，最接近 Optimal device。</td>
+        </tr>
+        <tr>
+          <td><strong>Olivetti Programma 101 (1965)</strong></td>
+          <td>歷史上<strong>第一台個人桌上型電腦 (First PC ever)</strong>。</td>
+        </tr>
+        <tr>
+          <td><strong>Alan Kay (1969)</strong> & <strong>Ted Nelson (1974)</strong></td>
+          <td>• <strong>Alan Kay</strong>：提出 <span class="kw">Dynabook</span> 概念與紙板模型（現代筆電與平板先驅）。<br>• <strong>Ted Nelson</strong>：出版雙封面書《<span class="kw">Computer Lib / Dream Machines</span>》，提倡個人電腦普及與反文化，反對 IBM 的集中化控制。</td>
+        </tr>
+        <tr>
+          <td><strong>Xerox PARC Alto (1973)</strong><br><span class="quiz-flag">Lec 2 P.28 Quiz Item!!</span></td>
+          <td><strong>五位研發先驅（必認名字）</strong>：<span class="kw">Ed McCreight, Chuck Thacker, Butler Lampson, Bob Sproull, Dave Boggs</span>。首台具備位元映射直向螢幕 (Portrait bit-mapped display)、GUI 視窗圖標、滑鼠與乙太網 (Ethernet) 的個人工作站。Steve Jobs 與 Wozniak 後來借鑑了這些創意創立 Apple。</td>
+        </tr>
+        <tr>
+          <td><strong>Xerox Star 8010 (1981)</strong><br>vs. <strong>Apple Lisa (1983) / Mac (1984)</strong></td>
+          <td>
+            • <strong>Xerox Star 8010 (Pioneer 先驅系統)</strong>：<strong>首台商業化且完全基於可用性工程 (Usability engineering: 紙上原型、用戶測試、迭代優化) 的 GUI 電腦</strong>（桌面隱喻、WYSIWYG、鼓勵辨識/點擊而非記憶/打字、無模式交互 Modeless）。但因<strong>售價太貴 (\$15,000)、功能受限無試算表、封閉架構禁止第三方軟體、死板依賴直接操作</strong>而商業失敗。<br>
+            • <strong>Apple Lisa (1983, \$10,000)</strong> 同樣失敗；<strong>Apple Macintosh (1984, \$2,500, Settler 收割者系統)</strong> 憑藉親民定價、成熟概念、開放第三方開發工具包與雷射印表機桌面排版大獲成功（唯一敗筆：<strong>把磁碟拖進垃圾桶 Pull to Trash 居然是退片 Eject</strong>！）。
+          </td>
+        </tr>
+        <tr>
+          <td><strong>多學科交叉案例 (Lec 2 P.37–52)</strong></td>
+          <td>
+            • <strong>Computer Science</strong>：美國邊境想用遠距讀取的 RFID 駕照，但 Melanie Rieback 發明了首個 RFID 病毒與個人隱私防火牆 <span class="kw">RFID Guardian</span>。<br>
+            • <strong>Artificial Intelligence</strong>：Uber 自駕車撞死人，因為感測器把行人誤判為 <span class="kw">False positive</span>（誤報雜訊）而決定不閃避。<br>
+            • <strong>Anthropology (人類學與文化差異)</strong>：印度家庭共用手機不喜歡<strong>來電顯示 (<span class="kw">Calling-line identification</span>)</strong>；穆斯林女性藍牙罩袍 (Charming Burka) 與符合教法的 Muslim AI；香港深水埗竹棚工人需要雙手作業，傳統觸控手機對他毫無用處。<br>
+            • <strong>Linguistics (語言學)</strong>：語音識別兩大形式——① <strong>語音轉文字 (Converts spoken words to text)</strong>；② <strong>聲紋驗證 (Voice verification: identifies speaker according to acoustic input)</strong>。
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== SECTION 2: LECTURE 3 & 4 ==================== -->
+<section class="doc-section" id="sec-lec34">
+  <div class="sec-header">
+    <h2>🧠 Part 2：Lecture 3 & 4 — 人類資訊處理、解題策略與 Fitts' Law</h2>
+    <span class="sec-tag">Human Information Processing (Part 1 & 2)</span>
+  </div>
+  <div class="sec-body">
+    <h3 class="sub-title">2.1 Solso 人類資訊處理模型與大腦神經機制 (Lec 3 P.5–25)</h3>
+    <ul class="dense-list">
+      <li><strong>Solso 模型流程</strong>：Physical World ➔ Detection System (<span class="kw">Iconic</span> 視覺 / <span class="kw">Echoic</span> 聽覺 / <span class="kw">Haptic</span> 觸覺) ➔ Stimulus Filter ➔ Short-term Working Memory（儲存當前問題狀態、子目標與活躍程序）⇄ Long-term Memory（儲存實踐知識 Repository of knowledge）➔ Response Generator & Output。</li>
+      <li><strong>大腦白質與神經元結構</strong>：大腦重 1.5 kg，白質 (White matter) 總長 15 萬公里，放大看並非雜亂毛線，而是<strong>水平與垂直正交的直角網格 (Wedeen, 2012)</strong>；人類約有 700 億個腦細胞，突觸 (Synapses) 是電化學開關。</li>
+      <li><strong>記憶的可塑性與單細胞表徵</strong>：
+        <br>• 視覺、文字、聲音與觸覺輸入會整合成一個整體存入記憶，特定人物臉孔與地標甚至只儲存在<strong>單一或一兩個神經元中</strong>（Fried 2005 發現的 <span class="kw">Jennifer Aniston neuron</span>、Halle Berry / 巴黎鐵塔神經元）。
+        <br>• 記憶<strong>不是固定的 (Not fixed)</strong>，回憶時神經元連接會發生<strong>物理改變</strong>（新連接點出現、舊點消退），且對語境敏感 (Context-sensitive)——Ramirez (2013) 在小鼠海馬體 (Hippocampus) 激活恐懼記憶神經元，成功在安全盒子裡誘發<strong>虛假記憶 (False memory)</strong>。
+        <br>• 成人大腦約 84% DNA 基因處於活躍狀態；中腦<strong>黑質 (<span class="kw">Substantia nigra</span>)</strong> 的神經元製造<strong>多巴胺 (Dopamine)</strong>，負責獎勵系統與內在動機（Affective processing: Goals, Relevance, Valence）。
+      </li>
+    </ul>
+
+    <h3 class="sub-title">2.2 問題連續體、兩種思維模式與三種表徵層次 <span class="quiz-flag">Lec 4 P.55 Exam Sample Item</span></h3>
+    <div class="callout callout-green">
+      <strong>必背滿分定義 — Well-defined Problem vs. Ill-defined Problem (Lec 3 P.29–31 & Lec 4 P.55)</strong>：<br>
+      • <span class="kw">Well-defined problem</span>（確定性情境、結構化決策，如找程式漏分號 Bug、下棋、PLC 藍圖）：<br>
+      <strong>"With full specification of the provided data, actions, strategies, and goal states, which can be represented in a problem space."</strong>（這句原話是 Lec 4 P.55 官方 MC 樣題的唯一正確選項 C！）<br>
+      • <span class="kw">Ill-defined problem</span>（機率性情境、非結構化決策，如寫公司 Mission statement、幼兒自由畫畫）：規格模糊不完整，必須使用 <span class="kw">Goal Decomposition (目標分解)</span> 將大目標拆解為 Sub-goals 與 Sub-sub-goals。
+    </div>
+
+    <table class="scan-table">
+      <thead>
+        <tr>
+          <th style="width:20%;">比較維度</th>
+          <th style="width:40%;">Logic Rationalist (邏輯理性主義者 — COMP 學生)</th>
+          <th style="width:40%;">Associative Empiricist (聯想經驗主義者 — SD 設計學生)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>系統偏好與決策</strong></td>
+          <td>喜歡<strong>封閉系統 (Closed systems，如魚缸裡的魚)</strong>、結構化決策 (Structured decisions)。</td>
+          <td>喜歡<strong>開放系統 (Open systems，如樹上的鳥)</strong>、非結構化決策 (Unstructured decisions)。</td>
+        </tr>
+        <tr>
+          <td><strong>數據表徵偏好</strong></td>
+          <td>偏好<strong>精確數字表格 (Precision, Details, Exact)</strong>。</td>
+          <td>偏好<strong>全局趨勢長條圖 (Global overview, Trends)</strong>。</td>
+        </tr>
+        <tr>
+          <td><strong>Tree - bin - me 案例</strong></td>
+          <td>採取<strong>第三人稱獨立俯視視角 (Person-independent overview)</strong>，將自己視為空間中的點，認為測量是多餘的 (<em>"I can reason from the givens"</em>)。</td>
+          <td>採取<strong>第一人稱視角 (First-person perspective)</strong>，走向具體化，因為被樹擋住看不見垃圾桶就認為無法回答 (<em>"I cannot see/measure it"</em>)。</td>
+        </tr>
+        <tr>
+          <td><strong>數積木案例 (Lec 4 P.22)</strong></td>
+          <td>純靠邏輯推理假設背面也是實心方塊，分層相加算出 43 塊（<strong>結果算錯！</strong>）。</td>
+          <td>先做<strong>經驗聯想再繞到背面實證檢驗 (Empirical association and then verification)</strong>，發現背面其實是神像與圓球，反而<strong>更準確 (Better accuracy)</strong>！</td>
+        </tr>
+        <tr>
+          <td><strong>三種問題表徵層次</strong><br>(以 Ice Melting 融冰為例)</td>
+          <td colspan="2">
+            1. <span class="kw">Surface / Phenomenological level (表面現象層 / Visible laboratory level)</span>：聚焦於肉眼可見的顏色、形狀、質地、太陽與污漬（解法：走到陰影下、拿紙巾擦、用清潔劑；在企業流程中對應員工文化與突發狀況）。<br>
+            2. <span class="kw">Structural / Molecular level (結構分子層)</span>：聚焦於內部結構與分子的混亂度（解法：加入乳化劑、加氯化鈉鹽防止冰晶變粗糙；在企業中對應工作單元與流程圖）。<br>
+            3. <span class="kw">Symbolic level (符號邏輯層)</span>：聚焦於抽象邏輯與公式 $\text{H}_2\text{O}(s) \rightleftharpoons \text{H}_2\text{O}(l)$（解法：利用天然蛋白質 <strong>BslA</strong> 同時結合空氣、水與脂肪阻止融化）。<br>
+            <em>💡 設計啟示：產品生命週期遵循 <strong>Innovation S-curve</strong>（隨時間推移，因設計決策敲定，點子的變異度 Variability of ideas 會越來越小）。設計師應提供多重表徵 (Multiple representations)！</em>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-title">2.3 六大問題解決策略 (Problem-Solving Strategies — Lec 3 P.32–86)</h3>
+    <table class="scan-table">
+      <thead>
+        <tr>
+          <th style="width:24%;">解題策略名稱</th>
+          <th style="width:76%;">運作機制、課件經典案例與必考限制</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Difference Reduction</strong><br>(差異縮減法 — 局部貪心)</td>
+          <td>要求每完成一個子目標，都必須讓當前狀態<strong>直接更靠近目標狀態</strong>。在物流供貨案例中，貨車每去一個城市就必須立刻回工廠卸貨（路線：<code>2+4+4+8+8+2 = 28</code>），雖然<strong>只需小貨車</strong>，但總里程長、<strong>車輛磨損大 (More wear-and-tear)</strong>，且極易掉入 <span class="kw">Local maximum trap (局部最優陷阱)</span>！</td>
+        </tr>
+        <tr>
+          <td><strong>2. Means-End Analysis</strong><br>(手段-目的分析 — 全局最優)</td>
+          <td>針對每個子目標採用不同程序，<strong>允許為了達成最終目標而暫時遠離目標狀態 (<span class="kw">Temporary goal state evasion</span>)</strong>！貨車先不回基地，順路走遍 A➔B➔C 一次裝滿再回工廠 D（路線：<code>2+4+8+2 = 16</code> 最優解），但技術代價是<strong>需要更大容量的貨車或機器人平台 (Demands a larger lorry / platform)</strong>。</td>
+        </tr>
+        <tr>
+          <td><strong>3. Forward & Backward Reasoning</strong><br>(正反向遞迴推理)</td>
+          <td>
+            • <strong>Forward (正向)</strong>：從已知數據推導結論（Data mining ➔ Rule ➔ Conclusion，如知起火推有煙）。<br>
+            • <strong>Backward (反向診斷)</strong>：從當前症狀反推原因（如知電腦藍屏 BSOD 反推剛裝了 NVIDIA 驅動）。<br>
+            • <strong>⚠️ 絕對鐵律 (Lec 3 P.54–55)</strong>：<strong>僅允許用於已知且具 1 對 1 因果關係的問題 (Only allowed for known problems with 1-to-1 relationship)</strong>！若為<strong>未知問題（一果多因，如藍屏可能是寫病毒、裝驅動或打機過熱）</strong>，<strong>嚴禁正反向推理</strong>，必須先進行 <span class="kw">Empirical Validation (實證檢驗)</span> 排除其他所有原因！
+          </td>
+        </tr>
+        <tr>
+          <td><strong>4. Analogical & Case-based Reasoning</strong><br>(類比與案例推理)</td>
+          <td>半理性半創意 (Halfway intelligent and creative)：尋找不同領域間相似的特徵關係（如 <code>Clock signal : computer :: heartbeat : human being</code>）。<strong>Case-based reasoning</strong> 案例：模仿<strong>啄木鳥頸部吸震結構 (Woodpecker)</strong> 改造露營斧頭，實現更平衡省力的揮砍。</td>
+        </tr>
+        <tr>
+          <td><strong>5. Random Trial-and-Error</strong><br>(隨機試錯法)</td>
+          <td>低階解題策略，<strong>最常見於非專家/新手用戶 (Non-expert / Novices)</strong>。案例：新手在 Excel 想找「搜尋 (Find)」，因覺得搜尋跟 <code>Edit</code> 無關而去點 <code>Tools ➔ Goal Seek...</code>，結果把儲存格數值改亂並開始胡亂點擊 (Wild clicking)。</td>
+        </tr>
+        <tr>
+          <td><strong>6. Creative Problem Solving & Deep Learning</strong></td>
+          <td>
+            • <strong>三種創意手法</strong>：① 賦予既有工具新功能（如 <strong>OmniTouch</strong> 把手掌變觸控螢幕）；② 融合兩個領域（如模仿線蟲蠕動的搜救機器人、頂針觸控套）；③ 超越常規（如 <strong>Crowd PC</strong> 利用筆電背面當觸控板）。<br>
+            • <strong>Deep Learning (深度學習) 的誤分類與創意</strong>：DL 是多層神經網路，從底層像素/線條 <strong>Bottom-up (由下而上)</strong> 組合邊緣與特徵（如 Google Photos 曾誤把黑人標記為 Gorilla）。但 Prof. Hoorn 指出：<strong>錯誤只在死板系統中才是錯誤，在創意中則是跨界組合的源泉</strong>（如特徵重疊產生的 Elephant Man、汽車前臉像人臉、大象椅、復古相機造型削鉛筆機、清真寺圓頂天文館）。
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-title">2.4 運動輸出、Fitts' Law 與反應時間 (Lec 4 P.26–51)</h3>
+    <div class="formula-bar">
+      • Fitts' Law 移動時間公式：T = a + b · log₂(2D / W) = a + b · ID<br>
+      • 原始難度指標：ID = log₂(2A / W) &nbsp;|&nbsp; Shannon 改良公式：ID = log₂(A/W + 1) 或 log₂(A/W + 0.5) [當 ID &lt; 3 bits]<br>
+      • 設備效能指標 (Throughput)：IP = 1 / b &nbsp;(單位：bits/sec)
+    </div>
+    <ul class="dense-list">
+      <li><strong>Fitts' Law 核心考點</strong>：
+        <br>1. <strong>物理層 vs. 體驗層 (Lec 4 P.26–28)</strong>：Fitts' Law 測量的是系統表現的<strong>物理層面 (Physical side of performance: Human clock time, # errors)</strong>，關係到系統的 <strong>Efficiency (效率)</strong>。
+        <br>2. <strong>ID 與設備無關 (Lec 4 P.41)</strong>：<span class="kw">Index of Difficulty (ID) 只取決於任務本身 (D 與 W)，與使用什麼輸入設備無關！</span>迴歸常數 $a$（y軸截距）與 $b$（斜率 secs/bit）以及 $IP = 1/b$ 才取決於互動模態與硬體設備（Mouse 的公式為 $T = 1.03 + 0.096 \log_2(A/W + 0.5)$）。
+        <br>3. <strong>為什麼有對數 Logarithm？(4 大原因，Lec 4 P.32–34)</strong>：① <strong>Speed-accuracy tradeoff</strong>（越快越不準，難度增加呈邊際遞減）；② <strong>Shannon's Information Theory</strong>（大腦到肌肉如同帶雜訊的資訊通道，容量以 bits 計）；③ <strong>Empirical fit</strong>（實驗數據符合對數曲線）；④ <strong>Doubling/halving effect</strong>（<strong>距離 $D$ 翻倍或寬度 $W$ 減半，$ID$ 都只固定增加 1 bit！</strong>）。
+        <br>4. <strong>跨文化案例 (Vincy Wong, Lec 4 P.51)</strong>：速度與準確度的權衡受工作文化影響——<strong>美國分部追求速度 (Process speed，允許捷徑)</strong>，<strong>新加坡分部追求零錯誤 (Making no errors / Guilt culture，嚴守規則與多重檢查迴路)</strong>。
+      </li>
+      <li><strong>反應時間與心理計時學 (Reaction Times & Mental Chronometry, Lec 4 P.43–49)</strong>：
+        <br>• <strong>人類行為時間尺度</strong>：$10^{-3}\text{ ms}$ 為生物級 (Biological)，$10^0\text{ sec}$ 為認知級 (Cognitive / Immediate)，Hours/Minutes 為理性適應級 (Rational)，Months/Weeks 為社交級 (Social / Attitude formation)。
+        <br>• <strong>總反應速度 = Reaction Time (反應時間，取決於刺激類型) + Response/Motor Time (運動時間，取決於年齡與體能)</strong>。
+        <br>• <strong>三大感官 Reaction Time 排序（必背！）</strong>：<span class="kw">Visual 視覺 (~200 ms，最快！)</span> &lt; <span class="kw">Pain 痛覺 (~700 ms)</span> &lt; <span class="kw">Auditory 聽覺 (~1500 ms，最慢！)</span>。
+        <br>• <strong>電梯射擊實驗 (Mental Chronometry)</strong>：電梯門開前先響起警告鈴聲 $S_1$，能產生有效準備期 $\text{EPP} = \text{SOA} + D_{S2} - D_{S1}$，加速大腦對目標刺激 $S_2$（敵人出現）的中樞處理！
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== SECTION 3: LECTURE 5 & 6 ==================== -->
+<section class="doc-section" id="sec-lec56">
+  <div class="sec-header">
+    <h2>👁️ Part 3：Lecture 5 & 6 — 視覺生理、Gestalt 原則、閱讀與排版設計</h2>
+    <span class="sec-tag">Visual Perception and Computer Graphics (Part 1 & 2)</span>
+  </div>
+  <div class="sec-body">
+    <h3 class="sub-title">3.1 視覺生理學、錯覺與 3D 運動深度感知 (Lec 5 P.7–40)</h3>
+    <ul class="dense-list">
+      <li><strong>視網膜感光細胞與視角定律</strong>：
+        <br>• 視角公式 (<span class="kw">Law of visual angle</span>)：$\tan(\theta/2) = s / (2d)$，即 $\theta = 2\arctan(s/2d)$（決定物體佔據視野的比例）。
+        <br>• <span class="kw">Rods (視桿細胞)</span>：負責<strong>低光暗視覺 (Low-light vision)</strong>；<span class="kw">Cones (視錐細胞)</span>：負責<strong>色彩視覺 (Colour vision)</strong>，其中人眼對<strong>藍光的敏銳度最低 (<span class="kw">Blue acuity is lowest</span>)</strong>，且全球約 <strong>8% 男性與 1% 女性患有色盲</strong>。
+        <br>• <span class="kw">Ganglion cells (神經節細胞)</span>：作為<strong>模式濾波器 (Pattern filters)</strong>，對<strong>中頻率信號 (Middle frequencies)</strong> 通過率最高，並具有 <span class="kw">Mutual suppression (相互抑制)</span> 機制（能用群體校正單一細胞雜訊，但也導致我們在 <strong>Hermann Grid 赫曼方格交叉處看到不存在的灰點輸出</strong>，以及盯著紅方塊後因紅錐細胞疲勞、綠藍細胞持續放電而看到<strong>青色 Cyan 視覺殘像 After-images</strong>）。
+      </li>
+      <li><strong>核心哲學：色彩、3D 與模式都不是物理數據的屬性，而是大腦的主觀詮釋 (Lec 5 P.14, 23, 89)</strong>：
+        <br>• 視網膜上的影像只是 <strong>2D、上下顛倒 (Upside-down) 且縮小 (Shrank)</strong> 的！
+        <br>• <strong>大腦重建 3D 的 10 個步驟</strong>：① Slicing up (Eye fixations 切片，如同 CT Scan) ➔ ② Imputing missing data from memory (概念驅動填補盲點) ➔ ③ Shrinking ➔ ④ 雙眼不同角度取像 ➔ ⑤ Splitting up ➔ ⑥ 經由 <span class="kw">Optic chiasm (視交叉)</span> 執行 <strong>Left goes right, right goes left</strong> ➔ ⑦ Merging 合併 ➔ ⑧ <strong>Flip (翻正)</strong> ➔ ⑨ <strong>Rotate (旋轉)</strong> ➔ ⑩ <strong>Resize (放大還原)</strong>。
+      </li>
+      <li><strong>深度與運動感知三大考點 (Size, Optic Flow & Motion Parallax)</strong>：
+        <br>1. <strong>大小恆常性 (<span class="kw">Law of size constancy</span>)</strong>：熟悉物體即使視角改變，仍被感知為固定大小；鐵軌斜線的深度暗示會強迫大腦放大遠處的怪物（龐氏錯覺 Giant or gnome）。
+        <br>2. <strong>光流 (<span class="kw">Optic Flow</span>)</strong>：<span class="kw">Expanding optic flow (擴張光流)</span> 代表我們在<strong>前進 (Go forward)</strong>，會誘發身體前傾 (Lean forward)；<span class="kw">Contracting optic flow (收縮光流)</span> 代表<strong>後退 (Backward)</strong>，誘發身體後仰 (Lean backward)。
+        <br>3. <strong>視網膜路徑與運動視差 (<span class="kw">Retinal Path & Motion Parallax</span>)</strong>：
+          <br>• <strong>近處物體（如小狗）</strong>：在視網膜上的移動路徑<strong>長 (<span class="kw">Long retinal path = close by</span>)</strong>，因而看起來跑得快（這也解釋了<strong>「火車開動錯覺 Moving-train illusion」</strong>：隔壁近處火車開動，長路徑讓我們誤以為是自己的火車在動）。
+          <br>• <strong>遠處物體（如月亮）</strong>：視網膜路徑<strong>短 (<span class="kw">Short retinal path = far away</span>)</strong>。當你盯著中景的樹（Focal point）往右走時，近處的狗從視野<strong>反方向離開 (Opposite side = object stays behind)</strong>，而遠處的月亮從<strong>同方向離開半視野 (<span class="kw">Same side of your direction = object goes with me</span>)</strong> ➔ 解釋了為什麼<strong>「月亮看起來總是跟著你走 (Moon travels with you)」</strong>！
+      </li>
+    </ul>
+
+    <h3 class="sub-title">3.2 Gestalt 格式塔七大知覺原則與概念驅動識別 (Lec 5 P.42–90)</h3>
+    <table class="scan-table">
+      <thead>
+        <tr>
+          <th style="width:22%;">Gestalt 原則名稱</th>
+          <th style="width:78%;">核心定義與課件必考圖例 (Data ➔ Information 的建構規則)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. Similarity (相似性)</strong></td>
+          <td>外貌相似的元素會被自動歸為一組（例：方塊與圓圈交替排列時，人眼會看成「一列方塊、一列圓圈」的直欄；Opera 瀏覽器相同底色的選項被綁定在一起）。</td>
+        </tr>
+        <tr>
+          <td><strong>2. Proximity (接近性)</strong></td>
+          <td>空間距離靠近的物體會被歸為一組（例：左邊圓點看成兩直欄、右邊看成兩橫列；MTV 蜂巢按鈕與搜尋單選鈕分組；<strong>24-25 Q.B3a 黑灰點陣圖真題</strong>）。</td>
+        </tr>
+        <tr>
+          <td><strong>3. Symmetry (對稱性)</strong></td>
+          <td>對稱的圖形即使有距離，也會被共同感知為前景物體（例：黑底白框圖中，人眼會看到 <strong>3 個黑色的對稱西洋棋子</strong>，而不是 4 個不對稱的白色背景塊）。</td>
+        </tr>
+        <tr>
+          <td><strong>4. Continuity (連續性)</strong></td>
+          <td>人眼傾向將線條視為沿著<strong>最平滑路徑 (Smoothest path)</strong> 延伸（例：基因分岔圖中上方分支被視為主流延續；股價走勢圖讓人誤以為紅線會一直往上漲，忽略崩盤風險）。</td>
+        </tr>
+        <tr>
+          <td><strong>5. Closure (閉合性)</strong></td>
+          <td>大腦會自動忽略缺口並補全熟悉的完整圖形（例：西洋棋騎士剪影、<strong>IBM 藍白條紋 Logo</strong>、<strong>Kanizsa Triangle 卡尼薩三角形</strong>、<strong>黑白斑點中的大麥町犬 Dalmatian dog</strong>）。<br><em>💡 統計學啟示：在數列 <code>1; 2; 3; 4; 5; _; 7; 8; 9</code> 中，最理性的回答其實是 <strong>"I don't know"</strong>（如同樂透彩球 <code>1 2 3 4 5 6 7</code> 與隨機號碼的中獎機率完全相同，大數據找新模式本質上是機率遊戲）。</em></td>
+        </tr>
+        <tr>
+          <td><strong>6. Smallness (小面積原則)</strong></td>
+          <td><strong>較小的區域傾向被視為前景圖形 (Figures)</strong>，較大的區域被視為背景 (Background)（例：在魯賓之杯 <strong>Rubin's Vase</strong> 中，當黑色花瓶區域縮小時，更容易看出花瓶而非兩張人臉）。</td>
+        </tr>
+        <tr>
+          <td><strong>7. Surroundedness (包圍性)</strong></td>
+          <td>被其他區域包圍的區域傾向被視為獨立圖形（例：四個看似無意義的黑色怪塊，其實是包圍並襯托出中間的白色英文字母 <strong>"TIE"</strong>）。</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout callout-red">
+      <strong>🔥 24-25 真題 B4 必背問答：為什麼人類能認出黑白斑點圖裡的斑點狗 (Dalmatian dog)，而 GPT-4o-mini 等 AI 卻認不出來？</strong><br>
+      • <strong>人類 (Humans)</strong>：依靠 Gestalt 的 <span class="kw">Closure (閉合性原則)</span> 與長短期記憶中的 <span class="kw">Top-down / Concept-driven conceptual interpretation (由上而下的概念驅動詮釋)</span>，主動填補缺失的邊界數據 (Imputing missing data)。<br>
+      • <strong>AI / 深度學習 (DL)</strong>：圖中的黑點只是<strong>互不相連的數據點 (<span class="kw">Unconnected data points</span>)</strong>。AI 依賴 <span class="kw">Bottom-up (由下而上)</span> 的像素與邊緣特徵匹配，當缺乏連續清晰的輪廓線與紋理時，就無法聚合成高階物體類別。
+    </div>
+
+    <h3 class="sub-title">3.3 閱讀生理機制、Semantic Priming 與 GUI 排版鐵律 (Lec 6 & Past Papers)</h3>
+    <ul class="dense-list">
+      <li><strong>人類閱讀的眼球運動 (Reading Eye Movements, Lec 6)</strong>：
+        <br>• <span class="kw">Saccades (眼跳)</span>：眼球快速跳動，<strong>跳動期間大腦完全沒有視覺感知</strong>；<span class="kw">Fixations (凝視停頓)</span>：眼球停留，<strong>所有的感知與閱讀理解都只發生在 Fixations 期間</strong>！<span class="kw">Regressions (回視)</span>：往回看以重新理解難懂的字句。
+        <br>• <strong>字形識別定律</strong>：<strong>小寫羅馬字母的上半部比下半部更重要 (<span class="kw">Upper part of lowercase Roman letters is more important</span>)</strong>，遮住下半部依然很好讀；全大寫 (ALL CAPS) 會失去單詞輪廓特徵，降低閱讀速度。
+      </li>
+      <li><strong>語義啟動 (Semantic Priming) 與介面文字消除歧義 (Lec 6 & 25-26 Q.C2b)</strong>：
+        <br>• <strong>經驗差距</strong>：專家 (Experts) 擁有豐富領域知識；<strong>新手 (Novices) 極度依賴介面提供的語境啟動詞 (<span class="kw">Context / Semantic Prime</span>)</strong> 來消除一詞多義 (Ambiguity)。
+        <br>• <strong>介面標籤 4 大鐵律</strong>：① <strong>嚴禁並排使用同義詞圖標 (<span class="kw">Avoid synonyms</span>)</strong>（如 25-26 真題中同時放 <code>Trash Can 垃圾桶</code> 與 <code>"X"</code> 圖標，會造成語義歧義讓長者猶豫不敢點，應改為單一明確的文字標籤如 <code>"Delete"</code> 以實現 <span class="kw">Design for recognition rather than recall</span>）；② 使用<strong>肯定句 (<span class="kw">Affirmative statements</span>)</strong>，嚴禁雙重否定；③ 圖標必須配備 <span class="kw">Tooltips</span>（Novell GroupWise 5.1 失敗主因：<em>"There are no tooltips!"</em>）；④ Tooltip 絕不能寫 <code>Properties = Show properties</code> 這種同義反覆廢話 (Full circle)。
+      </li>
+      <li><strong>Typography 字體與版面設計硬性數字 (Lec 6 & 24-25 Q.B3b)</strong>：
+        <br>• <strong>字體選擇</strong>：紙本長文用 <strong>Serif (襯線體)</strong> 引導水平視線；<strong>數位螢幕顯示優先用清晰的 Sans-serif (無襯線體)</strong>，避免使用花俏手寫體/草書（會破壞字形識別、缺乏大小寫與標點清晰度，大幅增加認知負荷）。
+        <br>• <strong>黃金數字</strong>：每行寬度<strong>不超過 60 個字符 (<span class="kw">Max 60 characters per line</span>)</strong>；整個介面最多使用 <strong>1–2 種字體 (上限 3 種)</strong>、<strong>2 種字重 (Weights)</strong>、<strong>4 種字號 (Sizes)</strong>，且不同層級字號差距<strong>至少 2 pt</strong>；段落間距應大於行距，<strong>標題必須離下方內文更近 (Proximity)</strong>。
+        <br>• <strong>GUI 佈局四原則 <span class="kw">CRAP</span></strong>：<strong>C</strong>ontrast (對比)、<strong>R</strong>epetition (重複一致性)、<strong>A</strong>lignment (網格對齊 Grids)、<strong>P</strong>roximity (接近性分組)。
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== SECTION 4: LECTURE 7 ==================== -->
+<section class="doc-section" id="sec-lec7">
+  <div class="sec-header">
+    <h2>💬 Part 4：Lecture 7 — 語言溝通、對話三層次、STN 與 NLP</h2>
+    <span class="sec-tag">Language, Communication, and Dialogue Techniques (Part 1)</span>
+  </div>
+  <div class="sec-body">
+    <h3 class="sub-title">4.1 對話的三個層次 (Three Levels of Dialog — Tut 7.1 & 7.2 必考題！)</h3>
+    <table class="scan-table">
+      <thead>
+        <tr>
+          <th style="width:20%;">對話層次</th>
+          <th style="width:35%;">核心定義 (Marking Point: 問題出在哪？)</th>
+          <th style="width:45%;">Tutorial 7.1 & 7.2 圖書館自助機標準案例</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1. LEXICAL</strong><br>(詞法層 — 外觀形狀)</td>
+          <td><span class="kw">The shape and physical appearance of the interaction</span>（按鍵形狀、顏色、圖標、字元外觀）。</td>
+          <td><em>"The 'Confirm' button is round and green; the 'Cancel' button is square and grey."</em>（只涉及控制項的物理形狀與顏色外觀）。</td>
+        </tr>
+        <tr>
+          <td><strong>2. SYNTACTIC</strong><br>(句法層 — 先後順序)</td>
+          <td><span class="kw">The order / sequence of inputs and outputs</span>（對話步驟的先後次序）。</td>
+          <td><em>"The kiosk asks for payment BEFORE letting the user choose which books to renew, and users keep tapping back."</em>（每個按鈕本身能點，但<strong>輸入輸出的先後順序錯了</strong>）。</td>
+        </tr>
+        <tr>
+          <td><strong>3. SEMANTIC</strong><br>(語義層 — 數據效果)</td>
+          <td><span class="kw">What the actions mean for the application's data</span>（操作對系統底層數據產生的實際意義與結果）。</td>
+          <td><em>"Pressing 'Renew all' silently renews three books that were reserved by another user – the tap was fine, the effect was wrong."</em>（外觀與順序都對，但<strong>對系統數據產生的效果錯了</strong>）。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="sub-title">4.2 狀態轉換網路 (State Transition Network, STN) vs. 流程圖 (Flowchart)</h3>
+    <ul class="dense-list">
+      <li><strong>STN 符號規則 (Tut 7.1 & Lec 7)</strong>：
+        <br>• <strong>圓圈 (Circles) = States (系統狀態 / 螢幕畫面 / 模式)</strong>，如 <code>Welcome</code>、<code>Login form</code>、<code>Logged in</code>，或含 Entry/Exit actions 的狀態（如 ATM 的 <code>Reading card</code>、<code>Choosing transaction</code>、<code>Performing transaction</code>）。<strong>注意：每個狀態圓圈名稱必須唯一，絕不可重複！</strong>
+        <br>• <strong>有向弧線 (Directed Arcs / Arrows) = User actions or events / conditions</strong>（推動對話轉換的用戶動作或驗證結果，如 <code>choose "Log in"</code>、<code>submit: password valid</code>、<code>submit: invalid, show error, return to form</code>）。
+        <br>• <strong>共享逃生弧 (<span class="kw">Shared Escape Arc</span>，如 "Cancel")</strong>：從子對話框內部任意位置退回主畫面時，<strong>只畫一條共用的獨立虛線弧，而不是在每個狀態上重複畫</strong>！
+        <br>• <strong>必背一行解釋 (Tut 7.2 官方滿分答案)</strong>：<span class="kw">"Without it, every state needs its own identical Cancel arc – the diagram turns into spaghetti of duplicated behaviour; a single shared escape (like a Help menu at meta level) keeps the model readable."</span>
+      </li>
+      <li><strong>STN 與傳統 Flowchart 的區別 (Lec 7)</strong>：在傳統 Flowchart 中，方框代表處理程序 (Process)，菱形代表條件判斷 (Decision)，橢圓才代表起止狀態；而 <strong>STN 專注於建模「系統狀態 (圓圈)」與「狀態間的轉換事件 (箭頭)」</strong>。</li>
+    </ul>
+
+    <h3 class="sub-title">4.3 自然語言處理 (NLP Pipeline) 與核心挑戰 (Lec 7 & Tut 7.1–7.2)</h3>
+    <ul class="dense-list">
+      <li><strong>NLP 四大處理階段 (Pipeline)</strong>：
+        <br>1. <strong>Tokenisation / Lexical analysis (分詞与詞法分析)</strong>：切分單詞並標註詞性 (Tag parts of speech)。
+          <br>👉 <em>必考問答：舉出一個 Tokenisation 不簡單的語言及原因 (Tut 7.2)</em>：
+          <br>• <span class="kw">Chinese (中文)</span>：<strong>No spaces between words, so word segmentation is needed before tokenisation.</strong>（詞與詞之間沒有空格，需先進行中文分詞）。
+          <br>• <span class="kw">Turkish (土耳其語)</span>：<strong>A single word packs many morphemes, so intra-word tokenisation is needed.</strong>（黏著語單詞內含多個語素）。
+        <br>2. <strong>Syntactic analysis / Parsing (句法解析)</strong>：分析相關 Token 群組如何構成更大的語法結構。
+          <br>👉 <em>必考問答：Parser 分析 Token 群組時產生的層級結構叫什麼名字？(Tut 7.2)</em> ➔ 答案：<span class="kw">A parse tree (解析樹 / 語法樹)</span>！
+        <br>3. <strong>Semantic analysis (語義分析)</strong>：理解字面意義。<strong>核心難題是歧義 (<span class="kw">Ambiguity is the core problem</span>)</strong>——<strong>英語最常用的 121 個名詞平均每個詞有 7.8 種含義 (average 7.8 meanings each)</strong>！
+        <br>4. <strong>Discourse analysis & Pragmatics (篇章/語篇分析與語用學)</strong>：跨句子理解上下文與真實意圖。
+          <br>👉 <em>必考問答 1 — 指代消解 (<span class="kw">Coreference resolution</span>, Tut 7.2)</em>：在 <em>"There is a power reduction in section L-94. Explain it."</em> 中，<code>"it"</code> 指代 <strong>the power reduction</strong>（Coreference resolution 負責將代詞連結回前文實體）。
+          <br>👉 <em>必考問答 2 — 多意圖複合指令遺漏 (25-26 Q.C2a Mr. Lee 語音助手真題)</em>：當用戶一句話包含兩個請求（如 <em>"In the morning. And also remind me to call my daughter"</em>），AI 只確認了早上吃藥卻漏掉打給女兒，這是因為 AI 發生了 <span class="kw">Discourse analysis / Multi-intent syntactic parsing failure (篇章連貫與複合意圖解析失敗)</span>，無法像人類一樣利用語境記憶同時追蹤兩個並列任務。
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ==================== SECTION 5: TUTORIALS 1 TO 7.2 ==================== -->
+<section class="doc-section" id="sec-tuts">
+  <div class="sec-header">
+    <h2>🛠️ Part 5：Tutorials 1–7.2 (非 Figma 部分) 必考重點全匯總</h2>
+    <span class="sec-tag">助教講義裏藏著的 MC / T&F / Case Study 考點</span>
+  </div>
+  <div class="sec-body">
+    <table class="scan-table">
+      <thead>
+        <tr>
+          <th style="width:18%;">Tutorial 編號</th>
+          <th style="width:82%;">核心理論、指標與必背案例解析 (已剔除 Figma 操作與 Week 8)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Tutorial 1</strong><br>(Norman 鴻溝與可用性)</td>
+          <td>
+            • <strong>Gulf of Execution (執行鴻溝)</strong>：用戶心中有目標，但<strong>不知道該如何操作介面</strong>（缺乏 Affordance / Signifiers / Mapping）。<br>
+            • <strong>Gulf of Evaluation (評估鴻溝)</strong>：用戶操作了介面，但<strong>看不出系統狀態發生了什麼變化</strong>（缺乏 Informative Feedback）。<br>
+            • <strong>Usability 三大核心維度 (ISO)</strong>：<span class="kw">Effectiveness</span> (能否準確完成目標)、<span class="kw">Efficiency</span> (耗費多少時間與精力)、<span class="kw">Satisfaction</span> (主觀滿意度)。
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Tutorial 3</strong><br>(Maze 測試報告三大指標)</td>
+          <td>
+            在 Maze 原型測試報告中，任務完成路徑分為三類（MC / T&F 必考）：<br>
+            1. <span class="kw">Direct Success (直接成功)</span>：測試者完全按照你預設的<strong>預期路徑 (Expected path)</strong> 完成任務。<br>
+            2. <span class="kw">Indirect Success (間接成功)</span>：測試者走了<strong>非預期路徑 (Unexpected / Off-path)</strong>，但最終依然成功抵達終點畫面 (Final screen)。<br>
+            3. <span class="kw">Give-up / Bounce (放棄/跳出)</span>：測試者中途離開或放棄，未完成任務。<br>
+            • <strong>Card Sort (卡片分類)</strong> 與 <strong>Tree Test (樹狀結構測試)</strong>：用於檢驗資訊架構分類是否達成共識 (Consensus)。
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Tutorial 5</strong><br>(需求工程與 PACT)</td>
+          <td>
+            • <strong>Requirement vs. Specification (MC 必考區分)</strong>：<br>
+              - <span class="kw">Requirement (需求)</span>：利益相關者的需要，描述軟體<strong>應該做什麼 (WHAT the software should do)</strong>。<br>
+              - <span class="kw">Specification (規格)</span>：經需求分析後產出的技術文件，定義系統特徵與<strong>如何滿足該需求 (HOW that need will be met)</strong>。<br>
+            • <strong>Functional vs. Non-functional Requirements</strong>：<br>
+              - <span class="kw">Functional (功能需求 = 動詞 Verbs)</span>：系統必須執行的功能（例：<em>"The system shall allow users to input their birthday"</em>）。<br>
+              - <span class="kw">Non-functional (非功能需求 = 形容詞/副詞 Adjectives/Adverbs)</span>：系統的品質屬性，分為 5 大類：<strong>Look and feel, Usability, Performance, Operational, Security</strong>（例：<em>"Users shall complete birthday entry within 5 seconds"</em>）。<br>
+            • <strong>PACT 分析框架</strong>：<span class="kw">P</span>eople (人)、<span class="kw">A</span>ctivity (活動)、<span class="kw">C</span>ontext (環境語境)、<span class="kw">T</span>echnology (技術)。
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Tutorial 6 & 7.0</strong><br>(Design Thinking 與好壞設計圖例)</td>
+          <td>
+            • <strong>Design Thinking 五階段</strong>：<span class="kw">1. Empathize (同理心) ➔ 2. Define (定義問題) ➔ 3. Ideate (發想) ➔ 4. Prototype (原型) ➔ 5. Test (測試)</span>。<strong>注意：它是 Non-linear & Iterative (非線性且可隨時折返迭代的)，專解 Ill-defined 問題！</strong><br>
+            • <strong>Steve Krug《Don't Make Me Think》三大法則</strong>：① 介面必須 <strong>Self-evident (不言自明)</strong>；② <strong>Users don't read pages, they SCAN them (用戶只掃視不閱讀)</strong>；③ <strong>We don't make optimal choices, we SATISFICE (滿意即止，選第一個合理的選項)</strong>。因此必須建立清晰的 <strong>Visual Hierarchy</strong>（越重要的越醒目、邏輯相關的在視覺上靠攏、用慣例取代自創聰明詞 Clever names）。<br>
+            • <strong>Tutorial 6 & 7.0 練習題官方標準答案</strong>：<br>
+              1. <strong>插線板開關與插孔錯位 / 113 號房路牌箭頭混亂</strong>：違反 <span class="kw">Natural Mapping (自然映射)</span> 與 <span class="kw">Gestalt Proximity</span>。<br>
+              2. <strong>貓耳馬克杯喝水戳眼睛 / 四面封死的木椅</strong>：外觀有趣但嚴重違反 <span class="kw">Usability / Affordance</span>（連基本的喝水、坐下功能都無法安全達成）。<br>
+              3. <strong>出生年份下拉選單能選 2078 年</strong>：違反 <span class="kw">Constraints (約束原則)</span>，允許用戶輸入不可能的未來出生年份。<br>
+              4. <strong>右鍵選單把「剪下/複製」變灰 (Greyed out)</strong>：同時運用了 <span class="kw">Constraint</span>（物理防呆，防止點擊無效動作）與 <span class="kw">Feedback / Visibility</span>（視覺提示當前沒有選取文字）。<br>
+              5. <strong>音樂播放器按鈕組 A vs. B</strong>：選 <strong>B (<code>[|◁] [◁] [▷] [▷|]</code>)</strong>！因為豎線 <code>|</code> 在最外側，透過 <span class="kw">Natural Mapping</span> 直觀映射了「跳到第一首（起點邊界）」與「跳到最後一首（終點邊界）」。
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ==================== SECTION 6: EXAM TEMPLATES ==================== -->
+<section class="doc-section" id="sec-templates">
+  <div class="sec-header">
+    <h2>⚡ Part 6：明天考場「短答 & Case Study」萬能搶分模板</h2>
+    <span class="sec-tag">看到題目直接套用這幾句英文，秒拿滿分！</span>
+  </div>
+  <div class="sec-body">
+    <div class="callout callout-green">
+      <strong>模板 1：遇到「找路線 / 配送 / 決策失敗」的 Case Study (Lec 3 & 4)</strong><br>
+      • <strong>(a) 思維與表徵</strong>：<em>"The user is an <strong>Associative Empiricist</strong> relying on the <strong>Surface / Phenomenological level</strong> of representation (focusing only on immediate visual features like distance/color while ignoring structural constraints)."</em><br>
+      • <strong>(b) 失敗策略</strong>：<em>"They employed <strong>Difference Reduction</strong>, which requires every sub-goal to directly reduce the distance between the Current Problem State and the Goal State. This caused them to fall into a <strong>local maximum trap</strong>."</em><br>
+      • <strong>(c) 推薦策略</strong>：<em>"The system should guide them to use <strong>Means-End Analysis</strong>, which allows <strong>temporary goal state evasion</strong> (taking a sub-goal that temporarily increases distance from the goal state to achieve the optimal global solution)."</em>
+    </div>
+
+    <div class="callout callout-green">
+      <strong>模板 2：遇到「批評糟糕介面 / 按鈕難點 / 流程繁瑣」的 Case Study (Lec 1, 4, 5, 6 & Tut 6)</strong><br>
+      • <strong>違反 Fitts' Law</strong>：<em>"According to <strong>Fitts' Law</strong> ($T = a + b \log_2(2D/W)$), the target width $W$ is too small and distance $D$ is too large, which increases the <strong>Index of Difficulty (ID)</strong> and movement time $T$, causing <strong>fat-finger errors</strong> under the <strong>speed-accuracy trade-off</strong>."</em><br>
+      • <strong>違反視覺與 Gestalt</strong>：<em>"Using dark blue in low light fails because <strong>Rods</strong> handle low-light vision while <strong>Cones</strong> handle colour, and <strong>blue acuity is the lowest</strong>. Grouping can be improved without heavy borders by applying <strong>Gestalt principles of Proximity</strong> (placing related items closer) and <strong>Similarity</strong> (using consistent colours/shapes)."</em><br>
+      • <strong>違反 Don't Make Me Think 與認知負荷</strong>：<em>"Users <strong>scan rather than read</strong> and <strong>satisfice</strong>. Using clever/ambiguous labels or forcing users to navigate deep menus increases <strong>short-term memory load</strong> and widens the <strong>Gulf of Execution</strong>. We should add <strong>Constraints</strong> (e.g., limiting birth year to $\le 2026$), provide <strong>Informative Feedback</strong>, and offer direct links."</em>
+    </div>
+
+    <div class="callout callout-green">
+      <strong>模板 3：遇到「畫 STN 圖 + 解釋 Cancel + NLP 問答」 (Lec 7 & Tut 7.1–7.2)</strong><br>
+      • <strong>畫 STN 檢查清單</strong>：① 圓圈只寫<strong>狀態/畫面名</strong>（絕不重複）；② 箭頭寫<strong>動作/條件</strong>；③ 錯誤重試畫<strong>自迴圈 (Self-loop)</strong>；④ <code>Cancel</code> 畫<strong>一條共用弧線</strong>退回起點。<br>
+      • <strong>為什麼只畫一條 Cancel 弧？</strong>：<em>"Without a single shared escape arc, every state needs its own identical Cancel arc, turning the diagram into <strong>spaghetti of duplicated behaviour</strong>; one shared arc <strong>keeps the model readable</strong>."</em><br>
+      • <strong>NLP 必背三連擊</strong>：Parser 結構叫 <strong><code>A parse tree</code></strong>；中文分詞難是因為 <strong><code>Chinese has no spaces between words, requiring word segmentation</code></strong>；漏掉第二個語音指令是因為 <strong><code>Discourse analysis / multi-intent parsing failure</code></strong>。
+    </div>
+  </div>
+</section>
+
+
+  </main>
+</div>
+
+
+<script>
+  function highlightText(query) {
+    const sections = document.querySelectorAll('.doc-section');
+    const q = query.trim().toLowerCase();
+    sections.forEach(sec => {
+      if (!q) {
+        sec.style.display = 'block';
+        return;
+      }
+      const text = sec.innerText.toLowerCase();
+      sec.style.display = text.includes(q) ? 'block' : 'none';
+    });
+  }
+</script>
+
+
+</body>
+</html>
